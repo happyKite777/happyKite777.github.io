@@ -459,7 +459,8 @@
 <p>&emsp;预处理需要预处理程序（c中叫cpp）处理、编译需要编译程序（c中叫cc1、c++中叫cc1plus、oc叫cc1obj、java叫jc1……）处理、汇编需要汇编程序程序（c中叫as）处理，链接需要链接器（c中叫ld）处理。gcc实际上是对这些过程的封装，通过不同的参数调用不同的处理程序。<br>&emsp;以上编译过程可以拆解为：</p>
 <pre class="line-numbers language-none"><code class="language-none">gcc -E hello.c -o hello.i        &#x2F;&#x2F; 预编译
 gcc -S hello.i -o hello.s        &#x2F;&#x2F; 编译
-gcc -c hello.s -o hello.out      &#x2F;&#x2F; 汇编和链接<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+gcc -c hello.s -o hello.o      &#x2F;&#x2F; 汇编，目标文件
+gcc hello.o -o hello.out      &#x2F;&#x2F; 链接，可执行文件<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="1-源代码是如何到二进制的"><a href="#1-源代码是如何到二进制的" class="headerlink" title="1. 源代码是如何到二进制的"></a>1. 源代码是如何到二进制的</h2><h3 id="1-1-预编译"><a href="#1-1-预编译" class="headerlink" title="1.1 预编译"></a>1.1 预编译</h3><p>预编译主要是对源文件中的预编译指令进行处理，比如#include、#define等。处理规则如下：</p>
 <ul>
 <li>删除所有的”#define”，并展开所有宏定义  </li>
@@ -498,16 +499,15 @@ int main(int argc, char const *argv[])
 <pre class="line-numbers language-none"><code class="language-none">gcc -s hello.i -o hello.s<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&emsp;现代的gcc把预编译和编译两个步骤合并，使用cc1一步完成。</p>
 <h3 id="1-3-汇编"><a href="#1-3-汇编" class="headerlink" title="1.3 汇编"></a>1.3 汇编</h3><p>&emsp;汇编器将汇编代码编程机器可以执行的指令， 每一条汇编指令都对应着一条机器指令。汇编器的执行很简单，不需要优化，只需要对照汇编指令和机器指令表一一翻译即可。</p>
-<pre class="line-numbers language-none"><code class="language-none">as -c hello.s -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>或者直接</p>
-<pre class="line-numbers language-none"><code class="language-none">gcc -c hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">gcc -c hello.c -o hello.o<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h3 id="1-4-链接"><a href="#1-4-链接" class="headerlink" title="1.4 链接"></a>1.4 链接</h3><p>通常我们看到链接会链接一大串文件，如下图所示，它会把编译生成的目标文件和运行时需要的库等打包放一起。具体后面会讲。</p>
 <pre class="line-numbers language-none"><code class="language-none">$ld -static &#x2F;usr&#x2F;lib&#x2F;crt1.o &#x2F;usr&#x2F;lib&#x2F;crti.o &#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-linux-
 gnu&#x2F;4.1.3&#x2F;crtbeginT.o -L&#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-linux-gnu&#x2F;4.1.3 -L&#x2F;usr&#x2F;lib -
 L&#x2F;lib hello.o --start-group -lgcc -lgcc_eh -lc --end-group &#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-
 linux-gnu&#x2F;4.1.3&#x2F;crtend.o &#x2F;usr&#x2F;lib&#x2F;crtn.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
+<pre class="line-numbers language-none"><code class="language-none">gcc hello.o -o hello.out
+gcc hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <h2 id="2-编译的过程"><a href="#2-编译的过程" class="headerlink" title="2. 编译的过程"></a>2. 编译的过程</h2><p>&emsp;编译主要分为6步：<strong>词法分析、语法分析、语义分析、中间代码优化、目标代码生成和目标代码优化。</strong>这里的编译实际上是上述的编译和汇编两个过程。<br><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1750648939,4195670772&fm=26&gp=0.jpg" alt="编译过程"><br>&emsp;其中前4个步骤生成中间代码，它是和机器无关的，被称为<strong>前端编译</strong>，后2个步骤，和具体的平台架构、字长等相关，又叫做<strong>后端编译</strong>。</p>
 <h3 id="2-1-词法分析"><a href="#2-1-词法分析" class="headerlink" title="2.1 词法分析"></a>2.1 词法分析</h3><p>&emsp;源代码程序被输入到扫描器，它会做语法分析，运用算法将字符串分割成一系列的记号。<br>&emsp;比如有一行c源码：</p>
 <pre class="line-numbers language-none"><code class="language-none">array[index] &#x3D; (index + 4) * (2 + 6)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
