@@ -406,9 +406,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/">
+                                <span class="chip bg-color">计算机</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -557,10 +561,17 @@ movl %ecx, array(,eax,4) 	; array[index] &#x3D; ecx<span aria-hidden="true" clas
 <p>&emsp;最后代码优化器对上述代码进行优化，比如选择合适的寻址方式、使用位移来代替乘法、删除多余的指令等。</p>
 <h2 id="3-链接的过程"><a href="#3-链接的过程" class="headerlink" title="3. 链接的过程"></a>3. 链接的过程</h2><p>&emsp;经过编译器的词法分析、语法分析、语义分析、源代码优化、代码生成和目标代码优化后，源代码终于被编译成了目标代码。但是目标代码中有一个问题：index和array的地址还没有确定？如果引用的是其他程序模块变量，地址怎么确定呢？<br>&emsp;事实上，定义的其他模块的全局变量和函数最终运行时的绝对地址都要在最终链接的时候确定，这个过程由链接器实现。<br>&emsp;链接器是一个将编译器产生的目标文件打包成可执行文件或者库文件或者目标文件的程序。<br>&emsp;程序由若干个模块组成，各个模块之间会进行通信，比如调用其他模块的函数，需要知道函数的地址，访问其他模块的变量，也需要变量的地址，这都归结于一种方式，即模块间符号的引用。<br>&emsp;<strong>模块间依靠符号来通信，定义符号的模块多出来的区域，刚好拼接上引用该符号的模块缺少的区域，这个拼接的过程就叫：链接</strong>。<br><img src="https://img-blog.csdn.net/20180917213258403?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dpdGh1Yl8zNzM4MjMxOQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="链接"></p>
 <p>&emsp;链接器主要的工作就是把一些指令对其他符号地址的引用修正为真正的地址。<br>&emsp;链接过程主要包括<strong>地址和空间分配（Address and Storage Allocation）、符号决议（Symbol Resolution）和重定向（Relocation）</strong>等步骤。<br>&emsp;符号决议在在静态链接的时候称为符号决议或者名称决议（Name Resolution），在动态链接的时候被叫做<strong>符号绑定（Symbol Binding）</strong>或者名称绑定（Name Binding），有时候甚至叫做地址绑定（Address Binding）、指令绑定（Instruction Binding）。从名称上可以区分出来，决议偏向静态链接，绑定偏向动态链接。</p>
+<ul>
+<li>符号决议：其实就是指用符号来去标识一个地址。比如说 int a = 6;这样一句代码，用a来标识一个块4个字节大小的空间，空间里边存放的内容就是4.</li>
+<li>重新计算各个目标的地址过程叫做重定位。</li>
+</ul>
 <h3 id="3-1-静态链接"><a href="#3-1-静态链接" class="headerlink" title="3.1 静态链接"></a>3.1 静态链接</h3><p>&emsp;如下图，最基本的静态链接就是把目标文件和库文件一起链接，形成最终可执行文件。最常见的库是运行时库。<br><img src="http://blog.chinaunix.net/attachment/201308/8/26548237_1375965656F2Fy.png" alt="静态链接过程"><br>&emsp;我们在main.c模块中调用另一个模块func.c中的函数foo，必须知道foo的地址，但是每个模块都是单独编译的，在编译main.c的的时候并不知道foo函数的地址，所以编译器会暂时搁置调用foo的指令的目标地址，等链接的时候，链接器会根据引用符号foo，自动去相应的func.c模块查找foo的地址，然后将main.c模块中所有引用到foo的指令重新修正，让他们的目标地址为真正foo函数的地址。这就是静态链接最基本的过程和作用。<br>&emsp;假设A里面有个全局变量p，我们再B里面要访问这个全局变量，B里面有这么一条指令：</p>
 <pre class="line-numbers language-none"><code class="language-none">movl $0x2a, p     &#x2F;&#x2F; p &#x3D; 42，x86架构<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&emsp;意思是给p变量赋值0x2a。编译B得到指令机器码  <u>C7 05</u>  <u>00 00 00 00</u>  <u>2a 00 00 00</u>，c705是mov指令码，2a为源常量，由于不知道地址所以暂时置为0，等链接器链接A和B的时候，假设确定p的地址为0x1000，则把目标地址修改为0x1000，即<u>C7 05</u>  <u>00 00 10 00</u>  <u>2a 00 00 00</u>。</p>
-<h3 id="3-2-动态链接"><a href="#3-2-动态链接" class="headerlink" title="3.2 动态链接"></a>3.2 动态链接</h3>
+<h3 id="3-2-动态链接"><a href="#3-2-动态链接" class="headerlink" title="3.2 动态链接"></a>3.2 动态链接</h3><p>&emsp;把程序按照模块拆分成各个相对独立部分，在程序运行时才将它们链接在一起形成一个完整的程序，而不是像静态链接一样把所有程序模块都链接成一个单独的可执行文件</p>
+<p>&emsp;假设现在有两个程序program1.o和program2.o，这两者共用同一个库lib.o,假设首先运行程序program1，系统首先加载program1.o，当系统发现program1.o中用到了lib.o，即program1.o依赖于lib.o，那么系统接着加载lib.o，如果program1.o和lib.o还依赖于其他目标文件，则依次全部加载到内存中。当program2运行时，同样的加载program2.o，然后发现program2.o依赖于lib.o，但是此时lib.o已经存在于内存中，这个时候就不再进行重新加载，而是将内存中已经存在的lib.o映射到program2的虚拟地址空间中，从而进行链接（这个链接过程和静态链接类似）形成可执行程序。</p>
+<p>&emsp;链接是一个很复杂的过程，后续有时间再写。</p>
+
             </div>
             <hr/>
 
@@ -622,7 +633,11 @@ movl %ecx, array(,eax,4) 	; array[index] &#x3D; ecx<span aria-hidden="true" clas
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/">
+                                    <span class="chip bg-color">计算机</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -821,6 +836,14 @@ movl %ecx, array(,eax,4) 	; array[index] &#x3D; ecx<span aria-hidden="true" clas
                     </div>
                 </div>
 
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/">
+                        <span class="chip bg-color">计算机</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
