@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="MySQL索引及其优化, HappyKite777的博客">
+    <meta name="keywords" content="JVM的简单介绍, HappyKite777的博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>MySQL索引及其优化 | HappyKite777的博客</title>
+    <title>JVM的简单介绍 | HappyKite777的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">MySQL索引及其优化</h1>
+                    <h1 class="description center-align post-title">JVM的简单介绍</h1>
                 </div>
             </div>
         </div>
@@ -408,8 +408,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/mysql/">
-                                <span class="chip bg-color">mysql</span>
+                            <a href="/tags/jvm/">
+                                <span class="chip bg-color">jvm</span>
                             </a>
                         
                     </div>
@@ -420,8 +420,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/mysql/" class="post-category">
-                                mysql
+                            <a href="/categories/java/" class="post-category">
+                                java
                             </a>
                         
                     </div>
@@ -433,7 +433,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-25
+                    2020-10-09
                 </div>
                 
 
@@ -449,136 +449,194 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-索引的数据结构"><a href="#1-索引的数据结构" class="headerlink" title="1.索引的数据结构"></a>1.索引的数据结构</h2><h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>&emsp;哈希索引为索引列计算一个哈希值，然后存放在一个哈希表中。如果哈希值相同，则以链表的形式连接。<br><img src="https://static001.geekbang.org/resource/image/0c/57/0c62b601afda86fe5d0fe57346ace957.png" alt="image"></p>
+                <h2 id="1、虚拟机概念"><a href="#1、虚拟机概念" class="headerlink" title="1、虚拟机概念"></a>1、虚拟机概念</h2><p>&emsp;虚拟机就是指虚拟的计算机。它是一款软件，用来执行一系列虚拟计算机指令。大体上，虚拟机可以分为系统虚拟机和程序虚拟机。</p>
 <ul>
-<li>哈希索引数据未排序，因此做区间查询的速度慢，且无法用于order by</li>
-<li>哈希索引对于数据读取特别快，但只适用于等值查询的场景，比如Memory引擎</li>
-<li>如果哈希冲突很多，索引维护代价高</li>
+<li>系统虚拟机：对物理计算机的仿真，提供可运行完整操作系统的虚拟平台，比如VirtualBox、VMware等。</li>
+<li>程序虚拟机：专门为执行单个计算机程序而设计，比如java虚拟机（JVM），在Java虚拟机中执行的指令我们称为Java字节码指令。</li>
 </ul>
-<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>&emsp;&emsp;最常用的索引，大多数MySQL引擎支持B-Tree索引（Archive引擎不支持任何索引），虽然名字叫B-Tree索引，但不同的引擎内部有自己的实现方式，比如NDB集群引擎内部使用B-Tree结构存储数据，而InnDB使用B+Tree结构。</p>
-<html>
-<center>
-<img src='https://note.youdao.com/yws/public/resource/39bb332f3420ad4aeff72ecc1ee7f58c/xmlnote/WEBRESOURCEeaac64d29be16f22c5dbe9dde8da5926/18609'></img>
-<h4>InnoDB 索引结构</h4>
-</center>
-关于<a target="_blank" rel="noopener" href='https://blog.csdn.net/qq_26222859/article/details/80631121'>B+树</a>
-</html>
+<h2 id="2、java虚拟机"><a href="#2、java虚拟机" class="headerlink" title="2、java虚拟机"></a>2、java虚拟机</h2><h3 id="2-1-java字节码"><a href="#2-1-java字节码" class="headerlink" title="2.1 java字节码"></a>2.1 java字节码</h3><p>&emsp;java字节码是指java语言编译成的字节码，任何能在jvm平台上执行的字节码格式都是一样的。所以应该统称为jvm字节码。</p>
+<p>&emsp;不同的编译器，可以编译出相同的字节码文件。任何语言只要能被编译器编译成字节码，就可以在jvm上运行。</p>
+<p>&emsp;Java虚拟机与Java语言并没有必然的联系，它只与特定的二进制文件格式——Class文件格式所关联，Class文件中包含了Java虚拟机指令集（或者称为字节码、Bytecodes）和符号表，还有一些其他辅助信息。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTIxNzI1MTg4LnBuZw?x-oss-process=image/format,png" alt="jvm只关注字节码，不关注源码"></p>
+<h3 id="2-2-java虚拟机"><a href="#2-2-java虚拟机" class="headerlink" title="2.2 java虚拟机"></a>2.2 java虚拟机</h3><p>&emsp;Java虚拟机是一台执行Java字节码的虚拟计算机，它拥有独立的运行机制。由图上可知，不只是java，其他语言也可以被编译成字节码运行在jvm上，因此<strong>jvm是跨语言的平台</strong>。</p>
+<p>&emsp;Java技术的核心就是Java虚拟机（JVM，Java Virtual Machine），因为所有的Java程序都运行在Java虚拟机内部。</p>
+<p>&emsp;Java虚拟机就是二进制字节码的运行环境，负责装载字节码到其内部，解释/编译为对应平台上的机器指令执行。每一条Java指令，Java虚拟机规范中都有详细定义，如怎么取操作数，怎么处理操作数，处理结果放在哪里等。</p>
+<p>&emsp;JVM的特点：</p>
+<ul>
+<li><ul>
+<li>一次编译，到处运行</li>
+</ul>
+</li>
+<li><ul>
+<li>自动内存管理</li>
+</ul>
+</li>
+<li><ul>
+<li>自动垃圾回收</li>
+</ul>
+</li>
+</ul>
+<h2 id="3、JVM的整体结构"><a href="#3、JVM的整体结构" class="headerlink" title="3、JVM的整体结构"></a>3、JVM的整体结构</h2><p>&emsp;JVM运行在操作系统之上，它与硬件没有直接的交互。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTIzNDMyMDgyLnBuZw?x-oss-process=image/format,png" alt="jvm的位置"><br>&emsp;jvm在java体系中处于比较底层的位置。<br><img src="https://img2018.cnblogs.com/blog/890598/201902/890598-20190220210053733-743773115.png" alt="java体系结构"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTMyMzMwNjgyLnBuZw?x-oss-process=image/format,png" alt="hotspot整体结构"></p>
+<ul>
+<li>HotSpot是OracleJDK和OpenJDK共用的jvm</li>
+<li>它采用解释器与即时编译器共存的结构</li>
+<li>今天，java程序运行性能已经达到可以和c/c++一较高下的程度</li>
+</ul>
+<p>&emsp;上图可以看出，字节码文件是jvm的入口，文件通过类加载器被加载到内存中，生成一个大的class对象。加载又被分为加载、链接、初始化步骤，后续会具体讲解。运行时数据区是把内存分为了不同区域，其中java栈是老叫法，现在叫java虚拟机栈，具体可看上一篇文章。执行引擎被分为解释器、JIT即时编译器和垃圾回收，解释器用来解释字节码文件，JIT是对热点代码进行提前编译，这里的编译被称为编译的后端（源码被编译成字节码的过程叫编译的前端），垃圾回收器对使用后的内存进行回收管理，后续会具体讲到。执行引擎的作用实际上是把字节码指令翻译成机器指令，供计算机识别。</p>
+<h2 id="4、java代码执行流程"><a href="#4、java代码执行流程" class="headerlink" title="4、java代码执行流程"></a>4、java代码执行流程</h2><p>&emsp;执行流程和一般的程序编译链接的差不多，具体可看<a href="https://happykite777.github.io/2020/09/27/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">编译和链接</a>，Java的后端编译和链接是jvm实现的。<br><img src="http://5b0988e595225.cdn.sohucs.com/images/20200312/391f35c99f90452898cfefe633737401.png" alt="java代码执行流程"></p>
+<h2 id="5、JVM架构模型"><a href="#5、JVM架构模型" class="headerlink" title="5、JVM架构模型"></a>5、JVM架构模型</h2><p>&emsp;java编译器输入的指令流基本上是一种<strong>基于栈的指令集架构</strong>，另一种指令集架构则是<strong>基于寄存器的指令集架构</strong>。</p>
+<p>&emsp;基于栈式架构的特点：</p>
+<ul>
+<li><ul>
+<li>设计和实现更简单，适用于资源受限的系统。（比如嵌入式平台、打印机）</li>
+</ul>
+</li>
+<li><ul>
+<li>避开寄存器的分配难题，使用零地址指令方式分配</li>
+</ul>
+</li>
+<li><ul>
+<li>指令流中的指令大部分是零地址指令，其执行过程依赖于操作占。指令集更小，编译器容易实现。</li>
+</ul>
+</li>
+<li><ul>
+<li>不需要硬件支持，可以执行更好，更好实现跨平台</li>
+</ul>
+</li>
+</ul>
+<p>&emsp;基于寄存器架构的特点：</p>
+<ul>
+<li><ul>
+<li>典型的应用是x86的二进制指令集：比如传统的pc和Android的Davlik虚拟机</li>
+</ul>
+</li>
+<li><ul>
+<li>指令集架构完全依赖于硬件，可以执行差</li>
+</ul>
+</li>
+<li><ul>
+<li>性能优秀和执行更高效</li>
+</ul>
+</li>
+<li><ul>
+<li>花费更少的指令去完成一项操作 </li>
+</ul>
+</li>
+<li><ul>
+<li>在大部分情况下，基于寄存器架构的指令集往往都是以一地址指令、二地址指令和三地址指令为主，而基于栈式架构的指令集却是以零地址为主</li>
+</ul>
+</li>
+</ul>
+<h3 id="两种架构举例"><a href="#两种架构举例" class="headerlink" title="两种架构举例"></a>两种架构举例</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">StackStructTest</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> k <span class="token operator">=</span> i <span class="token operator">+</span> j<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>反编译，在生成的StackStructTest.class目录下执行 <code>javap -v  StackStructTest.class</code>，可以得到汇编代码</p>
+<pre class="line-numbers language-none"><code class="language-none">Classfile &#x2F;Users&#x2F;zhoumi&#x2F;IdeaProjects&#x2F;learn&#x2F;target&#x2F;classes&#x2F;com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest.class
+  Last modified 2020-10-10; size 484 bytes
+  MD5 checksum 7c6fc6746c6202d31f01b9dca6e74d98
+  Compiled from &quot;StackStructTest.java&quot;
+public class com.hk7.memory.StackStructTest
+  minor version: 0
+  major version: 49
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 &#x3D; Methodref          #3.#21         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
+   #2 &#x3D; Class              #22            &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest
+   #3 &#x3D; Class              #23            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object
+   #4 &#x3D; Utf8               &lt;init&gt;
+   #5 &#x3D; Utf8               ()V
+   #6 &#x3D; Utf8               Code
+   #7 &#x3D; Utf8               LineNumberTable
+   #8 &#x3D; Utf8               LocalVariableTable
+   #9 &#x3D; Utf8               this
+  #10 &#x3D; Utf8               Lcom&#x2F;hk7&#x2F;memory&#x2F;StackStructTest;
+  #11 &#x3D; Utf8               main
+  #12 &#x3D; Utf8               ([Ljava&#x2F;lang&#x2F;String;)V
+  #13 &#x3D; Utf8               args
+  #14 &#x3D; Utf8               [Ljava&#x2F;lang&#x2F;String;
+  #15 &#x3D; Utf8               i
+  #16 &#x3D; Utf8               I
+  #17 &#x3D; Utf8               j
+  #18 &#x3D; Utf8               k
+  #19 &#x3D; Utf8               SourceFile
+  #20 &#x3D; Utf8               StackStructTest.java
+  #21 &#x3D; NameAndType        #4:#5          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V
+  #22 &#x3D; Utf8               com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest
+  #23 &#x3D; Utf8               java&#x2F;lang&#x2F;Object
+&#123;
+  public com.hk7.memory.StackStructTest();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1
+         0: aload_0
+         1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
+         4: return
+      LineNumberTable:
+        line 9: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;StackStructTest;
 
-<p>&emsp;&emsp;二叉搜索树是查询效率最高的，但是实际上大多数的数据库存储却并不使用二叉树。其原因是，索引不止存在内存中，还要写到磁盘上。</p>
-<p>&emsp;&emsp;你可以想象一下一棵100万节点的平衡二叉树，树高20。一次查询可能需要访问20个数据块。在机械硬盘时代，从磁盘随机读一个数据块需要10 ms左右的寻址时间。也就是说，对于一个100万行的表，如果使用二叉树来存储，单独访问一个行可能需要20个10 ms的时间，这个查询可真够慢的。</p>
-<p>&emsp;&emsp;二分查找每一次搜索就是一次IO，如果想减少IO操作，必须把树变矮，存储数据不变，则每个节点变多，也就是N叉树（B+树的阶）。“N”取决于数据块的大小。</p>
-<p>&emsp;&emsp;以InnoDB的一个整数字段索引为例，这个N差不多是1200。这棵树高是4的时候，就可以存1200的3次方个值，这已经17亿了。考虑到树根的数据块总是在内存中的，一个10亿行的表上一个整数字段的索引，查找一个值最多只需要访问3次磁盘。其实，树的第二层也有很大概率在内存中，那么访问磁盘的平均次数就更少了。</p>
-<hr>
-<h2 id="2-索引的类型"><a href="#2-索引的类型" class="headerlink" title="2.索引的类型"></a>2.索引的类型</h2><p>索引按照类型区分</p>
-<ul>
-<li>普通索引：仅加速查询</li>
-<li>唯一索引：加速查询 + 列值唯一（可以有null）</li>
-<li>主键索引：加速查询 + 列值唯一（不可以有null）+ 表中只有一个</li>
-<li>组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并</li>
-<li>全文索引：对文本的内容进行分词，进行搜索</li>
-</ul>
-<p><strong>普通索引和唯一索引如何选择？</strong></p>
-<p>当数据页更新时，如果这个数据页还没有在内存中的话，<br>在不影响数据一致性的前提下，InooDB会将这些更新操作缓存在change buffer中。<br>当下次访问这个数据页的时候，会将change buffer持久化到磁盘。</p>
-<p>记录要更新的目标页在内存中：</p>
-<ul>
-<li>对于唯一索引来说，找到合适的位置，判断到没有冲突，插入这个值，语句执行结束；</li>
-<li>对于普通索引来说，找到合适的位置，插入这个值，语句执行结束。</li>
-</ul>
-<p>记录要更新的目标页不在内存中：</p>
-<ul>
-<li>对于唯一索引来说，需要将数据页读入内存，判断到没有冲突，插入这个值，语句执行结束；</li>
-<li>对于普通索引来说，则是将更新记录在change buffer，语句执行就结束了。</li>
-</ul>
-<p>综上，尽量选择普通索引，如果有唯一性需求，在业务代码中做判断。</p>
-<p>ps.索引合并，使用多个单列索引组合搜索</p>
-<hr>
-<h2 id="3-InnoDB索引模型"><a href="#3-InnoDB索引模型" class="headerlink" title="3.InnoDB索引模型"></a>3.InnoDB索引模型</h2><h3 id="主键索引和非主键索引"><a href="#主键索引和非主键索引" class="headerlink" title="主键索引和非主键索引"></a>主键索引和非主键索引</h3><p>假设有以下表T，id为主键，k建索引。</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> T<span class="token punctuation">(</span>
-  id <span class="token keyword">int</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span> 
-  k <span class="token keyword">int</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span> 
-  name <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token keyword">index</span> <span class="token punctuation">(</span>k<span class="token punctuation">)</span>
-<span class="token punctuation">)</span><span class="token keyword">engine</span><span class="token operator">=</span><span class="token keyword">InnoDB</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>那么将会对应2颗索引树主键索引和非主键索引，如下图。<br><img src="https://static001.geekbang.org/resource/image/dc/8d/dcda101051f28502bd5c4402b292e38d.png" alt="image"></p>
-<ul>
-<li>主键索引的叶子节点存的是==整行数据==。在InnoDB里，主键索引也被称为==聚簇索引==（clustered index）。</li>
-<li>非主键索引的叶子节点内容是==主键的值==。在InnoDB里，非主键索引也被称为二级索引（secondary index）。</li>
-</ul>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> T <span class="token keyword">where</span> ID<span class="token operator">=</span><span class="token number">500</span> 
-<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> T <span class="token keyword">where</span> k<span class="token operator">=</span><span class="token number">5</span>    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>以上两个语句虽然结果是一样的，但是查询过程有差别：</p>
-<ul>
-<li>where ID=500, 主键查询方式，则只需要搜索ID这棵B+树；</li>
-<li>where k=5, 普通索引查询方式，则需要先搜索k索引树，得到ID的值为500，再到ID索引树搜索一次。这个过程称为回表。</li>
-</ul>
-<p><strong>基于非主键索引的查询需要多扫描一棵索引树。因此，我们在应用中应该尽量使用主键查询。</strong></p>
-<p>对于InnDB，如果建表时候没有指定pk，会判断是否有非空的唯一索引，如果有则该列为主键，如果没有会自动创建一个db_row_id做主键。</p>
-<h3 id="主键如何选择"><a href="#主键如何选择" class="headerlink" title="主键如何选择"></a>主键如何选择</h3><p>主键可以采用自增也可以以业务字段（比如身份证号）做主键。</p>
-<ul>
-<li>从性能上看，以业务字段做主键无法保证有序插入，这样使得写数据的成本变高。</li>
-<li>从存储空间的角度来看，每个非主键索引的叶子节点上都是主键的值，如果用身份证号做主键，那么每个二级索引的叶子节点占用约20个字节，而如果用整型做主键，则只要4个字节，如果是长整型（bigint）则是8个字节。</li>
-</ul>
-<p><strong>显然，主键长度越小，普通索引的叶子节点就越小，普通索引占用的空间也就越小。</strong></p>
-<p>当业务需求，表中只有一个索引，且为唯一索引时，适合使用业务字段做主键。</p>
-<h2 id="4-索引优化策略"><a href="#4-索引优化策略" class="headerlink" title="4.索引优化策略"></a>4.索引优化策略</h2><h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>&emsp;&emsp;上述例子，如果执行的语句是select ID from T where k between 3 and 5，这时只需要查ID的值，而ID的值已经在k索引树上了，因此可以直接提供查询结果，不需要回表。也就是说，在这个查询里面，索引k已经“覆盖了”我们的查询需求，我们称为==覆盖索引==。</p>
-<html>
-<p style="color:red;">&emsp;&emsp;由<b>于覆盖索引可以减少树的搜索次数，显著提升查询性能，所以使用覆盖索引是一个常用的性能优化手段。</b></p>
-</html>
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava&#x2F;lang&#x2F;String;)V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack&#x3D;2, locals&#x3D;4, args_size&#x3D;1
+         0: iconst_2
+         1: istore_1
+         2: iconst_3
+         3: istore_2
+         4: iload_1
+         5: iload_2
+         6: iadd
+         7: istore_3
+         8: return
+      LineNumberTable:
+        line 11: 0
+        line 12: 2
+        line 13: 4
+        line 14: 8
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       9     0  args   [Ljava&#x2F;lang&#x2F;String;
+            2       7     1     i   I
+            4       5     2     j   I
+            8       1     3     k   I
+&#125;
+SourceFile: &quot;StackStructTest.java&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h3><p>前缀索引就是只给列的前n个字符建立索引。通常适合在大字段上建立前缀索引。</p>
-<pre class="line-numbers language-none"><code class="language-none">alter table t_dispatch_citys add key(en_name(n))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>n如何选择？  </p>
-<blockquote>
-<p>选择性 = 基数 / 记录总数,   （1/T  ~  1）</p>
-</blockquote>
-<p>选择性要足够大，唯一索引的选择性为1，是最好的</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r1<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r2<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r3<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r4<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r5<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r6<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r7<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r8<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r9
-<span class="token keyword">from</span> <span class="token punctuation">`</span>t_dispatch_citys<span class="token punctuation">`</span><span class="token punctuation">;</span>
-
-<span class="token comment"># 测试结果</span>
-<span class="token comment">#   r1	 r2		  r3	  r4	  r5	  r6	  r7	  r8	</span>
-<span class="token comment"># 0.094	0.1865	0.4966	0.7416	0.9011	0.9730	0.9888	0.9910</span>
-<span class="token comment"># 当n=6的时候，选择性已经97%了。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>MySQL不支持后缀索引，但是可以采用曲线方式，后缀索引=reverse(前缀)</p>
-<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p>联合索引即在多个字段上建索引，联合索引也符合“最左前缀原则”。  </p>
-<pre class="line-numbers language-none"><code class="language-none">select * from T where a&#x3D;? and b&#x3D;?<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>如果分别在a、b上建索引，则mysql会采用using intersect交集算法。对所有使用的索引执行同步扫描，并生成从合并索引扫描中接收到的行序列的交集。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9iVVJQamdGcEdNVDl5Z2dQc2Zkcktad1pjZkEwZmliaWM2Uk5ZeDdaWkpYZVN1bDVZRnp1TmZmT2JHOG9ZSUk0d21hTWZkd1pERGtyY2RvaWM0aDJuYWcwdy82NDA?x-oss-process=image/format,png" alt="intersect交集算法"><br>联合索引如何排序？</p>
-<blockquote>
-<p>如果通过调整顺序，可以少维护一个索引，则优先考虑该顺序。<br>如果仅仅只是选择这一个索引，则选择性高的字段排前面。</p>
-</blockquote>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> test
-<span class="token punctuation">(</span>
-    id <span class="token keyword">int</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
-    a  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    b  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    c  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    d <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    <span class="token keyword">index</span> <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span>
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">explain</span> <span class="token keyword">select</span> id<span class="token punctuation">,</span> a <span class="token keyword">from</span> test <span class="token keyword">where</span> c <span class="token operator">=</span> <span class="token string">'a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>以上sql还是会命中索引，where虽然不符合最左前缀原则，但是id和a字段都在联合索引上，优化器会对比遍历主键索引树和联合索引树的代价，发现联合索引更快，于是会命中。</p>
-<h3 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h3><pre class="line-numbers language-none"><code class="language-none">CREATE TABLE &#96;tuser&#96; (
-  &#96;id&#96; int(11) NOT NULL,
-  &#96;id_card&#96; varchar(32) DEFAULT NULL,
-  &#96;name&#96; varchar(32) DEFAULT NULL,
-  &#96;age&#96; int(11) DEFAULT NULL,
-  &#96;ismale&#96; tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (&#96;id&#96;),
-  KEY &#96;id_card&#96; (&#96;id_card&#96;),
-  KEY &#96;name_age&#96; (&#96;name&#96;,&#96;age&#96;)
-) ENGINE&#x3D;InnoDB<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>MySQL5.6以前是这样走的<br><img src="https://static001.geekbang.org/resource/image/b3/ac/b32aa8b1f75611e0759e52f5915539ac.jpg" alt="不走索引下推"><br>MySQL5.6推出了索引下推策略，是这样走的，减少了回表的次数<br><img src="https://static001.geekbang.org/resource/image/76/1b/76e385f3df5a694cc4238c7b65acfe1b.jpg" alt="索引下推"></p>
+<p>同样执行2+3这种逻辑操作，其指令分别如下：</p>
+<ul>
+<li>基于栈的计算流程（以Java虚拟机为例）<pre class="line-numbers language-none"><code class="language-none">0: iconst_2    &#x2F;&#x2F;常量2
+1: istore_1    &#x2F;&#x2F;把常量2保存到索引为1的操作数栈中
+2: iconst_3    &#x2F;&#x2F;常量3
+3: istore_2    &#x2F;&#x2F;把常量3保存到索引为2的操作数栈中
+4: iload_1     &#x2F;&#x2F;加载常量2
+5: iload_2     &#x2F;&#x2F;加载常量3
+6: iadd		   &#x2F;&#x2F;对常量2和3求和
+7: istore_3    &#x2F;&#x2F;把求和的结果保存在索引为3的操作数栈中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>而基于寄存器的计算流程<pre class="line-numbers language-none"><code class="language-none">mov eax,2 &#x2F;&#x2F;将eax寄存器的值设为1
+add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<p><strong>由于跨平台性的设计，Java的指令都是根据栈来设计的。</strong></p>
+<h2 id="6、JVM的生命周期"><a href="#6、JVM的生命周期" class="headerlink" title="6、JVM的生命周期"></a>6、JVM的生命周期</h2><h3 id="虚拟机的启动"><a href="#虚拟机的启动" class="headerlink" title="虚拟机的启动"></a>虚拟机的启动</h3><p>&emsp;<strong>Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创建一个初始类（initial class）来完成的</strong>，这个类是由虚拟机的具体实现指定的。</p>
+<h3 id="虚拟机的执行"><a href="#虚拟机的执行" class="headerlink" title="虚拟机的执行"></a>虚拟机的执行</h3><ul>
+<li>一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序</li>
+<li>程序开始执行时他才运行，程序结束时他就停止</li>
+<li><strong>执行一个所谓的Java程序的时候，真真正正在执行的是一个叫做Java虚拟机的进程</strong>。可通<code>jps</code>来查看虚拟机中正在执行的进程。</li>
+</ul>
+<h3 id="虚拟机的退出"><a href="#虚拟机的退出" class="headerlink" title="虚拟机的退出"></a>虚拟机的退出</h3><ul>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+<li>某线程调用Runtime类或System类的exit()方法，或Runtime类的halt()方法，并且Java安全管理器也允许这次exit()或halt()操作。</li>
+<li>除此之外，JNI（Java Native Interface）规范描述了用JNI Invocation API来加载或卸载Java虚拟机时，Java虚拟机的退出情况。</li>
+</ul>
 
             </div>
             <hr/>
@@ -604,7 +662,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://happykite777.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/">https://happykite777.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/</a>
+                    <a href="https://happykite777.github.io/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">https://happykite777.github.io/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -642,8 +700,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/mysql/">
-                                    <span class="chip bg-color">mysql</span>
+                                <a href="/tags/jvm/">
+                                    <span class="chip bg-color">jvm</span>
                                 </a>
                             
                         </div>
@@ -811,62 +869,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/09/27/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">
+                <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="编译和链接基础知识">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="JVM的简单介绍">
                         
-                        <span class="card-title">编译和链接基础知识</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-27
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            happyKite777
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">
-                        <span class="chip bg-color">编译和链接</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="MySQL索引及其优化">
-                        
-                        <span class="card-title">MySQL索引及其优化</span>
+                        <span class="card-title">JVM的简单介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -877,14 +891,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-10-09
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/mysql/" class="post-category">
-                                    mysql
+                            <a href="/categories/java/" class="post-category">
+                                    java
                                 </a>
                             
                             
@@ -895,8 +909,57 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/mysql/">
-                        <span class="chip bg-color">mysql</span>
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/09/29/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="JVM之内存与垃圾回收">
+                        
+                        <span class="card-title">JVM之内存与垃圾回收</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-29
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category">
+                                    java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
                     </a>
                     
                 </div>

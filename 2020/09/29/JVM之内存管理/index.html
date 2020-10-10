@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="MySQL索引及其优化, HappyKite777的博客">
+    <meta name="keywords" content="JVM之内存与垃圾回收, HappyKite777的博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>MySQL索引及其优化 | HappyKite777的博客</title>
+    <title>JVM之内存与垃圾回收 | HappyKite777的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">MySQL索引及其优化</h1>
+                    <h1 class="description center-align post-title">JVM之内存与垃圾回收</h1>
                 </div>
             </div>
         </div>
@@ -408,8 +408,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/mysql/">
-                                <span class="chip bg-color">mysql</span>
+                            <a href="/tags/jvm/">
+                                <span class="chip bg-color">jvm</span>
                             </a>
                         
                     </div>
@@ -420,8 +420,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/mysql/" class="post-category">
-                                mysql
+                            <a href="/categories/java/" class="post-category">
+                                java
                             </a>
                         
                     </div>
@@ -433,7 +433,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-25
+                    2020-09-29
                 </div>
                 
 
@@ -449,136 +449,45 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-索引的数据结构"><a href="#1-索引的数据结构" class="headerlink" title="1.索引的数据结构"></a>1.索引的数据结构</h2><h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>&emsp;哈希索引为索引列计算一个哈希值，然后存放在一个哈希表中。如果哈希值相同，则以链表的形式连接。<br><img src="https://static001.geekbang.org/resource/image/0c/57/0c62b601afda86fe5d0fe57346ace957.png" alt="image"></p>
+                <p>&emsp;如果运行一个java应用程序，则必须使用jdk或者jre。jre属于jdk的一部分，jdk包含jre中的所有内容，以及开发applet和应用程序所需的编译器和调试器等工具。jre提供了库、Java虚拟机（JVM）和其他组件来运行用Java编程语言编写的applet和应用程序。程序运行起来最少需要jre的支持，jdk中其中的大量工具则适合开发时候使用。<br><img src="https://img2018.cnblogs.com/blog/890598/201902/890598-20190220210053733-743773115.png" alt="java技术体系"><br>&emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。</p>
+<p>java虚拟机的特点：</p>
 <ul>
-<li>哈希索引数据未排序，因此做区间查询的速度慢，且无法用于order by</li>
-<li>哈希索引对于数据读取特别快，但只适用于等值查询的场景，比如Memory引擎</li>
-<li>如果哈希冲突很多，索引维护代价高</li>
+<li>一次编译，处处运行</li>
+<li>自动内存管理</li>
+<li>自动垃圾回收功能</li>
 </ul>
-<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>&emsp;&emsp;最常用的索引，大多数MySQL引擎支持B-Tree索引（Archive引擎不支持任何索引），虽然名字叫B-Tree索引，但不同的引擎内部有自己的实现方式，比如NDB集群引擎内部使用B-Tree结构存储数据，而InnDB使用B+Tree结构。</p>
-<html>
-<center>
-<img src='https://note.youdao.com/yws/public/resource/39bb332f3420ad4aeff72ecc1ee7f58c/xmlnote/WEBRESOURCEeaac64d29be16f22c5dbe9dde8da5926/18609'></img>
-<h4>InnoDB 索引结构</h4>
-</center>
-关于<a target="_blank" rel="noopener" href='https://blog.csdn.net/qq_26222859/article/details/80631121'>B+树</a>
-</html>
-
-<p>&emsp;&emsp;二叉搜索树是查询效率最高的，但是实际上大多数的数据库存储却并不使用二叉树。其原因是，索引不止存在内存中，还要写到磁盘上。</p>
-<p>&emsp;&emsp;你可以想象一下一棵100万节点的平衡二叉树，树高20。一次查询可能需要访问20个数据块。在机械硬盘时代，从磁盘随机读一个数据块需要10 ms左右的寻址时间。也就是说，对于一个100万行的表，如果使用二叉树来存储，单独访问一个行可能需要20个10 ms的时间，这个查询可真够慢的。</p>
-<p>&emsp;&emsp;二分查找每一次搜索就是一次IO，如果想减少IO操作，必须把树变矮，存储数据不变，则每个节点变多，也就是N叉树（B+树的阶）。“N”取决于数据块的大小。</p>
-<p>&emsp;&emsp;以InnoDB的一个整数字段索引为例，这个N差不多是1200。这棵树高是4的时候，就可以存1200的3次方个值，这已经17亿了。考虑到树根的数据块总是在内存中的，一个10亿行的表上一个整数字段的索引，查找一个值最多只需要访问3次磁盘。其实，树的第二层也有很大概率在内存中，那么访问磁盘的平均次数就更少了。</p>
-<hr>
-<h2 id="2-索引的类型"><a href="#2-索引的类型" class="headerlink" title="2.索引的类型"></a>2.索引的类型</h2><p>索引按照类型区分</p>
+<h2 id="1-JVM内存结构"><a href="#1-JVM内存结构" class="headerlink" title="1.JVM内存结构"></a>1.JVM内存结构</h2><p>&emsp;JVM定义了在程序执行期间使用的各种运行时数据区域。其中一些数据区域是在Java虚拟机启动时创建的，只有在Java虚拟机退出时才会被销毁。其他数据区域是每个线程的。每线程数据区域在创建线程时创建，在线程退出时销毁。主要分为程序计数器、虚拟机栈、堆、方法区和运行常量池。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWcyMDE4LmNuYmxvZ3MuY29tL2Jsb2cvODc0OTYzLzIwMTgxMC84NzQ5NjMtMjAxODEwMjUxNDE4NDExODctMjAzMjY3MDI0Mi5wbmc?x-oss-process=image/format,png" alt="java内存模型"></p>
+<h3 id="1-1-程序计数器"><a href="#1-1-程序计数器" class="headerlink" title="1.1 程序计数器"></a>1.1 程序计数器</h3><p>&emsp;程序计数器是一块很小的内存区域，可以看作是当前线程所执行字节码的行号指示器。程序的控制流，分支、循环、异常跳出等都是通过改变这个计数器来实现的。java虚拟机支持多线程，某个确定的时刻，只会执行一条指令，因此为了保证多线程里面，指令执行的正确性，程序计数器必须是独立的，因此这块区域被称为“线程私有”内存。</p>
+<p>&emsp;如果程序正在执行的是一个java方法，则计数器的值为虚拟机字节码指令的地址。如果正在执行的是本地方法，则计数器的值为空。<strong>此区域是唯一一个不会发生OOM的内存区域</strong>。</p>
+<h3 id="1-2-虚拟机栈"><a href="#1-2-虚拟机栈" class="headerlink" title="1.2 虚拟机栈"></a>1.2 虚拟机栈</h3><p>&emsp;java虚拟机栈属于线程私有内存，生命周期和线程相同。<strong>虚拟机栈存储的是java方法相关的数据</strong>，方法被执行时，java虚拟机会同步创建一个栈，用于存储局部变量表、操作数栈、动态链接、方法出口等信息。方法从开始调用到执行完毕，对应着入栈到出栈的过程。</p>
+<p>&emsp;局部变量表存放了编译期可预知的各种java虚拟机基本数据类型（boolean、byte、char、short、int、float、long、double）、对象引用和returnAddress（指向一条字节码指令的地址）。这些数据类型在局部变量表中的存储空间以局部变量槽(slot)表示，64位长的long和double站2个槽，其他数据类型占1个槽。</p>
+<p>&emsp;局部变量表所需要的内存空间在编译期间就分配完成了，在运行期间，为方法分配栈的时候，“大小”不会改变。注意：此处大小是指槽的数量，真正使用多大的内存空间（比如一个槽占32位、64位等），由具体的虚拟机自行实现。</p>
+<p>&emsp;java虚拟机规范对这块内存区域定义了2种异常：</p>
 <ul>
-<li>普通索引：仅加速查询</li>
-<li>唯一索引：加速查询 + 列值唯一（可以有null）</li>
-<li>主键索引：加速查询 + 列值唯一（不可以有null）+ 表中只有一个</li>
-<li>组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并</li>
-<li>全文索引：对文本的内容进行分词，进行搜索</li>
+<li><ul>
+<li>如果线程申请的栈深度大于虚拟机允许的深度，抛出StackOverflowError</li>
 </ul>
-<p><strong>普通索引和唯一索引如何选择？</strong></p>
-<p>当数据页更新时，如果这个数据页还没有在内存中的话，<br>在不影响数据一致性的前提下，InooDB会将这些更新操作缓存在change buffer中。<br>当下次访问这个数据页的时候，会将change buffer持久化到磁盘。</p>
-<p>记录要更新的目标页在内存中：</p>
-<ul>
-<li>对于唯一索引来说，找到合适的位置，判断到没有冲突，插入这个值，语句执行结束；</li>
-<li>对于普通索引来说，找到合适的位置，插入这个值，语句执行结束。</li>
+</li>
+<li><ul>
+<li>如果没超过但是无法申请到足够的内存，则抛出OutOfMemoryError</li>
 </ul>
-<p>记录要更新的目标页不在内存中：</p>
-<ul>
-<li>对于唯一索引来说，需要将数据页读入内存，判断到没有冲突，插入这个值，语句执行结束；</li>
-<li>对于普通索引来说，则是将更新记录在change buffer，语句执行就结束了。</li>
+</li>
 </ul>
-<p>综上，尽量选择普通索引，如果有唯一性需求，在业务代码中做判断。</p>
-<p>ps.索引合并，使用多个单列索引组合搜索</p>
-<hr>
-<h2 id="3-InnoDB索引模型"><a href="#3-InnoDB索引模型" class="headerlink" title="3.InnoDB索引模型"></a>3.InnoDB索引模型</h2><h3 id="主键索引和非主键索引"><a href="#主键索引和非主键索引" class="headerlink" title="主键索引和非主键索引"></a>主键索引和非主键索引</h3><p>假设有以下表T，id为主键，k建索引。</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> T<span class="token punctuation">(</span>
-  id <span class="token keyword">int</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span> 
-  k <span class="token keyword">int</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span> 
-  name <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token keyword">index</span> <span class="token punctuation">(</span>k<span class="token punctuation">)</span>
-<span class="token punctuation">)</span><span class="token keyword">engine</span><span class="token operator">=</span><span class="token keyword">InnoDB</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>那么将会对应2颗索引树主键索引和非主键索引，如下图。<br><img src="https://static001.geekbang.org/resource/image/dc/8d/dcda101051f28502bd5c4402b292e38d.png" alt="image"></p>
-<ul>
-<li>主键索引的叶子节点存的是==整行数据==。在InnoDB里，主键索引也被称为==聚簇索引==（clustered index）。</li>
-<li>非主键索引的叶子节点内容是==主键的值==。在InnoDB里，非主键索引也被称为二级索引（secondary index）。</li>
-</ul>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> T <span class="token keyword">where</span> ID<span class="token operator">=</span><span class="token number">500</span> 
-<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> T <span class="token keyword">where</span> k<span class="token operator">=</span><span class="token number">5</span>    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>以上两个语句虽然结果是一样的，但是查询过程有差别：</p>
-<ul>
-<li>where ID=500, 主键查询方式，则只需要搜索ID这棵B+树；</li>
-<li>where k=5, 普通索引查询方式，则需要先搜索k索引树，得到ID的值为500，再到ID索引树搜索一次。这个过程称为回表。</li>
-</ul>
-<p><strong>基于非主键索引的查询需要多扫描一棵索引树。因此，我们在应用中应该尽量使用主键查询。</strong></p>
-<p>对于InnDB，如果建表时候没有指定pk，会判断是否有非空的唯一索引，如果有则该列为主键，如果没有会自动创建一个db_row_id做主键。</p>
-<h3 id="主键如何选择"><a href="#主键如何选择" class="headerlink" title="主键如何选择"></a>主键如何选择</h3><p>主键可以采用自增也可以以业务字段（比如身份证号）做主键。</p>
-<ul>
-<li>从性能上看，以业务字段做主键无法保证有序插入，这样使得写数据的成本变高。</li>
-<li>从存储空间的角度来看，每个非主键索引的叶子节点上都是主键的值，如果用身份证号做主键，那么每个二级索引的叶子节点占用约20个字节，而如果用整型做主键，则只要4个字节，如果是长整型（bigint）则是8个字节。</li>
-</ul>
-<p><strong>显然，主键长度越小，普通索引的叶子节点就越小，普通索引占用的空间也就越小。</strong></p>
-<p>当业务需求，表中只有一个索引，且为唯一索引时，适合使用业务字段做主键。</p>
-<h2 id="4-索引优化策略"><a href="#4-索引优化策略" class="headerlink" title="4.索引优化策略"></a>4.索引优化策略</h2><h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>&emsp;&emsp;上述例子，如果执行的语句是select ID from T where k between 3 and 5，这时只需要查ID的值，而ID的值已经在k索引树上了，因此可以直接提供查询结果，不需要回表。也就是说，在这个查询里面，索引k已经“覆盖了”我们的查询需求，我们称为==覆盖索引==。</p>
-<html>
-<p style="color:red;">&emsp;&emsp;由<b>于覆盖索引可以减少树的搜索次数，显著提升查询性能，所以使用覆盖索引是一个常用的性能优化手段。</b></p>
-</html>
-
-<h3 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h3><p>前缀索引就是只给列的前n个字符建立索引。通常适合在大字段上建立前缀索引。</p>
-<pre class="line-numbers language-none"><code class="language-none">alter table t_dispatch_citys add key(en_name(n))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>n如何选择？  </p>
-<blockquote>
-<p>选择性 = 基数 / 记录总数,   （1/T  ~  1）</p>
-</blockquote>
-<p>选择性要足够大，唯一索引的选择性为1，是最好的</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r1<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r2<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r3<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r4<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r5<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r6<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r7<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r8<span class="token punctuation">,</span>
-<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> <span class="token keyword">left</span><span class="token punctuation">(</span>en_name<span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> r9
-<span class="token keyword">from</span> <span class="token punctuation">`</span>t_dispatch_citys<span class="token punctuation">`</span><span class="token punctuation">;</span>
-
-<span class="token comment"># 测试结果</span>
-<span class="token comment">#   r1	 r2		  r3	  r4	  r5	  r6	  r7	  r8	</span>
-<span class="token comment"># 0.094	0.1865	0.4966	0.7416	0.9011	0.9730	0.9888	0.9910</span>
-<span class="token comment"># 当n=6的时候，选择性已经97%了。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>MySQL不支持后缀索引，但是可以采用曲线方式，后缀索引=reverse(前缀)</p>
-<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p>联合索引即在多个字段上建索引，联合索引也符合“最左前缀原则”。  </p>
-<pre class="line-numbers language-none"><code class="language-none">select * from T where a&#x3D;? and b&#x3D;?<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>如果分别在a、b上建索引，则mysql会采用using intersect交集算法。对所有使用的索引执行同步扫描，并生成从合并索引扫描中接收到的行序列的交集。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9iVVJQamdGcEdNVDl5Z2dQc2Zkcktad1pjZkEwZmliaWM2Uk5ZeDdaWkpYZVN1bDVZRnp1TmZmT2JHOG9ZSUk0d21hTWZkd1pERGtyY2RvaWM0aDJuYWcwdy82NDA?x-oss-process=image/format,png" alt="intersect交集算法"><br>联合索引如何排序？</p>
-<blockquote>
-<p>如果通过调整顺序，可以少维护一个索引，则优先考虑该顺序。<br>如果仅仅只是选择这一个索引，则选择性高的字段排前面。</p>
-</blockquote>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> test
-<span class="token punctuation">(</span>
-    id <span class="token keyword">int</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
-    a  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    b  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    c  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    d <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
-    <span class="token keyword">index</span> <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span>
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">explain</span> <span class="token keyword">select</span> id<span class="token punctuation">,</span> a <span class="token keyword">from</span> test <span class="token keyword">where</span> c <span class="token operator">=</span> <span class="token string">'a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>以上sql还是会命中索引，where虽然不符合最左前缀原则，但是id和a字段都在联合索引上，优化器会对比遍历主键索引树和联合索引树的代价，发现联合索引更快，于是会命中。</p>
-<h3 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h3><pre class="line-numbers language-none"><code class="language-none">CREATE TABLE &#96;tuser&#96; (
-  &#96;id&#96; int(11) NOT NULL,
-  &#96;id_card&#96; varchar(32) DEFAULT NULL,
-  &#96;name&#96; varchar(32) DEFAULT NULL,
-  &#96;age&#96; int(11) DEFAULT NULL,
-  &#96;ismale&#96; tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (&#96;id&#96;),
-  KEY &#96;id_card&#96; (&#96;id_card&#96;),
-  KEY &#96;name_age&#96; (&#96;name&#96;,&#96;age&#96;)
-) ENGINE&#x3D;InnoDB<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>MySQL5.6以前是这样走的<br><img src="https://static001.geekbang.org/resource/image/b3/ac/b32aa8b1f75611e0759e52f5915539ac.jpg" alt="不走索引下推"><br>MySQL5.6推出了索引下推策略，是这样走的，减少了回表的次数<br><img src="https://static001.geekbang.org/resource/image/76/1b/76e385f3df5a694cc4238c7b65acfe1b.jpg" alt="索引下推"></p>
+<h3 id="1-3-本地方法栈"><a href="#1-3-本地方法栈" class="headerlink" title="1.3 本地方法栈"></a>1.3 本地方法栈</h3><p>&emsp;本地方法栈和虚拟机栈几乎一样，只不过它是为<strong>调用本地方法</strong>服务的。比如：调用本地的C、C++方法等。</p>
+<h3 id="1-4-堆"><a href="#1-4-堆" class="headerlink" title="1.4 堆"></a>1.4 堆</h3><p>&emsp;堆是虚拟机管理的最大的一块内存区域，此区域用于<strong>存放对象实例</strong>，几乎所有对象的内存分配都在java堆这里。</p>
+<p>&emsp;堆是垃圾收集器管理的内存区域，因此堆也被叫做“GC堆”。大多数虚拟机对这一块内存采用“分代管理”的方式，因此这块内存在分代虚拟机（比如HotSpot虚拟机）里面又被分为新生代、老年代、永久代等，这块后面会具体讲。</p>
+<p>&emsp;java堆属于多个线程共享的一块区域，但是如果具体划分也可以划分出线程私有的缓冲区（Thread Local Allocation Buffer， TLAB），用于提升对象分配效率。java虚拟机规范规定，java堆在物理上可以不连续，但是在逻辑上必须是连续的。</p>
+<p>&emsp;java堆可以是固定大小的，也可以动态扩展，取决于具体虚拟机的实现。当前主流的虚拟机设计都是可动态扩展的（-Xmx、-Xms）。当堆中实例分配内存不足，且无法申请新的内存时，会报OutOfMemoryError。</p>
+<h3 id="1-5-方法区"><a href="#1-5-方法区" class="headerlink" title="1.5 方法区"></a>1.5 方法区</h3><p>&emsp;方法区（只有HotSpot才有这个概念）是各个线程共享的一块区域，java方法区类似于常规语言编译代码的存储区，<strong>存储编译器编译后的代码缓存等数据</strong>，它存储每个类的结构，比如运行时常量池、字段和方法数据，以及方法和构造函数的代码，包括类和实例初始化以及接口初始化中使用的特殊方法。</p>
+<p>&emsp;JVM规范对方法区的约束很松，和堆一样，可以物理区间不连续、内存大小可选择固定和可扩展的外，还可以选择不实现垃圾回收。垃圾收集器在方法区很少出现，如果出现收集行为，主要针对常量池的回收和类型的卸载，这部分的回收很麻烦，但是有时候又很有必要。</p>
+<p>&emsp;如果内存分配不足，会报OOM异常。</p>
+<h3 id="1-6-运行时常量池"><a href="#1-6-运行时常量池" class="headerlink" title="1.6 运行时常量池"></a>1.6 运行时常量池</h3><p>&emsp;<strong>运行时常量属于方法区的一部分</strong>，.class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池表（Constant Pool Table），用于存放编译器生成的各种字面量与符号引用，这部分的内容将在类加载后存放到方法区的运行时常量中池。</p>
+<p>&emsp;规范没有对运行时常量池作任何要求，但是通常，除了保存.class中的符号描述引用外，还会把符号引用翻译出来的直接引用也存储在这里。</p>
+<p>&emsp;运行时常量池具有动态性，除了编译产生的内容会进入，运行期间新产生的常量也可以进入常量池。比如String的intern()方法。当内存不够时，会报OOM异常。</p>
+<h3 id="1-7-直接内存"><a href="#1-7-直接内存" class="headerlink" title="1.7 直接内存"></a>1.7 直接内存</h3><p>&emsp;直接内存不属于虚拟机运行时数据区的一部分，也不是java虚拟机规范中定义的内存区域，但是这部分内存经常被使用，也可能导致OOM。</p>
+<p>&emsp;jdk1.4新加入了了NIO（New Input/Output）类，引入了一种基于通道和缓存区的I/O方式，它可以使用Native函数库直接分配对外内存，然后通过一个存储在java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作。这样能在一些场景中显著提高性能，因为避免了再Java堆和Native堆中来回复制数据。</p>
+<p>&emsp;直接内存的分配不受java堆大小的限制，但是机器的限制。</p>
+<p>参考文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/index.html">https://docs.oracle.com/javase/8/docs/index.html</a><br>参考文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5</a></p>
 
             </div>
             <hr/>
@@ -604,7 +513,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://happykite777.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/">https://happykite777.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/</a>
+                    <a href="https://happykite777.github.io/2020/09/29/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">https://happykite777.github.io/2020/09/29/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -642,8 +551,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/mysql/">
-                                    <span class="chip bg-color">mysql</span>
+                                <a href="/tags/jvm/">
+                                    <span class="chip bg-color">jvm</span>
                                 </a>
                             
                         </div>
@@ -815,13 +724,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/09/27/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">
+                <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="编译和链接基础知识">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="JVM的简单介绍">
                         
-                        <span class="card-title">编译和链接基础知识</span>
+                        <span class="card-title">JVM的简单介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -832,8 +741,57 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-27
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-10-09
                         </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category">
+                                    java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/09/28/Mach-O%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="Mach-O目标文件格式">
+                        
+                        <span class="card-title">Mach-O目标文件格式</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-28
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -847,56 +805,6 @@
                     
                     <a href="/tags/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">
                         <span class="chip bg-color">编译和链接</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="MySQL索引及其优化">
-                        
-                        <span class="card-title">MySQL索引及其优化</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-25
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/mysql/" class="post-category">
-                                    mysql
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/mysql/">
-                        <span class="chip bg-color">mysql</span>
                     </a>
                     
                 </div>
