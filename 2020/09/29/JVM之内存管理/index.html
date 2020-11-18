@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="JVM之内存与垃圾回收, HappyKite777的博客">
+    <meta name="keywords" content="JVM之内存管理, HappyKite777的博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>JVM之内存与垃圾回收 | HappyKite777的博客</title>
+    <title>JVM之内存管理 | HappyKite777的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">JVM之内存与垃圾回收</h1>
+                    <h1 class="description center-align post-title">JVM之内存管理</h1>
                 </div>
             </div>
         </div>
@@ -449,42 +449,399 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>&emsp;如果运行一个java应用程序，则必须使用jdk或者jre。jre属于jdk的一部分，jdk包含jre中的所有内容，以及开发applet和应用程序所需的编译器和调试器等工具。jre提供了库、Java虚拟机（JVM）和其他组件来运行用Java编程语言编写的applet和应用程序。程序运行起来最少需要jre的支持，jdk中其中的大量工具则适合开发时候使用。<br><img src="https://img2018.cnblogs.com/blog/890598/201902/890598-20190220210053733-743773115.png" alt="java技术体系"><br>&emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。</p>
-<p>java虚拟机的特点：</p>
+                <p>&emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。</p>
+<h2 id="1-运行时数据区域概述"><a href="#1-运行时数据区域概述" class="headerlink" title="1 运行时数据区域概述"></a>1 运行时数据区域概述</h2><h3 id="1-1-运行时数据区域结构"><a href="#1-1-运行时数据区域结构" class="headerlink" title="1.1 运行时数据区域结构"></a>1.1 运行时数据区域结构</h3><p>&emsp;JVM定义了在程序执行期间使用的各种运行时数据区域。其中一些数据区域是在Java虚拟机启动时创建的，只有在Java虚拟机退出时才会被销毁。其他数据区域是每个线程的。每线程数据区域在创建线程时创建，在线程退出时销毁。主要分为程序计数器、虚拟机栈、堆、方法区和运行常量池。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTExNjQwNTExLnBuZw?x-oss-process=image/format,png" alt="HotSpot架构"><br>&emsp;每个JVM只有一个Runtime实例，即为运行时环境，也就是上图中间蓝色的框框。</p>
+<p>&emsp;不同的JVM对于内存的划分方式和管理机制存在着部分差异。结合JVM虚拟机规范，本文主要探讨经经典的JVM（HotSpot）内存布局。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTEyNDE2MTAxLnBuZw?x-oss-process=image/format,png" alt="java详细内存模型"><br>灰色的为单独线程私有的，红色的为多个线程共享的。即：</p>
 <ul>
-<li>一次编译，处处运行</li>
-<li>自动内存管理</li>
-<li>自动垃圾回收功能</li>
+<li>线程独有：程序计数器、虚拟机栈、本地方法栈</li>
+<li>线程间共享：堆、堆外内存（永久代或元空间、代码缓存）<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTEyNjAxMjExLnBuZw?x-oss-process=image/format,png" alt="java内存模型"></li>
 </ul>
-<h2 id="1-JVM内存结构"><a href="#1-JVM内存结构" class="headerlink" title="1.JVM内存结构"></a>1.JVM内存结构</h2><p>&emsp;JVM定义了在程序执行期间使用的各种运行时数据区域。其中一些数据区域是在Java虚拟机启动时创建的，只有在Java虚拟机退出时才会被销毁。其他数据区域是每个线程的。每线程数据区域在创建线程时创建，在线程退出时销毁。主要分为程序计数器、虚拟机栈、堆、方法区和运行常量池。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWcyMDE4LmNuYmxvZ3MuY29tL2Jsb2cvODc0OTYzLzIwMTgxMC84NzQ5NjMtMjAxODEwMjUxNDE4NDExODctMjAzMjY3MDI0Mi5wbmc?x-oss-process=image/format,png" alt="java内存模型"></p>
-<h3 id="1-1-程序计数器"><a href="#1-1-程序计数器" class="headerlink" title="1.1 程序计数器"></a>1.1 程序计数器</h3><p>&emsp;程序计数器是一块很小的内存区域，可以看作是当前线程所执行字节码的行号指示器。程序的控制流，分支、循环、异常跳出等都是通过改变这个计数器来实现的。java虚拟机支持多线程，某个确定的时刻，只会执行一条指令，因此为了保证多线程里面，指令执行的正确性，程序计数器必须是独立的，因此这块区域被称为“线程私有”内存。</p>
+<h3 id="1-2-jvm线程"><a href="#1-2-jvm线程" class="headerlink" title="1.2 jvm线程"></a>1.2 jvm线程</h3><p><strong>jvm线程</strong></p>
+<ul>
+<li>线程是一个程序里的运行单元。JVM允许一个应用有多个线程并行的执行</li>
+<li>在Hotspot JVM里，<strong>每个线程都与操作系统的本地线程直接映射</strong></li>
+<li>当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收</li>
+<li>操作系统负责将线程安排调度到任何一个可用的CPU上。一旦本地线程初始化成功，它就会调用Java线程中的run()方法</li>
+<li>如果一个线程抛异常，并且该线程是进程中最后一个守护线程，那么进程将停止</li>
+</ul>
+<p><strong>jvm系统线程</strong><br>又叫后台线程，它不包括调用public static void main(String [])的main线程以及所有这个main线程自己创建的线程。</p>
+<p>后台线程在HotSpot中主要有以下几个：</p>
+<ul>
+<li>虚拟机线程：jvm达到安全点时出现的线程（安全点是和垃圾回收相关的一个概念，后续会讲到）。</li>
+<li>周期任务线程：用于周期性操作的调度执行</li>
+<li>GC线程：专门负责垃圾回收</li>
+<li>编译线程：运行时会将字节码编译成到本地代码</li>
+<li>信号调度线程：接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</li>
+</ul>
+<h2 id="2-JVM内存布局"><a href="#2-JVM内存布局" class="headerlink" title="2 JVM内存布局"></a>2 JVM内存布局</h2><h3 id="2-1-程序计数器（pc寄存器）"><a href="#2-1-程序计数器（pc寄存器）" class="headerlink" title="2.1 程序计数器（pc寄存器）"></a>2.1 程序计数器（pc寄存器）</h3><p>&emsp;程序计数器是一块很小的内存区域，可以看作是当前线程所执行字节码的行号指示器。<br>&emsp;pc寄存器用来<strong>存储指向下一条指令的地址</strong>，也就是即将要执行的指令代码。由执行引擎读取下一条指令，并执行该指令。程序的控制流，分支、循环、异常跳出等都是通过改变这个计数器来实现的。</p>
+<p style="color: red">&emsp;<b>java虚拟机支持多线程，cpu在不同的线程之间切换，在每个线程中指令是顺序执行的，某个确定的时刻，只会执行一条指令，因此为了保证多线程里面，指令执行的正确性，程序计数器必须是独立的，因此这块区域被称为“线程私有”内存</b></p>
+
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTU1NzI4NTU3LnBuZw?x-oss-process=image/format,png" alt="pc寄存器作用"><br>&emsp;上图栈帧其实对应一个方法，方法1中调用2方法，方法2再调用……一直到调用n方法，调用就压入栈，红色区域是指当前方法。方法里面具体的指令都有行号标识，pc寄存器就相当于行号标识，记录了下一条要执行的指令的地址。</p>
 <p>&emsp;如果程序正在执行的是一个java方法，则计数器的值为虚拟机字节码指令的地址。如果正在执行的是本地方法，则计数器的值为空。<strong>此区域是唯一一个不会发生OOM的内存区域</strong>。</p>
-<h3 id="1-2-虚拟机栈"><a href="#1-2-虚拟机栈" class="headerlink" title="1.2 虚拟机栈"></a>1.2 虚拟机栈</h3><p>&emsp;java虚拟机栈属于线程私有内存，生命周期和线程相同。<strong>虚拟机栈存储的是java方法相关的数据</strong>，方法被执行时，java虚拟机会同步创建一个栈，用于存储局部变量表、操作数栈、动态链接、方法出口等信息。方法从开始调用到执行完毕，对应着入栈到出栈的过程。</p>
-<p>&emsp;局部变量表存放了编译期可预知的各种java虚拟机基本数据类型（boolean、byte、char、short、int、float、long、double）、对象引用和returnAddress（指向一条字节码指令的地址）。这些数据类型在局部变量表中的存储空间以局部变量槽(slot)表示，64位长的long和double站2个槽，其他数据类型占1个槽。</p>
-<p>&emsp;局部变量表所需要的内存空间在编译期间就分配完成了，在运行期间，为方法分配栈的时候，“大小”不会改变。注意：此处大小是指槽的数量，真正使用多大的内存空间（比如一个槽占32位、64位等），由具体的虚拟机自行实现。</p>
+<p><strong>举例</strong><br><img src="https://img-blog.csdnimg.cn/20201012154521652.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="image"><br>&emsp;使用<code>javap -v xxx.class</code>得到反编译代码，如上图所示，左边的行号即为指令地址（或者偏移地址），右边的为jvm操作指令，pc寄存器存储的是下一条要执行的指令地址（5），执行引擎会取得该地址，操作对应的局部变量表、操作数栈等，然后把jvm指令翻译成机器指令，供cpu执行。</p>
+<h3 id="2-2-虚拟机栈"><a href="#2-2-虚拟机栈" class="headerlink" title="2.2 虚拟机栈"></a>2.2 虚拟机栈</h3><p>以前叫java栈，是内存中的一块区域。</p>
+<h4 id="栈概述"><a href="#栈概述" class="headerlink" title="栈概述"></a>栈概述</h4><p>&emsp;栈是运行时的单位，堆是存储的单位。</p>
+<ul>
+<li>栈解决程序的运行问题，即程序如何执行，如何处理数据.</li>
+<li>堆解决的是数据存储的问题，即数据怎么放，放哪里.</li>
+</ul>
+<p><strong>栈的运行原理：</strong><br>&emsp;<strong>虚拟机栈存储的是java方法相关的数据和操作</strong>。线程被创建时，虚拟机会同步创建一个虚拟机栈，其<strong>内部保存的是一个个的栈帧</strong>，栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。<br>&emsp;方法的调用代表一个栈帧入栈，方法调用结束代表栈帧出栈，<strong>方法从开始调用到执行完毕，对应着入栈到出栈的过程</strong>。如下图，执行引擎执行methodA时，methodA的栈帧入栈，然后调用methodB，methodB栈帧入栈（简画，实际栈帧存储的东西不止局部变量）。<strong>栈顶的栈帧代表的是当前栈帧，栈帧对应的方法叫当前方法，方法对应的类叫当前类</strong>。<br><img src="https://img-blog.csdnimg.cn/20201012161928311.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="java虚拟机栈"></p>
+<p>&emsp;不同线程中所包含的栈帧是不允许存在相互引用的，即一个栈帧之中不可以引用另外一个线程的栈帧。</p>
+<p>&emsp;java方法有两种返回函数的方式，但不管使用哪种方式，都会导致栈帧被弹出</p>
+<ul>
+<li>正常的函数返回，使用return指令。</li>
+<li>抛出异常。如果当前方法A发生了异常但是没有捕获，则当前栈帧会被弹出，如果调用A的方法B的栈帧也没有捕获异常，则B栈帧被弹出，继续往外层执行，假设直至main方法均没有捕获异常，则程序会报错中断。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MjAzMTQyNTQ1LnBuZw?x-oss-process=image/format,png" alt="方法的调用"></li>
+</ul>
+<p>&emsp;java虚拟机栈属于线程私有内存，生命周期和线程相同。</p>
+<p><strong>虚拟机栈作用：</strong></p>
+<blockquote>
+<p>主管Java程序的运行，它保存方法的局部变量（8 种基本数据类型、对象的引用地址）、部分结果，并参与方法的调用和返回。</p>
+</blockquote>
+<p><strong>虚拟机栈优点：</strong></p>
+<blockquote>
+<p>1、快速有效的内存分配方式，访问速度仅次于程序计数器。<br>2、jvm对栈的操作简单：入栈和出栈。<br>3、不存在垃圾回收的问题（GC、OOM，但会发生栈溢出）。</p>
+</blockquote>
 <p>&emsp;java虚拟机规范对这块内存区域定义了2种异常：</p>
 <ul>
 <li><ul>
-<li>如果线程申请的栈深度大于虚拟机允许的深度，抛出StackOverflowError</li>
+<li>如果线程申请的栈深度大于虚拟机允许的深度，抛出StackOverflowError栈溢出异常。</li>
 </ul>
 </li>
 <li><ul>
-<li>如果没超过但是无法申请到足够的内存，则抛出OutOfMemoryError</li>
+<li>如果栈可以动态扩展，扩展时无法申请到足够的内存，则抛出OutOfMemoryError内存溢出异常。</li>
 </ul>
 </li>
 </ul>
-<h3 id="1-3-本地方法栈"><a href="#1-3-本地方法栈" class="headerlink" title="1.3 本地方法栈"></a>1.3 本地方法栈</h3><p>&emsp;本地方法栈和虚拟机栈几乎一样，只不过它是为<strong>调用本地方法</strong>服务的。比如：调用本地的C、C++方法等。</p>
-<h3 id="1-4-堆"><a href="#1-4-堆" class="headerlink" title="1.4 堆"></a>1.4 堆</h3><p>&emsp;堆是虚拟机管理的最大的一块内存区域，此区域用于<strong>存放对象实例</strong>，几乎所有对象的内存分配都在java堆这里。</p>
+<p>&emsp;使用<code>-Xss</code>来设置线程的最大栈空间，栈的大小决定了函数可达的最大深度。</p>
+<h4 id="栈帧的内部结构"><a href="#栈帧的内部结构" class="headerlink" title="栈帧的内部结构"></a>栈帧的内部结构</h4><p>&emsp;每个栈帧的内部存储这以下数据：</p>
+<ul>
+<li>局部变量表（Local Variables）</li>
+<li>操作数栈（Operand Stack）（或表达式栈）</li>
+<li>动态链接（Dynamic Linking）（或指向运行时常量池的方法引用）</li>
+<li>方法返回地址（Return Address）（或方法正常退出或者异常退出的定义）</li>
+<li>一些附加信息<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MjA1NDQzOTkzLnBuZw?x-oss-process=image/format,png" alt="栈帧的内部结构"><br>&emsp;栈帧的大小取决于内部结构的大小。</li>
+</ul>
+<p><font color=red><b>局部变量表</b></font></p>
+<ul>
+<li>局部变量表又被称之为局部变量数组或本地变量表。</li>
+<li>定义为一个数字数组，主要用于存储方法参数和定义在方法体内的局部变量，这些数据类型包括各类基本数据类型(8种)、对象引用（reference），以及returnAddress类型。</li>
+<li>由于局部变量表是建立在线程的栈上，是线程的私有数据，因此不存在数据安全问题</li>
+<li><strong>局部变量表所需的容量大小是在编译期确定下来的</strong>，并保存在方法的Code属性的maximum local variables数据项中。在方法运行期间是不会改变局部变量表的大小的。</li>
+<li><strong>局部变量表中的变量只在当前方法调用中有效。</strong>方法调用结束，方法栈帧出栈，局部变量表也会销毁。</li>
+</ul>
+<p>实例：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LocalVariablesTest</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+#<span class="token number">14</span>    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+#<span class="token number">15</span>        <span class="token class-name">LocalVariablesTest</span> test <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LocalVariablesTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+#<span class="token number">16</span>        <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+#<span class="token number">17</span><span class="token comment">//        test.test1();</span>
+#<span class="token number">18</span>    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;执行反汇编<code>javap -v LocalVariablesTest.class</code>得到字节码指令</p>
+<pre class="line-numbers language-none"><code class="language-none">public static void main(java.lang.String[]);
+  descriptor: ([Ljava&#x2F;lang&#x2F;String;)V
+  flags: ACC_PUBLIC, ACC_STATIC
+  Code:
+    stack&#x3D;2, locals&#x3D;3, args_size&#x3D;1
+       0: new           #3                  &#x2F;&#x2F; class com&#x2F;hk7&#x2F;memory&#x2F;LocalVariablesTest
+       3: dup
+       4: invokespecial #4                  &#x2F;&#x2F; Method &quot;&lt;init&gt;&quot;:()V
+       7: astore_1
+       8: bipush        10
+      10: istore_2
+      11: return
+    LineNumberTable:
+      line 15: 0
+      line 16: 8
+      line 18: 11
+    LocalVariableTable:
+      Start  Length  Slot  Name   Signature
+          0      12     0  args   [Ljava&#x2F;lang&#x2F;String;
+          8       4     1  test   Lcom&#x2F;hk7&#x2F;memory&#x2F;LocalVariablesTest;
+         11       1     2   num   I<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;由上可知，<code>locals=3</code>代表局部变量表大小为3，分别为args参数、test对象和num变量。代码指令一共12行，<strong>LineNumberTable</strong>表示pc指令地址和源码所在行的对应关系。<strong>LocalVariableTable</strong>局部变量表，<em>start</em>表示当前变量的作用域，变量都是定义之后生效，比如test的start是8，从LineNumberTable表可知，8对应line16，也就是从16行开始test变量生效。<em>length</em>表示变量作用域的长度，从表中可看到三个变量起始位置+长度=12，因此所有变量作用域的结束都是方法的}。<br><br></p>
+<p><strong>关于Slot的理解</strong></p>
+<ul>
+<li>1、参数值的存放总是从局部变量数组索引 0 的位置开始，到数组长度-1的索引结束。</li>
+<li>2、<strong>局部变量表，最基本的存储单元是Slot（变量槽）</strong>，局部变量表中存放编译期可知的各种基本数据类型（8种）、引用类型、returnAddress类型的变量。</li>
+<li>3、在局部变量表里，32位以内的类型只占用一个slot（包括returnAddress类型），64位的类型占用两个slot（1ong和double）。byte、short、char和boolean在存储前都会被转化成int。</li>
+<li>4、JVM会为局部变量表中的每一个Slot都分配一个访问索引，通过这个索引即可成功访问到局部变量表中指定的局部变量值。占两个slot的变量使用起始索引访问。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MjEyNDU0NDQ1LnBuZw?x-oss-process=image/format,png" alt="变量槽的索引访问"></li>
+<li>5、当一个实例方法被调用的时候，它的方法参数和方法体内部定义的局部变量将会<strong>按照顺序被复制到局部变量表中的每一个slot上</strong>。</li>
+<li>6、<strong>如果当前栈帧是由构造方法或者实例方法创建的，那么该对象引用this将会存放在index为0的slot处，其余的参数按照参数表顺序继续排列</strong>。如下图jclasslib插件中可以看到字节码文件信息，test2位实例方法，它的this占了index=0的插槽。由于静态方法中栈帧局部变量表没有存储this变量，因此静态方法中无法使用<code>this.xxx</code>。<br><img src="https://img-blog.csdnimg.cn/20201012182107466.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="this变量存储"></li>
+</ul>
+<p><strong>Slot的重复利用</strong><br>局部变量槽是可以重复利用的，如果一个局部变量过了其作用域被销毁了，则下一个局部变量可以利用这个局部变量槽。比如以下代码：</p>
+<pre class="line-numbers language-none"><code class="language-none">public void test4() &#123;
+    int a &#x3D; 0;
+    &#123;
+        int b &#x3D; 0;
+        b &#x3D; a + 1;
+    &#125;
+    &#x2F;&#x2F;b出了作用域，变量b被销毁，但是数组已经分配，因此c可以利用这个slot
+    &#x2F;&#x2F;变量c使用之前已经销毁的变量b占据的slot的位置
+    int c &#x3D; a + 1;
+&#125;
+
+
+
+public void test4();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack&#x3D;2, locals&#x3D;3, args_size&#x3D;1
+         0: iconst_0
+         1: istore_1
+         2: iconst_0
+         3: istore_2
+         4: iload_1
+         5: iconst_1
+         6: iadd
+         7: istore_2
+         8: iload_1
+         9: iconst_1
+        10: iadd
+        11: istore_2
+        12: return
+      LineNumberTable:
+        line 36: 0
+        line 38: 2
+        line 39: 4
+        line 43: 8
+        line 44: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            4       4     2     b   I
+            0      13     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;LocalVariablesTest;
+            2      11     1     a   I
+           12       1     2     c   I<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><font color=green>&emsp;局部变量表和性能调优密切相关，局部变量表占了栈帧的主要空间，因此它和栈溢出息息相关。局部变量表中的变量是垃圾回收的根节点，被局部变量表中的直接或间接引用的对象不会被回收。</font></p>
+<p><font color=red><b>操作数栈</b></font><br>&emsp;栈帧中的操作数栈Operand Stack采用数组来具体实现，也可被称之为表达式栈。操作数栈在方法的执行过程中，根据字节码指令，往栈中写入（入栈）或者提取（出栈）数据。<br>&emsp;操作数栈是栈（虚拟机栈）中栈（栈帧的操作数栈），它主要用于保存计算过程中的中间结果，同时作为计算过程中变量临时的存储空间。<strong>局部变量表中的变量被操作的时候（比如执行i+j），会被压入操作数栈，经过一些指令(iadd)后再推出去，存储到局部变量表中</strong>。上述反汇编代码中的<code>stack=2</code>表示的是操作数栈的深度。</p>
+<p>&emsp;栈中的任何一个元素都是可以任意的Java数据类型</p>
+<ul>
+<li>32bit的类型占用一个栈单位深度</li>
+<li>64bit的类型占用两个栈单位深度</li>
+</ul>
+<p>&emsp;<strong>代码追踪实例</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">public static void main(String[] args) &#123;
+    byte i &#x3D; 15;
+    int j &#x3D; 800;
+    int k &#x3D; i + j;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>javap -v xxx.class之后得到字节码指令</p>
+<pre class="line-numbers language-none"><code class="language-none">stack&#x3D;2, locals&#x3D;4, args_size&#x3D;1
+ 0: bipush        15
+ 2: istore_1
+ 3: sipush        800
+ 6: istore_2
+ 7: iload_1
+ 8: iload_2
+ 9: iadd
+10: istore_3
+11: return<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;以上代码的具体执行如下图，<strong>指令类型采用所能包含的值的最小整数类型指令</strong>：</p>
+<ul>
+<li><ol>
+<li>当执行main函数时，创建好栈帧。pc寄存器的值为0，栈帧中初始化了局部变量表和操作数栈，值为空</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>执行地址为0的指令，bipush，pc=2，15入栈</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>执行地址为2的指令，istore_1，pc=3，15出栈，局部变量表slot1=15（实例方法，slot0存储的是this变量）</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>执行地址为3的指令，sipush（由于800超过了byte的范围，所以会使用sipush，short类型），pc=5，8入栈</li>
+</ol>
+</li>
+<li><ol start="5">
+<li>执行地址为5的指令，istore_2，pc=6，8出栈，局部变量表slot2=8</li>
+</ol>
+</li>
+<li><ol start="6">
+<li>执行地址为6的指令，iload_1，pc=7，从slot1中加载15，15入栈</li>
+</ol>
+</li>
+<li><ol start="7">
+<li>执行地址为7的指令，iload_2，pc=8，从slot2中加载8，8入栈</li>
+</ol>
+</li>
+<li><ol start="8">
+<li>执行地址为8的指令，iadd，pc=9，8和15出栈并执行相加操作，23入栈</li>
+</ol>
+</li>
+<li><ol start="9">
+<li>执行地址为9的指令，istore_3，pc=10，23出栈，局部变量表slot3=23</li>
+</ol>
+</li>
+<li><ol start="10">
+<li>执行地址为10的指令，return。函数结束，栈帧销毁。<br><img src="https://img-blog.csdnimg.cn/20201013115416401.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="代码追踪"></li>
+</ol>
+</li>
+</ul>
+<p><strong>栈顶缓存(Top-of-Stack-Cashing)技术</strong><br>&emsp;jvm简单介绍文章里面提到过，基于栈式架构的虚拟机所使用的零地址指令更加紧凑，但完成一项操作的时候需要使用更多的入栈和出栈指令，操作数栈存储在内存中，因此会导致频繁的内存读写，影响执行速度。为了解决这个问题HotSpot的提出了栈顶缓存技术。<br>&emsp;栈顶缓存是指将栈顶元素全部缓存在物理cpu的寄存器中，以此降低对内存的读写次数，提升执行引擎执行效率。</p>
+<p><font color=red><b>动态链接</b></font><br>&emsp;栈帧里面的<strong>动态链接、方法返回地址和一些附加信息</strong>有些地方把它们统称为<strong>帧数据区</strong>。<br>&emsp;动态链接又叫<strong>指向运行时常量池的方法引用</strong>。</p>
+<ul>
+<li><p>每一个栈帧内部都包含一个<strong>指向运行时常量池中该栈帧所属方法的引用</strong>区域</p>
+</li>
+<li><p>包含这个引用的目的就是<strong>为了支持当前方法的代码能够实现动态链接</strong>（Dynamic Linking），比如：invokedynamic指令</p>
+</li>
+<li><p>java源文件被编译为字节码文件后，<strong>所有的变量和方法的引用都会被保存到class文件的常量池（映射着的内存结构为方法区的运行时常量池）里面</strong></p>
+</li>
+<li><p>动态链接的作用是：<strong>把这些方法的符号引用转换为直接引用</strong></p>
+</li>
+</ul>
+<p>  &emsp;如下图所示，栈帧中有一个区域专门用来存储方法引用。方法区内存是多线程共享的，假设方法A和方法B都调用方法C，那么在运行时常量池会有方法C的方法引用，方法A和方法B对应的栈帧中的区域都会存储该方法引用。</p>
+<p>  <img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA2MTAxMjUxODQ3LnBuZw?x-oss-process=image/format,png" alt="动态链接"></p>
+<p>  &emsp;以下代码，methodB()调用methodA()，反汇编之后的结果如下。从结果中我们可以看到，方法b中有指令<code>5: invokevirtual #5</code>，invokevirtual代表调用方法，<code>#5</code>为方法引用，表示常量池中的<code>#5 = Methodref          #28.#29</code></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DynamicLink</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"methodA()...."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodB</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"methodB()...."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        num<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">//javap -v xxx.class</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> com<span class="token punctuation">.</span>hk7<span class="token punctuation">.</span>memory<span class="token punctuation">.</span><span class="token class-name">DynamicLink</span>
+  minor version<span class="token operator">:</span> <span class="token number">0</span>
+  major version<span class="token operator">:</span> <span class="token number">52</span>
+  flags<span class="token operator">:</span> ACC_PUBLIC<span class="token punctuation">,</span> ACC_SUPER
+<span class="token class-name">Constant</span> pool<span class="token operator">:</span>
+   #<span class="token number">1</span> <span class="token operator">=</span> <span class="token class-name">Methodref</span>          #<span class="token number">9.</span>#<span class="token number">23</span>         <span class="token comment">// java/lang/Object."&lt;init>":()V</span>
+   #<span class="token number">2</span> <span class="token operator">=</span> <span class="token class-name">Fieldref</span>           #<span class="token number">8.</span>#<span class="token number">24</span>         <span class="token comment">// com/hk7/memory/DynamicLink.num:I</span>
+   #<span class="token number">3</span> <span class="token operator">=</span> <span class="token class-name">Fieldref</span>           #<span class="token number">25.</span>#<span class="token number">26</span>        <span class="token comment">// java/lang/System.out:Ljava/io/PrintStream;</span>
+   #<span class="token number">4</span> <span class="token operator">=</span> <span class="token class-name">String</span>             #<span class="token number">27</span>            <span class="token comment">// methodA()....</span>
+   #<span class="token number">5</span> <span class="token operator">=</span> <span class="token class-name">Methodref</span>          #<span class="token number">28.</span>#<span class="token number">29</span>        <span class="token comment">// java/io/PrintStream.println:(Ljava/lang/String;)V</span>
+   #<span class="token number">6</span> <span class="token operator">=</span> <span class="token class-name">String</span>             #<span class="token number">30</span>            <span class="token comment">// methodB()....</span>
+   #<span class="token number">7</span> <span class="token operator">=</span> <span class="token class-name">Methodref</span>          #<span class="token number">8.</span>#<span class="token number">31</span>         <span class="token comment">// com/hk7/memory/DynamicLink.methodA:()V</span>
+   #<span class="token number">8</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">32</span>            <span class="token comment">// com/hk7/memory/DynamicLink</span>
+   #<span class="token number">9</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">33</span>            <span class="token comment">// java/lang/Object</span>
+  #<span class="token number">10</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               num
+  #<span class="token number">11</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">I</span>
+  #<span class="token number">12</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token generics"><span class="token punctuation">&lt;</span>init<span class="token punctuation">></span></span>
+  #<span class="token number">13</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+  #<span class="token number">14</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">Code</span>
+  #<span class="token number">15</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">LineNumberTable</span>
+  #<span class="token number">16</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">LocalVariableTable</span>
+  #<span class="token number">17</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token keyword">this</span>
+  #<span class="token number">18</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
+  #<span class="token number">19</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               methodA
+  #<span class="token number">20</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               methodB
+  #<span class="token number">21</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">SourceFile</span>
+  #<span class="token number">22</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">DynamicLink</span><span class="token punctuation">.</span>java
+  #<span class="token number">23</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">12</span><span class="token operator">:</span>#<span class="token number">13</span>        <span class="token comment">// "&lt;init>":()V</span>
+  #<span class="token number">24</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">10</span><span class="token operator">:</span>#<span class="token number">11</span>        <span class="token comment">// num:I</span>
+  #<span class="token number">25</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">34</span>            <span class="token comment">// java/lang/System</span>
+  #<span class="token number">26</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">35</span><span class="token operator">:</span>#<span class="token number">36</span>        <span class="token comment">// out:Ljava/io/PrintStream;</span>
+  #<span class="token number">27</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  #<span class="token number">28</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">37</span>            <span class="token comment">// java/io/PrintStream</span>
+  #<span class="token number">29</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">38</span><span class="token operator">:</span>#<span class="token number">39</span>        <span class="token comment">// println:(Ljava/lang/String;)V</span>
+  #<span class="token number">30</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token function">methodB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  #<span class="token number">31</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">19</span><span class="token operator">:</span>#<span class="token number">13</span>        <span class="token comment">// methodA:()V</span>
+  #<span class="token number">32</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               com<span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span>
+  #<span class="token number">33</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               java<span class="token operator">/</span>lang<span class="token operator">/</span><span class="token class-name">Object</span>
+  #<span class="token number">34</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               java<span class="token operator">/</span>lang<span class="token operator">/</span><span class="token class-name">System</span>
+  #<span class="token number">35</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               out
+  #<span class="token number">36</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">Ljava</span><span class="token operator">/</span>io<span class="token operator">/</span><span class="token class-name">PrintStream</span><span class="token punctuation">;</span>
+  #<span class="token number">37</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               java<span class="token operator">/</span>io<span class="token operator">/</span><span class="token class-name">PrintStream</span>
+  #<span class="token number">38</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               println
+  #<span class="token number">39</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token punctuation">(</span><span class="token class-name">Ljava</span><span class="token operator">/</span>lang<span class="token operator">/</span><span class="token class-name">String</span><span class="token punctuation">;</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">int</span> num<span class="token punctuation">;</span>
+    descriptor<span class="token operator">:</span> <span class="token class-name">I</span>
+    flags<span class="token operator">:</span>
+
+  <span class="token keyword">public</span> com<span class="token punctuation">.</span>hk7<span class="token punctuation">.</span>memory<span class="token punctuation">.</span><span class="token class-name">DynamicLink</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+    flags<span class="token operator">:</span> ACC_PUBLIC
+    <span class="token class-name">Code</span><span class="token operator">:</span>
+      stack<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
+         <span class="token number">0</span><span class="token operator">:</span> aload_0
+         <span class="token number">1</span><span class="token operator">:</span> invokespecial #<span class="token number">1</span>                  <span class="token comment">// Method java/lang/Object."&lt;init>":()V</span>
+         <span class="token number">4</span><span class="token operator">:</span> aload_0
+         <span class="token number">5</span><span class="token operator">:</span> bipush        <span class="token number">10</span>
+         <span class="token number">7</span><span class="token operator">:</span> putfield      #<span class="token number">2</span>                  <span class="token comment">// Field num:I</span>
+        <span class="token number">10</span><span class="token operator">:</span> <span class="token keyword">return</span>
+      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
+        line <span class="token number">9</span><span class="token operator">:</span> <span class="token number">0</span>
+        line <span class="token number">11</span><span class="token operator">:</span> <span class="token number">4</span>
+      <span class="token class-name">LocalVariableTable</span><span class="token operator">:</span>
+        <span class="token class-name">Start</span>  <span class="token class-name">Length</span>  <span class="token class-name">Slot</span>  <span class="token class-name">Name</span>   <span class="token class-name">Signature</span>
+            <span class="token number">0</span>      <span class="token number">11</span>     <span class="token number">0</span>  <span class="token keyword">this</span>   <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+    flags<span class="token operator">:</span> ACC_PUBLIC
+    <span class="token class-name">Code</span><span class="token operator">:</span>
+      stack<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
+         <span class="token number">0</span><span class="token operator">:</span> getstatic     #<span class="token number">3</span>                  <span class="token comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span>
+         <span class="token number">3</span><span class="token operator">:</span> ldc           #<span class="token number">4</span>                  <span class="token comment">// String methodA()....</span>
+         <span class="token number">5</span><span class="token operator">:</span> invokevirtual #<span class="token number">5</span>                  <span class="token comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
+         <span class="token number">8</span><span class="token operator">:</span> <span class="token keyword">return</span>
+      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
+        line <span class="token number">14</span><span class="token operator">:</span> <span class="token number">0</span>
+        line <span class="token number">15</span><span class="token operator">:</span> <span class="token number">8</span>
+      <span class="token class-name">LocalVariableTable</span><span class="token operator">:</span>
+        <span class="token class-name">Start</span>  <span class="token class-name">Length</span>  <span class="token class-name">Slot</span>  <span class="token class-name">Name</span>   <span class="token class-name">Signature</span>
+            <span class="token number">0</span>       <span class="token number">9</span>     <span class="token number">0</span>  <span class="token keyword">this</span>   <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+    flags<span class="token operator">:</span> ACC_PUBLIC
+    <span class="token class-name">Code</span><span class="token operator">:</span>
+      stack<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
+         <span class="token number">0</span><span class="token operator">:</span> getstatic     #<span class="token number">3</span>                  <span class="token comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span>
+         <span class="token number">3</span><span class="token operator">:</span> ldc           #<span class="token number">6</span>                  <span class="token comment">// String methodB()....</span>
+         <span class="token number">5</span><span class="token operator">:</span> invokevirtual #<span class="token number">5</span>                  <span class="token comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
+         <span class="token number">8</span><span class="token operator">:</span> aload_0
+         <span class="token number">9</span><span class="token operator">:</span> invokevirtual #<span class="token number">7</span>                  <span class="token comment">// Method methodA:()V</span>
+        <span class="token number">12</span><span class="token operator">:</span> aload_0
+        <span class="token number">13</span><span class="token operator">:</span> dup
+        <span class="token number">14</span><span class="token operator">:</span> getfield      #<span class="token number">2</span>                  <span class="token comment">// Field num:I</span>
+        <span class="token number">17</span><span class="token operator">:</span> iconst_1
+        <span class="token number">18</span><span class="token operator">:</span> iadd
+        <span class="token number">19</span><span class="token operator">:</span> putfield      #<span class="token number">2</span>                  <span class="token comment">// Field num:I</span>
+        <span class="token number">22</span><span class="token operator">:</span> <span class="token keyword">return</span>
+      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
+        line <span class="token number">18</span><span class="token operator">:</span> <span class="token number">0</span>
+        line <span class="token number">19</span><span class="token operator">:</span> <span class="token number">8</span>
+        line <span class="token number">20</span><span class="token operator">:</span> <span class="token number">12</span>
+        line <span class="token number">21</span><span class="token operator">:</span> <span class="token number">22</span>
+      <span class="token class-name">LocalVariableTable</span><span class="token operator">:</span>
+        <span class="token class-name">Start</span>  <span class="token class-name">Length</span>  <span class="token class-name">Slot</span>  <span class="token class-name">Name</span>   <span class="token class-name">Signature</span>
+            <span class="token number">0</span>      <span class="token number">23</span>     <span class="token number">0</span>  <span class="token keyword">this</span>   <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p><strong>方法的调用</strong></p>
+<p><font color=red><b>方法返回地址</b></font></p>
+<p><font color=red><b>一些附加信息</b></font></p>
+<h3 id="2-3-本地方法栈"><a href="#2-3-本地方法栈" class="headerlink" title="2.3 本地方法栈"></a>2.3 本地方法栈</h3><p>&emsp;本地方法栈和虚拟机栈几乎一样，只不过它是为<strong>调用本地方法</strong>服务的。比如：调用本地的C、C++方法等。</p>
+<h3 id="2-4-堆"><a href="#2-4-堆" class="headerlink" title="2.4 堆"></a>2.4 堆</h3><p>&emsp;堆是虚拟机管理的最大的一块内存区域，此区域用于<strong>存放对象实例</strong>，几乎所有对象的内存分配都在java堆这里。</p>
 <p>&emsp;堆是垃圾收集器管理的内存区域，因此堆也被叫做“GC堆”。大多数虚拟机对这一块内存采用“分代管理”的方式，因此这块内存在分代虚拟机（比如HotSpot虚拟机）里面又被分为新生代、老年代、永久代等，这块后面会具体讲。</p>
 <p>&emsp;java堆属于多个线程共享的一块区域，但是如果具体划分也可以划分出线程私有的缓冲区（Thread Local Allocation Buffer， TLAB），用于提升对象分配效率。java虚拟机规范规定，java堆在物理上可以不连续，但是在逻辑上必须是连续的。</p>
 <p>&emsp;java堆可以是固定大小的，也可以动态扩展，取决于具体虚拟机的实现。当前主流的虚拟机设计都是可动态扩展的（-Xmx、-Xms）。当堆中实例分配内存不足，且无法申请新的内存时，会报OutOfMemoryError。</p>
-<h3 id="1-5-方法区"><a href="#1-5-方法区" class="headerlink" title="1.5 方法区"></a>1.5 方法区</h3><p>&emsp;方法区（只有HotSpot才有这个概念）是各个线程共享的一块区域，java方法区类似于常规语言编译代码的存储区，<strong>存储编译器编译后的代码缓存等数据</strong>，它存储每个类的结构，比如运行时常量池、字段和方法数据，以及方法和构造函数的代码，包括类和实例初始化以及接口初始化中使用的特殊方法。</p>
+<h3 id="2-5-方法区"><a href="#2-5-方法区" class="headerlink" title="2.5 方法区"></a>2.5 方法区</h3><p>&emsp;方法区（只有HotSpot才有这个概念）是各个线程共享的一块区域，java方法区类似于常规语言编译代码的存储区，<strong>存储编译器编译后的代码缓存等数据</strong>，它存储每个类的结构，比如运行时常量池、字段和方法数据，以及方法和构造函数的代码，包括类和实例初始化以及接口初始化中使用的特殊方法。</p>
 <p>&emsp;JVM规范对方法区的约束很松，和堆一样，可以物理区间不连续、内存大小可选择固定和可扩展的外，还可以选择不实现垃圾回收。垃圾收集器在方法区很少出现，如果出现收集行为，主要针对常量池的回收和类型的卸载，这部分的回收很麻烦，但是有时候又很有必要。</p>
 <p>&emsp;如果内存分配不足，会报OOM异常。</p>
-<h3 id="1-6-运行时常量池"><a href="#1-6-运行时常量池" class="headerlink" title="1.6 运行时常量池"></a>1.6 运行时常量池</h3><p>&emsp;<strong>运行时常量属于方法区的一部分</strong>，.class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池表（Constant Pool Table），用于存放编译器生成的各种字面量与符号引用，这部分的内容将在类加载后存放到方法区的运行时常量中池。</p>
+<h3 id="2-6-运行时常量池"><a href="#2-6-运行时常量池" class="headerlink" title="2.6 运行时常量池"></a>2.6 运行时常量池</h3><p>&emsp;<strong>运行时常量属于方法区的一部分</strong>，.class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池表（Constant Pool Table），用于存放编译器生成的各种字面量与符号引用，这部分的内容将在类加载后存放到方法区的运行时常量中池。</p>
 <p>&emsp;规范没有对运行时常量池作任何要求，但是通常，除了保存.class中的符号描述引用外，还会把符号引用翻译出来的直接引用也存储在这里。</p>
 <p>&emsp;运行时常量池具有动态性，除了编译产生的内容会进入，运行期间新产生的常量也可以进入常量池。比如String的intern()方法。当内存不够时，会报OOM异常。</p>
-<h3 id="1-7-直接内存"><a href="#1-7-直接内存" class="headerlink" title="1.7 直接内存"></a>1.7 直接内存</h3><p>&emsp;直接内存不属于虚拟机运行时数据区的一部分，也不是java虚拟机规范中定义的内存区域，但是这部分内存经常被使用，也可能导致OOM。</p>
+<h3 id="2-7-直接内存"><a href="#2-7-直接内存" class="headerlink" title="2.7 直接内存"></a>2.7 直接内存</h3><p>&emsp;直接内存不属于虚拟机运行时数据区的一部分，也不是java虚拟机规范中定义的内存区域，但是这部分内存经常被使用，也可能导致OOM。</p>
 <p>&emsp;jdk1.4新加入了了NIO（New Input/Output）类，引入了一种基于通道和缓存区的I/O方式，它可以使用Native函数库直接分配对外内存，然后通过一个存储在java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作。这样能在一些场景中显著提高性能，因为避免了再Java堆和Native堆中来回复制数据。</p>
 <p>&emsp;直接内存的分配不受java堆大小的限制，但是机器的限制。</p>
 <p>参考文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/index.html">https://docs.oracle.com/javase/8/docs/index.html</a><br>参考文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5</a></p>
