@@ -449,14 +449,23 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="class类文件结构"><a href="#class类文件结构" class="headerlink" title="class类文件结构"></a>class类文件结构</h2><p> 参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.3">https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.3</a></p>
+                <h2 id="class类文件结构"><a href="#class类文件结构" class="headerlink" title="class类文件结构"></a>class类文件结构</h2><p> 参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.7.5">https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.7.5</a> jdk11</p>
 <p>&emsp;前面说过，任何语言只要能被编译成符合规范的字节码文件，就可以在虚拟机上运行。字节码文件是java规范中规定的，一个class文件必定对应着一个类或者接口的信息，但是反过来则不一定，因为类或者接口可以动态生成，直接被类加载器加载。</p>
 <p><strong>&emsp;class文件是一组以8字节为基础单位的二进制流，代码中各个部分严格按照顺序排列在文件中，没有任何分隔符。当遇到需要占用8字节以上空间的数据项时，会按照高位在前的方式分割成若干个8字节进行存储。</strong></p>
 <p>&emsp;class文件由表中所展示的这些项组成。u1、u2……代表1个字节、2个字节等。“_info”结尾的代表是表，复合数据结构。</p>
 <p><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3184539622,2942284202&fm=26&gp=0.jpg" alt="class文件结构"></p>
 <h2 id="1-魔数和版本号"><a href="#1-魔数和版本号" class="headerlink" title="1 魔数和版本号"></a>1 魔数和版本号</h2><p>&emsp;class文件的头4个字节被称为魔数(Magic Number)，它用来标识该文件是否为有效的class文件，class文件的魔数值为“0xCAFABABE”，我们可以看到任何class文件都是以“0xCAFABABE”开头。</p>
 <p>&emsp;魔数之后是java的版本号，第5、6字节为次版本号，第7、8字节为主版本号。jdk版本号从45开始，jdk版本号和java版本的对应规则如下图所示。魔数版本号在验证阶段，都会对其进行校验。</p>
-<p><img src="https://img-blog.csdnimg.cn/20201013180326577.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="jdk版本号"></p>
+<pre class="line-numbers language-none"><code class="language-none">JDK版本			版本号
+JDK 6				50
+JDK 7				51
+JDK 8				52
+JDK 9				53
+JDK 10			54
+JDK 11			55
+JDK 12			56
+JDK 13			56<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;<a target="_blank" rel="noopener" href="https://img-blog.csdnimg.cn/20201013180326577.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70">jdk版本号对应关系图</a></p>
 <p>&emsp;比如有以下例子：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>hk7<span class="token punctuation">.</span>memory</span><span class="token punctuation">;</span>
 
@@ -831,7 +840,7 @@
 
 <p>&emsp;标志符占2字节，16位，但是目前只定义了9个，未使用到的标志位一律为0。再看前面说到的字节码常量池之后是<code>0x0021 = 0x0001|0x0020</code>，查上表可知public类型，可使用invokespecial指令。</p>
 <p>   ACC_SUPDER：<a target="_blank" rel="noopener" href="https://blog.csdn.net/dshf_1/article/details/105787923">https://blog.csdn.net/dshf_1/article/details/105787923</a> </p>
-<h3 id="1-4-类索引、父类索引和接口索引集合"><a href="#1-4-类索引、父类索引和接口索引集合" class="headerlink" title="1.4 类索引、父类索引和接口索引集合"></a>1.4 类索引、父类索引和接口索引集合</h3><p>&emsp;访问标志之后接着是类索引（this_class）和父类索引（super_class），它们都是u2类型的数据，接口索引集合（interfaces）是一组u2类型的数据集合，<strong>Class文件中这三项确定该类型的继承关系</strong>。</p>
+<h2 id="4-类索引、父类索引和接口索引集合"><a href="#4-类索引、父类索引和接口索引集合" class="headerlink" title="4 类索引、父类索引和接口索引集合"></a>4 类索引、父类索引和接口索引集合</h2><p>&emsp;访问标志之后接着是类索引（this_class）和父类索引（super_class），它们都是u2类型的数据，接口索引集合（interfaces）是一组u2类型的数据集合，<strong>Class文件中这三项确定该类型的继承关系</strong>。</p>
 <ul>
 <li>类索引：确定该类的全限定名。</li>
 <li>父类索引：确定该类父类的全限定名。除了java.lang.Object之外，所有的类都有父类（java只能继承一个父类，因此父类索引只有一个，而接口可以实现多个，因此接口索引是个集合），因此除了Object，其他类的父类索引都不为0。</li>
@@ -840,7 +849,7 @@
 <p>&emsp;this_class和super_class均指向CONSGANT_class_info的的类描述符常量，通过指向的CONSGANT_class_info类型的常量中的索引值，可以找到定义在CONSGANT_utf8_info类型常量中的全限定名字符串。</p>
 <p>&emsp;还是上面那个例子，访问标志之后的4个字节为<code>0x0003</code>和<code>0x0004</code>，表示类索引和父类索引指向常量池中的<code>#3</code>和<code>#4</code>个常量，查常量池可以看到，他们确实是class类型的常量，<code>#3</code>又指向<code>#21</code>，<code>#21</code>为utf8类型常量，值为<code>com/hk7/memory/ClassTest</code>s。<code>#4</code>指向<code>#22</code>，<code>#22</code>为utf8常量，值为<code>java/lang/Object</code>。这与规定的一致。</p>
 <p>&emsp;再之后是接口索引个数，值为<code>0x0001</code>，说明本类没有实现了1个接口，接口索引个数之后紧接着接口的引用<code>0x0005</code>，查常量表#5指向#23，#23为utf8的字符串java/io/Serializable，说明它实现了java/io/Serializable接口，和源码一致。</p>
-<h3 id="1-5-字段表集合"><a href="#1-5-字段表集合" class="headerlink" title="1.5 字段表集合"></a>1.5 字段表集合</h3><p>&emsp;接口索引之后是字段表（field_info）信息，它描述类或者接口声明的变量，描述作用域（public、private）、变量类型（static静态变量、实例变量）、可变性（final）、并发可见性（volatile）、序列化（transient）、字段数据类型（基本类型、对象、数据）等信息。修饰符等可以用标志位来表示，而字段名、字段类型等无法固定，只能指针指向常量池中的常量来表示。具体的字段表结构如下：</p>
+<h2 id="5-字段表集合"><a href="#5-字段表集合" class="headerlink" title="5 字段表集合"></a>5 字段表集合</h2><p>&emsp;接口索引之后是字段表（field_info）信息，它描述类或者接口声明的变量，描述作用域（public、private）、变量类型（static静态变量、实例变量）、可变性（final）、并发可见性（volatile）、序列化（transient）、字段数据类型（基本类型、对象、数据）等信息。修饰符等可以用标志位来表示，而字段名、字段类型等无法固定，只能指针指向常量池中的常量来表示。具体的字段表结构如下：</p>
 <table>
    <tr>
       <td>名称</td>
@@ -897,7 +906,7 @@
 <p>&emsp;字段或者方法的<strong>描述符</strong>是用来描述字段的数据类型、方法参数列表和返回值的，上图可以看到描述符和类型的对应关系。数组类型，每个维度都会有一个前置的<code>[</code>来描述，比如<code>java.lang.String[][]</code>类型的二维数组被描述为<code>[[Ljava/lang/String;</code>，再比如一个整型数组<code>int[]</code>会描述为<code>[I</code>。</p>
 <p>&emsp;字段的<strong>属性</strong>是指final、static等修饰符。后面1.7会具体讲解。</p>
 <p>&emsp;再继续看上面的例子，接口描述之后是字段长度位，可以看到值为<code>0x0001</code>=1，说明方法只有1个变量。后面跟着变量的具体描述，access_flags<code>0x0002</code>表示private修饰；name_index<code>0x0006</code>表示指向常量池#6，查常量表看到#6为utf8的字符串num；<code>descriptor_index</code>0x0007表示指向常量池#7，查常量表可知#7是utf8的I，上图看到了，I是int的描述符，再后面是字段属性个数 <code>0x0000</code>=0，代表没有属性修饰。因此我们推断这一段代码为<code>private int m;</code>。</p>
-<h3 id="1-6-方法表集合"><a href="#1-6-方法表集合" class="headerlink" title="1.6 方法表集合"></a>1.6 方法表集合</h3><p>&emsp;字节码文件中，方法表的结构和上述字段表一致，依次是访问标志（access_flag）、名称索引（name_index）、描述符索引（descriptor_index）和属性表集合。区别在于访问标志选项有差别，volatile和transient无法修饰方法，方法表中没有相应标志，多了synchronized、native、strictfp和abstract相关标志，具体结构如下：</p>
+<h2 id="6-方法表集合"><a href="#6-方法表集合" class="headerlink" title="6 方法表集合"></a>6 方法表集合</h2><p>&emsp;字节码文件中，方法表的结构和上述字段表一致，依次是访问标志（access_flag）、名称索引（name_index）、描述符索引（descriptor_index）和属性表集合。区别在于访问标志选项有差别，volatile和transient无法修饰方法，方法表中没有相应标志，多了synchronized、native、strictfp和abstract相关标志，具体结构如下：</p>
 <table>
    <tr>
       <td>名称</td>
@@ -948,7 +957,7 @@
 <li>method1：access_flag<code>0x0001</code>=1表示public方法。name_index<code>0x0008</code>指向常量池#8，#8是utf8常量<code>&lt;init&gt;</code>，descriptor_index<code>0x0009</code>指向常量池#9，#9是utf8<code>()V</code>。再后面attributes_count<code>0x0001</code>表示init方法有1个属性修饰，后面是具体的属性结构<code>0x0001</code>=10，查常量池#10位utf8的<code>Code</code>，code里面存储的是方法里面具体的代码。这部分东西很多，具体请看1.7 属性表集合。通过上述我们推断方法1部分源码为<code>public void init()</code>。</li>
 <li>method2：ccess_flag<code>0x0001</code>=1表示public方法。name_index<code>0x000F</code>指向常量池#15，#15是utf8常量<code>add</code>，descriptor_index<code>0x0010</code>指向常量池#16，#16是utf8<code>()I</code>。再后面attributes_count<code>0x0001</code>表示init方法有1个属性修饰，后面是具体的属性结构<code>0x000A</code>=10，查常量池#10位utf8的<code>Code</code>，code里面存储的是方法里面具体的代码。通过上述我们推断方法2部分源码为<code>public int add()</code>。与源码一致。【可使用010editor的class模板打开class文件查看具体字节码】</li>
 </ul>
-<h3 id="1-7-属性表集合"><a href="#1-7-属性表集合" class="headerlink" title="1.7 属性表集合"></a>1.7 属性表集合</h3><p>&emsp;属性表在class文件、字段表和方法表中都会出现，用来描述专有的信息。《java虚拟机规范》对属性表没有像字段表、方法表那样严格限制顺序，只要不和已有属性名重复，都可以编译器都可以写入自己定义的属性信息，java虚拟机运行时会忽略掉它不认识的属性。</p>
+<h2 id="7-属性表集合"><a href="#7-属性表集合" class="headerlink" title="7 属性表集合"></a>7 属性表集合</h2><p>&emsp;属性表在class文件、字段表和方法表中都会出现，用来描述专有的信息。《java虚拟机规范》对属性表没有像字段表、方法表那样严格限制顺序，只要不和已有属性名重复，都可以编译器都可以写入自己定义的属性信息，java虚拟机运行时会忽略掉它不认识的属性。</p>
 <p>&emsp;属性的名称必须从常量池中引用uft8常量来表示，但是属性值的结构则不用，用长度说明属性值所占的位数即可。属性值的结构如下所示：</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">attribute_info &#123;
     u2 attribute_name_index;       # 属性名称
@@ -957,188 +966,60 @@
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>&emsp;java虚拟机预定义的属性如下：</p>
-<table>
-   <tr>
-      <td>属性名称</td>
-      <td>使用位置</td>
-      <td>含义</td>
-      <td>结构</td>
-   </tr>
-   <tr>
-      <td>Code</td>
-      <td>方法表</td>
-      <td>java代码编译成的字节码指令</td>
-     <td>
-       <pre></pre>
-     </td>
-   </tr>
-   <tr>
-      <td>ConstantValue</td>
-      <td>字段表</td>
-      <td>由final关键字定义的常量值</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>Deprecated</td>
-      <td>类、方法表、字段表</td>
-      <td>被声明为deprecated的方法和字段</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>Exceptions</td>
-      <td>方法标配</td>
-      <td>方法抛出的异常列表</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>EnclosingMethod</td>
-      <td>类文件</td>
-      <td>只有局部类和匿名类才拥有该属性，标志这个类所在的外围方法</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>InnerClasses</td>
-      <td>类文件</td>
-      <td>内部类列表</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>LineNumberTable</td>
-      <td>Code属性</td>
-      <td>java源码行号与字节码指令的对应关系</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>LocalVariableTable</td>
-      <td>Code属性</td>
-      <td>方法的局部变量描述</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>StackMapTable</td>
-      <td>Code属性</td>
-      <td>jdk6新增属性，验证局部变量和操作数栈类型是否匹配</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>Signature</td>
-      <td>类、方法表、字段表</td>
-      <td>jdk5新增属性，用于支持泛型的类、方法、字段的签名</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>SourceFile</td>
-      <td>类文件</td>
-      <td>记录源文件名称</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>SourceDebugExtension</td>
-      <td>类文件</td>
-      <td>jdk5新增属性，存储额外的调试信息</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>Synthetic</td>
-      <td>类、方法表、字段表</td>
-      <td>标识方法或字段为编译器自动生成的</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>LocalVariableTypeTable</td>
-      <td>类</td>
-      <td>jdk5新增属性，使用特征签名代替描述符，为支持泛型添加的属性</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>RuntimeVisibleAnnotations</td>
-      <td>类、方法表、字段表</td>
-      <td>jdk5新增属性，为动态注解提供支持</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>RuntimeInvisibleAnnotations</td>
-      <td>类、方法表、字段表</td>
-      <td>与RuntimeVisibleAnnotations刚好相反</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>RuntimeVisibleParameterAnnotations</td>
-      <td>方法表</td>
-      <td>jdk5新增属性，作用类似于RuntimeVisibleAnnotations，但是作用于方法</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>RuntimeInvisibleParameterAnnotations</td>
-      <td>方法表</td>
-      <td>与RuntimeVisibleParameterAnnotations刚好相反</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>AnnotationDefault</td>
-      <td>方法表</td>
-      <td>jdk5新增属性，用于记录注解类元素的默认值</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>BoostrapMethod</td>
-      <td>类文件</td>
-      <td>jdk7新增属性，用于保存invokedynamic指令引用的引导方法限定符</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>RuntimeVisibleTypeAnnotation</td>
-      <td>类、方法表、字段表、Code属性</td>
-      <td>jdk8新增属性，用于指明哪些类是运行时（即反射调用）可见的</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>RuntimeInvisibleTypeAnnotation</td>
-      <td>类、方法表、字段表、Code属性</td>
-      <td>与RuntimeVisibleTypeAnnotation相反</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>MethodParameters</td>
-      <td>方法表</td>
-      <td>jdk8新增属性，编译时加上-parameters参数可以将方法名称编译进Class文件中，并可运行时获取</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>Modules</td>
-      <td>类</td>
-      <td>jdk9新增属性，用于记录一个Module的名称以及相关信息（requires、exports、opens、uses、provides）</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>ModulePackages</td>
-      <td>类</td>
-      <td>jdk9新增属性，用于记录一个模块中所有被exports或者opens的包</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>ModuleMainClass</td>
-      <td>类</td>
-      <td>jdk9新增属性，用于指定一个模块的主类</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>NestHost</td>
-      <td>类</td>
-      <td>jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部类通过该属性得知自己的宿主类</td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>NestMembers</td>
-      <td>类</td>
-      <td>jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部宿主类通过该属性得知自己有哪些内部类</td>
-      <td></td>
-   </tr>
-</table>
+<pre class="line-numbers language-none"><code class="language-none">属性名                                      含义                                                                                     使用位置
+ConstantValue                         || 由final关键字定义的常量值                                                                  ||   字段表
+Code                                  || java代码编译成的字节码指令                                                                  ||  方法表
+StackMapTable                         || jdk6新增属性，验证局部变量和操作数栈类型是否匹配                                               ||  Code属性
+Exceptions                            || 方法抛出的异常列表                                                                         ||  方法表
+InnerClasses                          || 内部类列表                                                                                ||  类文件
+EnclosingMethod                       || 只有局部类和匿名类才拥有该属性，标志这个类所在的外围方法                                         ||  类文件
+Synthetic                             || 标识方法或字段为编译器自动生成的                                                             ||  类、方法表、字段表
+Signature                             || jdk5新增属性，用于支持泛型的类、方法、字段的签名                                               ||   类、方法表、字段表
+SourceFile                            || 记录源文件名称                                                                             ||   类文件
+SourceDebugExtension                  || jdk5新增属性，存储额外的调试信息                                                             ||   类文件	
+LineNumberTable                       || java源码行号与字节码指令的对应关系                                                           ||   Code属性
+LocalVariableTable                    || 方法的局部变量描述                                                                          ||  Code属性
+LocalVariableTypeTable                || jdk5新增属性，使用特征签名代替描述符，为支持泛型添加的属性                                       ||  类文件
+Deprecated                            || 被声明为deprecated的方法和字段                                                              ||  类、方法表、字段表
+RuntimeVisibleAnnotations             || jdk5新增属性，为动态注解提供支持                                                             ||  类、方法表、字段表
+RuntimeInvisibleAnnotations           || 同上相反                                                                                  ||   类、方法表、字段表
+RuntimeVisibleParameterAnnotations    || 类似于RuntimeVisibleAnnotations，作用于方法                                                 ||  方法表
+RuntimeInvisibleParameterAnnotations  || 同上相反                                                                                   ||  方法表
+RuntimeVisibleTypeAnnotations         || jdk8新增属性，用于指明哪些类是运行时（即反射调用）可见的                                         ||  类、方法表、字段表
+RuntimeInvisibleTypeAnnotations       || 同上相反                                                                                   ||  类、方法表、字段表
+AnnotationDefault                     || jdk5新增属性，用于记录注解类元素的默认值                                                       ||  方法表
+BootstrapMethods                      || jdk7新增属性，用于保存invokedynamic指令引用的引导方法限定符                                     ||  类文件
+MethodParameters                      || jdk8新增属性，编译时加上-parameters参数可以将方法名称编译进Class文件中，并可运行时获取             ||  方法表
+Module                                || jdk9新增属性，用于记录一个Module的名称以及相关信息（requires、exports、opens、uses、provides）   ||  类文件
+ModulePackages                        || jdk9新增属性，用于记录一个模块中所有被exports或者opens的包                                      ||  类文件
+ModuleMainClass                       || jdk9新增属性，用于指定一个模块的主类                                                           ||  类文件
+NestHost                              || jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部类通过该属性得知自己的宿主类                 ||  类文件
+NestMembers                           || jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部宿主类通过该属性得知自己有哪些内部类          ||  类文件<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
-<h4 id="1-Code属性"><a href="#1-Code属性" class="headerlink" title="1.Code属性"></a>1.Code属性</h4><pre class="line-numbers language-none"><code class="language-none">Code_attribute &#123;
+<h3 id="7-1-ConstantValue属性"><a href="#7-1-ConstantValue属性" class="headerlink" title="7.1 ConstantValue属性"></a>7.1 ConstantValue属性</h3><p>&emsp;ConstantValue属性的作用是通知虚拟机自动为静态变量赋值。只有被static修饰的变量才能使用该属性。实例变量(int x = 123)和静态变量(static int x = 123)的赋值方式和时机不同。前者是在实例构造器<code>&lt;init()&gt;</code>中赋值的。而静态变量的赋值有2种方式：</p>
+<ul>
+<li>在类构造器<code>&lt;cinit()&gt;</code>中赋值</li>
+<li>使用ConstantValue属性赋值</li>
+</ul>
+<p>&emsp;目前Oracle实现的javac编译器的实现方式是：如果变量同时使用final和static修饰（java语法上的常量）且类型为基本类型或者String类型，则使用ConstantValue属性赋值。否则会在<code>&lt;cinit()&gt;</code>中赋值。</p>
+<p>&emsp;《java虚拟机规范》中没有强制要求final修饰的变量必须设置ACC_FINAL标志，只要求具有ConstantValue属性的字段必须设置ACC_STATIC标志。final关键字的要求是javac编译器自己加入的。</p>
+<p>&emsp;ConstantValue的结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">ConstantValue_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 constantvalue_index;     &#x2F;&#x2F; 对常量池中字面量常量的引用。
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>&emsp;上述提到被final和static修饰的基本类型以及String类型的变量，才拥有ConstantValue属性，因此constantvalue_index指向的字面量常量只能是以下几种：</p>
+<pre class="line-numbers language-none"><code class="language-none">CONSTANT_Integer(int, short, char, byte, boolean)
+CONSTANT_Float（float）	
+CONSTANT_Long（long）
+CONSTANT_Double（double）
+CONSTANT_String（String）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-2-Code属性"><a href="#7-2-Code属性" class="headerlink" title="7.2 Code属性"></a>7.2 Code属性</h3><pre class="line-numbers language-none"><code class="language-none">Code_attribute &#123;
     u2 attribute_name_index;
     u4 attribute_length;
     u2 max_stack;
@@ -1166,7 +1047,7 @@
 <li>exception_table_length（u2）：异常表长度</li>
 <li>exception_table（exception_info）：异常表由4个项组成，分别是start_pc（u2）、end_pc（u2）、handler_pc（u2）和catch_type（u2）。</li>
 <li>attributes_count（u2）：略</li>
-<li>attributes（attributes_info）：略</li>
+<li>attributes（attributes_info）：字段属性表的具体内容详细见7.</li>
 </ul>
 <p>&emsp;Code属性是Class文件中最重要的属性，如果把java程序中的信息分为代码（Code，方法体中的代码）和元数据（类、字段、方法定义等），那么在整个class文件中，Code属性用于描述代码，其他所有数据都用于描述元数据。</p>
 <p>&emsp;继续前面的例子分析。继续分析add()的Code部分，attribute_name_index<code>0x000A</code>=10表示指向常量池#10，查常量池得#10为<code>Code</code>，表示这是Code代码，后面进入具体的代码结构。紧接着attribute_length<code>0x00000031</code>=49表示代码长度为49。再后max_stack<code>0x0002</code>=2表示add方法操作数栈最大深度为2，再后面max_locals<code>0x0001</code>=1表示局部变量表所需存储空间为1个槽。再后面code_length<code>0x00000007</code>=7表示字节码长度为7，即7个指令。接下来具体的7个字节码指令和气代表的含义分别为</p>
@@ -1195,10 +1076,240 @@
         Start  Length  Slot  Name   Signature
             0       7     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;ClassTest;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<h3 id="7-3-StackMapTable属性"><a href="#7-3-StackMapTable属性" class="headerlink" title="7.3 StackMapTable属性"></a>7.3 StackMapTable属性</h3><p>&emsp;StackMapTable属性是jdk6新增的属性，它很复杂，位于Code属性的属性表中。它会在虚拟机类加载的字节码验证阶段被类型检查器（Type Checker）使用，其目的在于代替以前比较消耗性能的基于数据流分析的类型推导验证器（加快类加载的字节码验证阶段）。</p>
+<p>&emsp;StackMapTable属性中包含零到多个栈映射帧（Stack Map Frame），每个栈帧代表一个字节码偏移量，用于表示执行到该字节码时局部变量表和操作数栈的验证类型。类型检查器会检查StackMapTable来确定一段字节码指令是否符合逻辑约束。StackMapTable的结构如下所示：</p>
+<pre class="line-numbers language-none"><code class="language-none">StackMapTable_attribute &#123;
+    u2              attribute_name_index;
+    u4              attribute_length;
+    u2              number_of_entries;
+    stack_map_frame entries[number_of_entries];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>&emsp;规定版本号&gt;=50.0的class文件，Code属性必须带有StackMapTable属性，如果没有则表示默认带了一个number_of_entries=0的StackMapTable属性。一个方法的Code属性只有一个StackMapTable属性，否则抛出异常。</p>
+<p>&emsp;StackMapTable具体见栈帧的内部结构。</p>
+<h3 id="7-4-Exceptions属性"><a href="#7-4-Exceptions属性" class="headerlink" title="7.4 Exceptions属性"></a>7.4 Exceptions属性</h3><p>&emsp;Exceptions属性和Code属性平级，不同于Code属性中的异常表。Exceptions的作用主要是列举方法中可能抛出的受检异常（Checked Exceptions），也就是throws后面的异常。它的结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">Exceptions_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 number_of_exceptions;													&#x2F;&#x2F;受检异常数量
+    u2 exception_index_table[number_of_exceptions];   &#x2F;&#x2F;指向常量池中CONSTANT_Class_info型的索引，代表该异常类型
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-5-InnerClass属性"><a href="#7-5-InnerClass属性" class="headerlink" title="7.5 InnerClass属性"></a>7.5 InnerClass属性</h3><p>&emsp;InnerClass属性用于记录内部类和宿主类之间的关联。它的结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">InnerClasses_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 number_of_classes;							 &#x2F;&#x2F;需要记录的内部类信息个数
+		&#123;   u2 inner_class_info_index;     &#x2F;&#x2F;指向常量池中的CONSTANT_Class_info型索引
+        u2 outer_class_info_index;     &#x2F;&#x2F;指向常量池中的CONSTANT_Class_info型索引
+        u2 inner_name_index;					 &#x2F;&#x2F;指向常量池中的CONSTANT_Utf8_info型索引	
+        u2 inner_class_access_flags;
+    &#125; classes[number_of_classes];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>&emsp;inner_class_access_flags是内部类的访问标志，取值范围如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">Flag Name				Value		Interpretation
+ACC_PUBLIC			0x0001	内部类是否为public
+ACC_PRIVATE			0x0002	private
+ACC_PROTECTED		0x0004	protected
+ACC_STATIC			0x0008	static
+ACC_FINAL				0x0010	final
+ACC_INTERFACE		0x0200	接口
+ACC_ABSTRACT		0x0400	abstract
+ACC_SYNTHETIC		0x1000	内部类是否自动生成（非用户代码生成）
+ACC_ANNOTATION	0x2000	注解
+ACC_ENUM				0x4000	枚举<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-6-EnclosingMethod属性"><a href="#7-6-EnclosingMethod属性" class="headerlink" title="7.6 EnclosingMethod属性"></a>7.6 EnclosingMethod属性</h3><p>&emsp;EnclosingMethod属性标识当前匿名内所在的外部方法。结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">EnclosingMethod_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 class_index;					&#x2F;&#x2F;指向常量池中的CONSTANT_Class_info型索引
+    u2 method_index;				&#x2F;&#x2F;指向常量池中的CONSTANT_NameAndType_info型索引
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>&emsp;&emsp;如果不是内部类，则method_index必须为0。</p>
+<h3 id="7-7-Synthetic和Deprecated属性"><a href="#7-7-Synthetic和Deprecated属性" class="headerlink" title="7.7 Synthetic和Deprecated属性"></a>7.7 Synthetic和Deprecated属性</h3><p>&emsp;Synthetic标识方法或字段为编译器自动生成（即不是源码定义的）的。Deprecated标志方法是否过时，只有是和否，没有值。</p>
+<pre class="line-numbers language-none"><code class="language-none">Synthetic_attribute &#123;
+    u2 attribute_name_index;   &#x2F;&#x2F;指向常量池中的CONSTANT_Utf8_info型索引
+    u4 attribute_length;			 &#x2F;&#x2F;值固定为：0x00000000
+&#125;
+Deprecated同上<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-8-Signature"><a href="#7-8-Signature" class="headerlink" title="7.8 Signature"></a>7.8 Signature</h3><p>&emsp;<strong>由于Java的泛型采用擦出法实现，在为了避免类型信息被擦除后导致签名混乱，需要这个属性记录泛型中的相关信息。</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">Signature_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 signature_index;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-9-SourceFile和SourceDebugExtension属性"><a href="#7-9-SourceFile和SourceDebugExtension属性" class="headerlink" title="7.9 SourceFile和SourceDebugExtension属性"></a>7.9 SourceFile和SourceDebugExtension属性</h3><p>&emsp;SourceFile记录生成这个class文件的源码文件名称。SourceDebugExtension存储额外的代码调试信息。</p>
+<pre class="line-numbers language-none"><code class="language-none">SourceFile_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 sourcefile_index;    &#x2F;&#x2F;CONSTANT_Utf8_info
+&#125;
+
+SourceDebugExtension_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u1 debug_extension[attribute_length];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-10-LineNumberTable属性"><a href="#7-10-LineNumberTable属性" class="headerlink" title="7.10 LineNumberTable属性"></a>7.10 LineNumberTable属性</h3><p>&emsp;描述java源码行号和字节码行号之间的对应关系。非运行必须属性，可以使用<code>javc -g: none XXX.java</code>或者<code>javac -g: lines XXX.java</code>来取消，这样生成的class文件不含LineNumberTable属性，报错时也不会显示行号信息。</p>
+<pre class="line-numbers language-none"><code class="language-none">LineNumberTable_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 line_number_table_length;
+    &#123;   u2 start_pc;					&#x2F;&#x2F;字节码行号
+        u2 line_number;	      &#x2F;&#x2F;源码行号
+    &#125; line_number_table[line_number_table_length];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-11-LocalVariableTable和LocalVariableTypeTable属性"><a href="#7-11-LocalVariableTable和LocalVariableTypeTable属性" class="headerlink" title="7.11 LocalVariableTable和LocalVariableTypeTable属性"></a>7.11 LocalVariableTable和LocalVariableTypeTable属性</h3><p>&emsp;LocalVariableTable用于描述栈帧中局部变量表的变量与java源码中定义的变量之间的关系，不是运行时必须属性。编译时使用<code>javac -g: none XXX.java</code>或者<code>javac -g: vars XXX.java</code>来忽略，这样会导致所有的参数名称丢失，IDE会使用args0、args1来代替原有参数名。不影响程序运行。其结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">LocalVariableTable_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 local_variable_table_length;
+    &#123;   u2 start_pc;							&#x2F;&#x2F;局部变量生命周期开始的字节码偏移量
+        u2 length;                &#x2F;&#x2F;局部变量生命周期开始范围长度
+        u2 name_index;					  &#x2F;&#x2F;局部变量名称，指向CONSTANT_Utf8_info
+        u2 descriptor_index;      &#x2F;&#x2F;局部变量描述符
+        u2 index;									&#x2F;&#x2F;局部变量在栈帧的局部变量表中变量槽的位置
+    &#125; local_variable_table[local_variable_table_length];
+&#125;
+
+LocalVariableTypeTable_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 local_variable_type_table_length;
+    &#123;   u2 start_pc;
+        u2 length;
+        u2 name_index;
+        u2 signature_index;   &#x2F;&#x2F;记录泛型
+        u2 index;
+    &#125; local_variable_type_table[local_variable_type_table_length];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>&emsp;LocalVariableTypeTable是jdk5引入的，作用同LocalVariableTable，记录泛型。</p>
+<h3 id="7-12运行时注解相关属性"><a href="#7-12运行时注解相关属性" class="headerlink" title="7.12运行时注解相关属性"></a>7.12运行时注解相关属性</h3><p>&emsp;JDK5引入了注解，Class文件也增加注解相关的属性。RuntimeVisibleAnnotations、RuntimeInvisibleAnnotations、RuntimeVisibleParameterAnnotations、RuntimeInvisibleParameterAnnotations、RuntimeVisibleTypeAnnotations、RuntimeInvisibleTypeAnnotations这6个注解功能类似。</p>
+<pre class="line-numbers language-none"><code class="language-none">RuntimeVisibleAnnotations_attribute &#123;
+    u2         attribute_name_index;
+    u4         attribute_length;
+    u2         num_annotations;
+    annotation annotations[num_annotations];
+&#125;
+
+annotation &#123;
+    u2 type_index;																	&#x2F;&#x2F; 指向CONSTAN_Utf8_info的索引，描述注解的字段描述符
+    u2 num_element_value_pairs;											&#x2F;&#x2F; 注解数量
+    &#123;   u2            element_name_index;						&#x2F;&#x2F; 该注解的参数
+        element_value value;                        &#x2F;&#x2F; 该注解的值
+    &#125; element_value_pairs[num_element_value_pairs];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;RuntimeVisibleAnnotations记录了类、字段或方法运行时的可见注解，当反射获取注解时，就是通过这个属性获取到的。其他5种注解的结构和它一致，功能类似。</p>
+<pre class="line-numbers language-none"><code class="language-none">
+RuntimeInvisibleAnnotations_attribute &#123;
+    u2         attribute_name_index;
+    u4         attribute_length;
+    u2         num_annotations;
+    annotation annotations[num_annotations];
+&#125;
+
+RuntimeVisibleParameterAnnotations_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u1 num_parameters;
+    &#123;   u2         num_annotations;
+        annotation annotations[num_annotations];
+    &#125; parameter_annotations[num_parameters];
+&#125;
+
+RuntimeInvisibleParameterAnnotations_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u1 num_parameters;
+    &#123;   u2         num_annotations;
+        annotation annotations[num_annotations];
+    &#125; parameter_annotations[num_parameters];
+&#125;
+
+RuntimeVisibleTypeAnnotations_attribute &#123;
+    u2              attribute_name_index;
+    u4              attribute_length;
+    u2              num_annotations;
+    type_annotation annotations[num_annotations];
+&#125;
+
+RuntimeInvisibleTypeAnnotations_attribute &#123;
+    u2              attribute_name_index;
+    u4              attribute_length;
+    u2              num_annotations;
+    type_annotation annotations[num_annotations];
+&#125;
+
+AnnotationDefault_attribute &#123;
+    u2            attribute_name_index;
+    u4            attribute_length;
+    element_value default_value;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>&emsp;AnnotationDefault记录注解中的默认值，也就是value参数。</p>
+<h3 id="7-13BootstrapMethods属性"><a href="#7-13BootstrapMethods属性" class="headerlink" title="7.13BootstrapMethods属性"></a>7.13BootstrapMethods属性</h3><p>&emsp;JDK7新增属性，用于保存invokeddynamic指令引用的引导方法限定类。如果类文件结构的常量池中出现过CONSTANT_InvokeDynamic_info常量，则类文件必须存在BoostrapMethod属性，最多一个。结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">BootstrapMethods_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 num_bootstrap_methods;
+    &#123;   u2 bootstrap_method_ref;												&#x2F;&#x2F;指向CONSTANT_MethodHandle_info类型常量
+        u2 num_bootstrap_arguments;                     
+        u2 bootstrap_arguments[num_bootstrap_arguments];&#x2F;&#x2F;有点类似链表，一个接一个
+    &#125; bootstrap_methods[num_bootstrap_methods];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="7-14模块相关属性"><a href="#7-14模块相关属性" class="headerlink" title="7.14模块相关属性"></a>7.14模块相关属性</h3><p>&emsp;主要是是为了支持JDK9引入的模块系统，用得少不看了，详情查看官网。</p>
+<pre class="line-numbers language-none"><code class="language-none">Module_attribute &#123;
+    u2 attribute_name_index;
+    u4 attribute_length;
+
+    u2 module_name_index;
+    u2 module_flags;
+    u2 module_version_index;
+
+    u2 requires_count;
+    &#123;   u2 requires_index;
+        u2 requires_flags;
+        u2 requires_version_index;
+    &#125; requires[requires_count];
+
+    u2 exports_count;
+    &#123;   u2 exports_index;
+        u2 exports_flags;
+        u2 exports_to_count;
+        u2 exports_to_index[exports_to_count];
+    &#125; exports[exports_count];
+
+    u2 opens_count;
+    &#123;   u2 opens_index;
+        u2 opens_flags;
+        u2 opens_to_count;
+        u2 opens_to_index[opens_to_count];
+    &#125; opens[opens_count];
+
+    u2 uses_count;
+    u2 uses_index[uses_count];
+
+    u2 provides_count;
+    &#123;   u2 provides_index;
+        u2 provides_with_count;
+        u2 provides_with_index[provides_with_count];
+    &#125; provides[provides_count];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
-<p>未完待续。。。下次再继续分析。</p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+
+<p>&emsp;</p>
+<p>&emsp;</p>
+
             </div>
             <hr/>
 
