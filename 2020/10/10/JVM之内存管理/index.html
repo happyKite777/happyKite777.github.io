@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="JVM之内存管理, HappyKite777的博客">
+    <meta name="keywords" content="JVM之内存模型, HappyKite777的博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>JVM之内存管理 | HappyKite777的博客</title>
+    <title>JVM之内存模型 | HappyKite777的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">JVM之内存管理</h1>
+                    <h1 class="description center-align post-title">JVM之内存模型</h1>
                 </div>
             </div>
         </div>
@@ -433,7 +433,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-29
+                    2020-10-10
                 </div>
                 
 
@@ -450,13 +450,8 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <p>&emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。</p>
-<h2 id="1-运行时数据区域概述"><a href="#1-运行时数据区域概述" class="headerlink" title="1 运行时数据区域概述"></a>1 运行时数据区域概述</h2><h3 id="1-1-运行时数据区域结构"><a href="#1-1-运行时数据区域结构" class="headerlink" title="1.1 运行时数据区域结构"></a>1.1 运行时数据区域结构</h3><p>&emsp;JVM定义了在程序执行期间使用的各种运行时数据区域。其中一些数据区域是在Java虚拟机启动时创建的，只有在Java虚拟机退出时才会被销毁。其他数据区域是每个线程的。每线程数据区域在创建线程时创建，在线程退出时销毁。主要分为程序计数器、虚拟机栈、堆、方法区和运行常量池。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTExNjQwNTExLnBuZw?x-oss-process=image/format,png" alt="HotSpot架构"><br>&emsp;每个JVM只有一个Runtime实例，即为运行时环境，也就是上图中间蓝色的框框。</p>
-<p>&emsp;不同的JVM对于内存的划分方式和管理机制存在着部分差异。结合JVM虚拟机规范，本文主要探讨经经典的JVM（HotSpot）内存布局。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTEyNDE2MTAxLnBuZw?x-oss-process=image/format,png" alt="java详细内存模型"><br>灰色的为单独线程私有的，红色的为多个线程共享的。即：</p>
-<ul>
-<li>线程独有：程序计数器、虚拟机栈、本地方法栈</li>
-<li>线程间共享：堆、堆外内存（永久代或元空间、代码缓存）<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTEyNjAxMjExLnBuZw?x-oss-process=image/format,png" alt="java内存模型"></li>
-</ul>
-<h3 id="1-2-jvm线程"><a href="#1-2-jvm线程" class="headerlink" title="1.2 jvm线程"></a>1.2 jvm线程</h3><p><strong>jvm线程</strong></p>
+<p>1.2 jvm线程</p>
+<p><strong>jvm线程</strong></p>
 <ul>
 <li>线程是一个程序里的运行单元。JVM允许一个应用有多个线程并行的执行</li>
 <li>在Hotspot JVM里，<strong>每个线程都与操作系统的本地线程直接映射</strong></li>
@@ -473,13 +468,18 @@
 <li>编译线程：运行时会将字节码编译成到本地代码</li>
 <li>信号调度线程：接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</li>
 </ul>
-<h2 id="2-JVM内存布局"><a href="#2-JVM内存布局" class="headerlink" title="2 JVM内存布局"></a>2 JVM内存布局</h2><h3 id="2-1-程序计数器（pc寄存器）"><a href="#2-1-程序计数器（pc寄存器）" class="headerlink" title="2.1 程序计数器（pc寄存器）"></a>2.1 程序计数器（pc寄存器）</h3><p>&emsp;程序计数器是一块很小的内存区域，可以看作是当前线程所执行字节码的行号指示器。<br>&emsp;pc寄存器用来<strong>存储指向下一条指令的地址</strong>，也就是即将要执行的指令代码。由执行引擎读取下一条指令，并执行该指令。程序的控制流，分支、循环、异常跳出等都是通过改变这个计数器来实现的。</p>
+<h2 id="1-jvm的内存布局"><a href="#1-jvm的内存布局" class="headerlink" title="1. jvm的内存布局"></a>1. jvm的内存布局</h2><p>&emsp;jvm内存布局又叫做运行时数据区域，主要是Java虚拟机在运行时，对不同部分的内存划分。<br>&emsp;jvm定义了在程序执行期间使用的各种运行时数据区域。其中一些数据区域是在Java虚拟机启动时创建的，只有在Java虚拟机退出时才会被销毁。其他数据区域是每个线程的。每线程数据区域在创建线程时创建，在线程退出时销毁。主要分为程序计数器、虚拟机栈、堆、方法区和运行常量池。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTExNjQwNTExLnBuZw?x-oss-process=image/format,png" alt="HotSpot架构"><br>&emsp;每个JVM只有一个Runtime实例，即为运行时环境，也就是上图中间蓝色的框框。<br>&emsp;不同的JVM对于内存的划分方式和管理机制存在着部分差异。结合JVM虚拟机规范，本文主要探讨经经典的JVM（HotSpot）内存布局。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTEyNDE2MTAxLnBuZw?x-oss-process=image/format,png" alt="java详细内存模型"><br>灰色的为单独线程私有的，红色的为多个线程共享的。即：</p>
+<ul>
+<li>线程独有：程序计数器、虚拟机栈、本地方法栈</li>
+<li>线程间共享：堆、堆外内存（永久代或元空间、代码缓存）<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTEyNjAxMjExLnBuZw?x-oss-process=image/format,png" alt="java内存模型"></li>
+</ul>
+<h3 id="1-1-程序计数器（pc寄存器）"><a href="#1-1-程序计数器（pc寄存器）" class="headerlink" title="1.1 程序计数器（pc寄存器）"></a>1.1 程序计数器（pc寄存器）</h3><p>&emsp;程序计数器是一块很小的内存区域，可以看作是当前线程所执行字节码的行号指示器。<br>&emsp;pc寄存器用来<strong>存储指向下一条指令的地址</strong>，也就是即将要执行的指令代码。由执行引擎读取下一条指令，并执行该指令。程序的控制流，分支、循环、异常跳出等都是通过改变这个计数器来实现的。</p>
 <p style="color: red">&emsp;<b>java虚拟机支持多线程，cpu在不同的线程之间切换，在每个线程中指令是顺序执行的，某个确定的时刻，只会执行一条指令，因此为了保证多线程里面，指令执行的正确性，程序计数器必须是独立的，因此这块区域被称为“线程私有”内存</b></p>
 
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MTU1NzI4NTU3LnBuZw?x-oss-process=image/format,png" alt="pc寄存器作用"><br>&emsp;上图栈帧其实对应一个方法，方法1中调用2方法，方法2再调用……一直到调用n方法，调用就压入栈，红色区域是指当前方法。方法里面具体的指令都有行号标识，pc寄存器就相当于行号标识，记录了下一条要执行的指令的地址。</p>
 <p>&emsp;如果程序正在执行的是一个java方法，则计数器的值为虚拟机字节码指令的地址。如果正在执行的是本地方法，则计数器的值为空。<strong>此区域是唯一一个不会发生OOM的内存区域</strong>。</p>
 <p><strong>举例</strong><br><img src="https://img-blog.csdnimg.cn/20201012154521652.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="image"><br>&emsp;使用<code>javap -v xxx.class</code>得到反编译代码，如上图所示，左边的行号即为指令地址（或者偏移地址），右边的为jvm操作指令，pc寄存器存储的是下一条要执行的指令地址（5），执行引擎会取得该地址，操作对应的局部变量表、操作数栈等，然后把jvm指令翻译成机器指令，供cpu执行。</p>
-<h3 id="2-2-虚拟机栈"><a href="#2-2-虚拟机栈" class="headerlink" title="2.2 虚拟机栈"></a>2.2 虚拟机栈</h3><p>以前叫java栈，是内存中的一块区域。</p>
+<h3 id="1-2-虚拟机栈"><a href="#1-2-虚拟机栈" class="headerlink" title="1.2 虚拟机栈"></a>1.2 虚拟机栈</h3><p>以前叫java栈，是java虚拟机内存中的一块区域。</p>
 <h4 id="栈概述"><a href="#栈概述" class="headerlink" title="栈概述"></a>栈概述</h4><p>&emsp;栈是运行时的单位，堆是存储的单位。</p>
 <ul>
 <li>栈解决程序的运行问题，即程序如何执行，如何处理数据.</li>
@@ -519,9 +519,13 @@
 <li>操作数栈（Operand Stack）（或表达式栈）</li>
 <li>动态链接（Dynamic Linking）（或指向运行时常量池的方法引用）</li>
 <li>方法返回地址（Return Address）（或方法正常退出或者异常退出的定义）</li>
-<li>一些附加信息<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MjA1NDQzOTkzLnBuZw?x-oss-process=image/format,png" alt="栈帧的内部结构"><br>&emsp;栈帧的大小取决于内部结构的大小。</li>
+<li>一些附加信息<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA1MjA1NDQzOTkzLnBuZw?x-oss-process=image/format,png" alt="栈帧的内部结构"><br>&emsp;栈帧的大小取决于内部结构的大小。<strong>在编译java源程序的时候，栈帧中需要多大的局部变量表、需要多深的操作数栈都已经被计算出来，并且写入到了方法表的Code属性中。</strong></li>
 </ul>
-<p><font color=red><b>局部变量表</b></font></p>
+<blockquote>
+<ol>
+<li>局部变量表</li>
+</ol>
+</blockquote>
 <ul>
 <li>局部变量表又被称之为局部变量数组或本地变量表。</li>
 <li>定义为一个数字数组，主要用于存储方法参数和定义在方法体内的局部变量，这些数据类型包括各类基本数据类型(8种)、对象引用（reference），以及returnAddress类型。</li>
@@ -616,7 +620,12 @@ public void test4();
             2      11     1     a   I
            12       1     2     c   I<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><font color=green>&emsp;局部变量表和性能调优密切相关，局部变量表占了栈帧的主要空间，因此它和栈溢出息息相关。局部变量表中的变量是垃圾回收的根节点，被局部变量表中的直接或间接引用的对象不会被回收。</font></p>
-<p><font color=red><b>操作数栈</b></font><br>&emsp;栈帧中的操作数栈Operand Stack采用数组来具体实现，也可被称之为表达式栈。操作数栈在方法的执行过程中，根据字节码指令，往栈中写入（入栈）或者提取（出栈）数据。<br>&emsp;操作数栈是栈（虚拟机栈）中栈（栈帧的操作数栈），它主要用于保存计算过程中的中间结果，同时作为计算过程中变量临时的存储空间。<strong>局部变量表中的变量被操作的时候（比如执行i+j），会被压入操作数栈，经过一些指令(iadd)后再推出去，存储到局部变量表中</strong>。上述反汇编代码中的<code>stack=2</code>表示的是操作数栈的深度。</p>
+<blockquote>
+<ol start="2">
+<li>操作数栈</li>
+</ol>
+</blockquote>
+<p>&emsp;栈帧中的操作数栈Operand Stack采用数组来具体实现，也可被称之为表达式栈。操作数栈在方法的执行过程中，根据字节码指令，往栈中写入（入栈）或者提取（出栈）数据。<br>&emsp;操作数栈是栈（虚拟机栈）中栈（栈帧的操作数栈），它主要用于保存计算过程中的中间结果，同时作为计算过程中变量临时的存储空间。<strong>局部变量表中的变量被操作的时候（比如执行i+j），会被压入操作数栈，经过一些指令(iadd)后再推出去，存储到局部变量表中</strong>。上述反汇编代码中的<code>stack=2</code>表示的是操作数栈的深度。</p>
 <p>&emsp;栈中的任何一个元素都是可以任意的Java数据类型</p>
 <ul>
 <li>32bit的类型占用一个栈单位深度</li>
@@ -682,8 +691,14 @@ public void test4();
 </ol>
 </li>
 </ul>
-<p><strong>栈顶缓存(Top-of-Stack-Cashing)技术</strong><br>&emsp;jvm简单介绍文章里面提到过，基于栈式架构的虚拟机所使用的零地址指令更加紧凑，但完成一项操作的时候需要使用更多的入栈和出栈指令，操作数栈存储在内存中，因此会导致频繁的内存读写，影响执行速度。为了解决这个问题HotSpot的提出了栈顶缓存技术。<br>&emsp;栈顶缓存是指将栈顶元素全部缓存在物理cpu的寄存器中，以此降低对内存的读写次数，提升执行引擎执行效率。</p>
-<p><font color=red><b>动态链接</b></font><br>&emsp;栈帧里面的<strong>动态链接、方法返回地址和一些附加信息</strong>有些地方把它们统称为<strong>帧数据区</strong>。<br>&emsp;动态链接又叫<strong>指向运行时常量池的方法引用</strong>。</p>
+<p><font color="red"><b>栈顶缓存(Top-of-Stack-Cashing)技术</b></font></p>
+<p>&emsp;jvm简单介绍文章里面提到过，基于栈式架构的虚拟机所使用的零地址指令更加紧凑，但完成一项操作的时候需要使用更多的入栈和出栈指令，操作数栈存储在内存中，因此会导致频繁的内存读写，影响执行速度。为了解决这个问题HotSpot的提出了栈顶缓存技术。<br>&emsp;栈顶缓存是指将栈顶元素全部缓存在物理cpu的寄存器中，以此降低对内存的读写次数，提升执行引擎执行效率。</p>
+<blockquote>
+<ol start="3">
+<li>动态链接</li>
+</ol>
+</blockquote>
+<p>&emsp;栈帧里面的<strong>动态链接、方法返回地址和一些附加信息</strong>有些地方把它们统称为<strong>帧数据区</strong>。<br>&emsp;动态链接又叫<strong>指向运行时常量池的方法引用</strong>。</p>
 <ul>
 <li><p>每一个栈帧内部都包含一个<strong>指向运行时常量池中该栈帧所属方法的引用</strong>区域</p>
 </li>
@@ -827,24 +842,170 @@ public void test4();
 
 
 
-<p><strong>方法的调用</strong></p>
-<p><font color=red><b>方法返回地址</b></font></p>
-<p><font color=red><b>一些附加信息</b></font></p>
-<h3 id="2-3-本地方法栈"><a href="#2-3-本地方法栈" class="headerlink" title="2.3 本地方法栈"></a>2.3 本地方法栈</h3><p>&emsp;本地方法栈和虚拟机栈几乎一样，只不过它是为<strong>调用本地方法</strong>服务的。比如：调用本地的C、C++方法等。</p>
-<h3 id="2-4-堆"><a href="#2-4-堆" class="headerlink" title="2.4 堆"></a>2.4 堆</h3><p>&emsp;堆是虚拟机管理的最大的一块内存区域，此区域用于<strong>存放对象实例</strong>，几乎所有对象的内存分配都在java堆这里。</p>
+<p><font color=red><b>方法的调用</b></font></p>
+<blockquote>
+<ol start="4">
+<li>方法返回地址</li>
+</ol>
+</blockquote>
+<p>&emsp;</p>
+<blockquote>
+<ol start="5">
+<li>一些附加信息</li>
+</ol>
+</blockquote>
+<p>&emsp;《java虚拟机规范》中没有描述到的一些信息也可以保存在栈帧之中。比如调试、性能搜集等相关信息，取决于虚拟机具体的实现。</p>
+<h3 id="1-3-本地方法栈"><a href="#1-3-本地方法栈" class="headerlink" title="1.3 本地方法栈"></a>1.3 本地方法栈</h3><p>&emsp;本地方法栈和虚拟机栈几乎一样，只不过它是为<strong>调用本地方法</strong>服务的。比如：调用本地的C、C++方法等。</p>
+<h3 id="1-4-堆"><a href="#1-4-堆" class="headerlink" title="1.4 堆"></a>1.4 堆</h3><p>&emsp;堆是虚拟机管理的最大的一块内存区域，此区域用于<strong>存放对象实例</strong>，几乎所有对象的内存分配都在java堆这里。</p>
 <p>&emsp;堆是垃圾收集器管理的内存区域，因此堆也被叫做“GC堆”。大多数虚拟机对这一块内存采用“分代管理”的方式，因此这块内存在分代虚拟机（比如HotSpot虚拟机）里面又被分为新生代、老年代、永久代等，这块后面会具体讲。</p>
 <p>&emsp;java堆属于多个线程共享的一块区域，但是如果具体划分也可以划分出线程私有的缓冲区（Thread Local Allocation Buffer， TLAB），用于提升对象分配效率。java虚拟机规范规定，java堆在物理上可以不连续，但是在逻辑上必须是连续的。</p>
 <p>&emsp;java堆可以是固定大小的，也可以动态扩展，取决于具体虚拟机的实现。当前主流的虚拟机设计都是可动态扩展的（-Xmx、-Xms）。当堆中实例分配内存不足，且无法申请新的内存时，会报OutOfMemoryError。</p>
-<h3 id="2-5-方法区"><a href="#2-5-方法区" class="headerlink" title="2.5 方法区"></a>2.5 方法区</h3><p>&emsp;方法区（只有HotSpot才有这个概念）是各个线程共享的一块区域，java方法区类似于常规语言编译代码的存储区，<strong>存储编译器编译后的代码缓存等数据</strong>，它存储每个类的结构，比如运行时常量池、字段和方法数据，以及方法和构造函数的代码，包括类和实例初始化以及接口初始化中使用的特殊方法。</p>
+<h3 id="1-5-方法区"><a href="#1-5-方法区" class="headerlink" title="1.5 方法区"></a>1.5 方法区</h3><p>&emsp;方法区（只有HotSpot才有这个概念）是各个线程共享的一块区域，java方法区类似于常规语言编译代码的存储区，<strong>存储编译器编译后的代码缓存等数据</strong>，它存储每个类的结构，比如运行时常量池、字段和方法数据，以及方法和构造函数的代码，包括类和实例初始化以及接口初始化中使用的特殊方法。</p>
 <p>&emsp;JVM规范对方法区的约束很松，和堆一样，可以物理区间不连续、内存大小可选择固定和可扩展的外，还可以选择不实现垃圾回收。垃圾收集器在方法区很少出现，如果出现收集行为，主要针对常量池的回收和类型的卸载，这部分的回收很麻烦，但是有时候又很有必要。</p>
 <p>&emsp;如果内存分配不足，会报OOM异常。</p>
-<h3 id="2-6-运行时常量池"><a href="#2-6-运行时常量池" class="headerlink" title="2.6 运行时常量池"></a>2.6 运行时常量池</h3><p>&emsp;<strong>运行时常量属于方法区的一部分</strong>，.class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池表（Constant Pool Table），用于存放编译器生成的各种字面量与符号引用，这部分的内容将在类加载后存放到方法区的运行时常量中池。</p>
+<h3 id="1-6-运行时常量池"><a href="#1-6-运行时常量池" class="headerlink" title="1.6 运行时常量池"></a>1.6 运行时常量池</h3><p>&emsp;<strong>运行时常量属于方法区的一部分</strong>，.class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池表（Constant Pool Table），用于存放编译器生成的各种字面量与符号引用，这部分的内容将在类加载后存放到方法区的运行时常量中池。</p>
 <p>&emsp;规范没有对运行时常量池作任何要求，但是通常，除了保存.class中的符号描述引用外，还会把符号引用翻译出来的直接引用也存储在这里。</p>
 <p>&emsp;运行时常量池具有动态性，除了编译产生的内容会进入，运行期间新产生的常量也可以进入常量池。比如String的intern()方法。当内存不够时，会报OOM异常。</p>
-<h3 id="2-7-直接内存"><a href="#2-7-直接内存" class="headerlink" title="2.7 直接内存"></a>2.7 直接内存</h3><p>&emsp;直接内存不属于虚拟机运行时数据区的一部分，也不是java虚拟机规范中定义的内存区域，但是这部分内存经常被使用，也可能导致OOM。</p>
+<h3 id="1-7-直接内存"><a href="#1-7-直接内存" class="headerlink" title="1.7 直接内存"></a>1.7 直接内存</h3><p>&emsp;直接内存不属于虚拟机运行时数据区的一部分，也不是java虚拟机规范中定义的内存区域，但是这部分内存经常被使用，也可能导致OOM。</p>
 <p>&emsp;jdk1.4新加入了了NIO（New Input/Output）类，引入了一种基于通道和缓存区的I/O方式，它可以使用Native函数库直接分配对外内存，然后通过一个存储在java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作。这样能在一些场景中显著提高性能，因为避免了再Java堆和Native堆中来回复制数据。</p>
 <p>&emsp;直接内存的分配不受java堆大小的限制，但是机器的限制。</p>
 <p>参考文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/index.html">https://docs.oracle.com/javase/8/docs/index.html</a><br>参考文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5</a></p>
+<h2 id="2-HotSpot对象内存布局"><a href="#2-HotSpot对象内存布局" class="headerlink" title="2. HotSpot对象内存布局"></a>2. HotSpot对象内存布局</h2><p>&emsp;HotSpot是目前最经典也最常用的虚拟机，本节以HotSpot为例，进一步解释说明上一节的运行时内存区域。</p>
+<h3 id="2-1-对象的创建"><a href="#2-1-对象的创建" class="headerlink" title="2.1 对象的创建"></a>2.1 对象的创建</h3><p>&emsp;1、类加载</p>
+<p>&emsp;当java虚拟机碰到new指令时，会执行以下步骤：</p>
+<p><img src="https://img-blog.csdnimg.cn/2020112319063746.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" alt="对象的创建"></p>
+<p>&emsp;2、内存分配</p>
+<p>&emsp;类加载之后，对象所需要的内存大小可以完全确定下来。为对象分配内存实际上是从java堆上划分一块内存，存储对象相关信息。内存分划分有2种方式：</p>
+<ul>
+<li>如果内存是规整的（使用过的在一边，空闲的在另一边），则中间放一个指针，分配内存时，把指针向空闲的那边挪动与对象大小相等的距离。这种分配方式叫”指针碰撞“。</li>
+<li>如果内存不是规整的，则需要维护一个列表，记录哪些内存块可用，哪些不可用。这种方式叫做”空闲列表“。</li>
+</ul>
+<p>&emsp;选择何种分配方式取决于内存是否规整，而内存是否规整又取决于垃圾收集器是否带有空间压缩站整理（Compact）功能。比如Serial、ParNew带压缩功能，使用指针碰撞方式，高效简单。CMS基于清楚算法的收集器，使用复杂的空闲列表方式。</p>
+<p>&emsp;并发情况下，简单的”指针碰撞“会出现安全问题，有可能对象A分配内存指针还没来得及修改，对象B修改指针了。解决这个问题，有2种方式：</p>
+<ul>
+<li>虚拟机采用CAS+失败重试的方式，保证更新的原子性。</li>
+<li>预先给线程划分一小块内存，称为本地线程分配缓冲（Thread Local Allocation Buffer，TLAB ），哪个线程需要分配内存，在自己的TLAB中进行。TLAB使用完毕之后，分配新的缓冲区则需要同步锁定。<code>-XX:+/-UseTLAB</code>设定是否使用TLAB</li>
+</ul>
+<p>&emsp;3、赋零值</p>
+<p>&emsp;内存分配之后，虚拟机必须将分配到的内存空间（除了对象头）都初始化为零值。如果使用了TLAB，也可在在TLAB分配时赋零值。这一步操作保证了java代码中对象不赋初始值就可以直接使用。（比如 Integer i;）</p>
+<p>&emsp;4、对象其他设置</p>
+<p>&emsp;java虚拟机对象进行必要的设置，比如对象属于哪个类的实例、如何才能找到类的元数据信息、对象的哈希吗、对象的GC分代年龄等信息。这些信息会放到对象头（Object Header）之中。偏向锁、对象头设置方式等。</p>
+<p>&emsp;以上步骤结束后，从虚拟机角度看，新的对象已经产生了。但是从程序员角度看，对象创建才和刚刚开始，因为还没开始执行init方法。</p>
+<h3 id="2-2-对象的内存布局"><a href="#2-2-对象的内存布局" class="headerlink" title="2.2 对象的内存布局"></a>2.2 对象的内存布局</h3><p>&emsp;在HotSpot虚拟机中，对象在堆内存中的布存储布局划分为三个部分：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）。</p>
+<blockquote>
+<p>对象头（Mark Word）</p>
+</blockquote>
+<p>&emsp;HotSpot对象头包括两部分信息：1、存储自身的运行时数据  2、类型指针</p>
+<p><strong>对象自身的运行时数据</strong></p>
+<p>&emsp;比如哈希吗、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。这部分数据的长度在32位和64位虚拟机（未开启指针压缩）中，分别为**4个字节(32bit)和8个字节(64bit)**。</p>
+<p>&emsp;对象头的结构是动态的，根据对象的状态复用存储空间。以便在极小的空间内存存储尽量多的数据，节省存储成本。</p>
+<p>&emsp;在不同的状态下（5种状态）对象头中所存储的内容会有所不同，如下所示：</p>
+<pre class="line-numbers language-none"><code class="language-none">状态								    标志位					存储内容
+无锁状态							||	01			||   对象哈希码、对象分代年龄
+轻量级锁							||  00			||   指向栈中锁记录的指针
+重量级锁							||  10			||   指向互斥量（重量级锁）的指针
+GC标记							||  11			||   空，不记录信息
+偏向锁，是否偏向锁为1		        ||	01			||   偏向线程ID、偏向时间戳、对象分代年龄<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://img-blog.csdnimg.cn/20200507092038123.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xpdXNoYW9Ncg==,size_16,color_FFFFFF,t_70" alt="32位和64位虚拟机中对象头结构"></p>
+<p>&emsp;比如：在64位的HotSpot虚拟机中，如对象处于无锁状态下时，对象头的64个字节中的26个bit处于空闲状态，HashCode占了31个bit，4个bit用来描述分代年龄，1个bit固定为0表示不是偏向锁，2个bit用于存储锁标志位。</p>
+<p><strong>类型指针</strong></p>
+<p>&emsp;对象头的另一部分是类型指针，即对象指向它的类型原数据的指针，Java虚拟机通过这个指针来确定对象是哪个Class的实例。但是并不是所有的虚拟机实现都需要在对象数据上存储类型指针，后面会讲到这一点。</p>
+<p>&emsp;如果对象是数组时，在对象头中还需要有一块用于记录数组长度的数据，因为虚拟机可以通过普通Java对象的元数据信息确定Java对象的大小，但是数组的长度不确定，就无法推断出整个数组的大小，无法分配内存。</p>
+<p>&emsp;类型指针占用大小：<code>-XX:+UseComparessedClassPointers</code> 开启的话是4个字节，不开启则为8个字节</p>
+<blockquote>
+<p>实例数据</p>
+</blockquote>
+<p>&emsp;实例数据部分是对象真正存储的有效信息。也就是我们在代码中定义的各种成员变量，父类子类的都必须记录起来。字段存储的顺序满足以下规则（按顺序满足）：</p>
+<ul>
+<li>HotSpot虚拟机默认分配顺序为：longs/doubles、ints、shorts/chars、bytes/booleans、oops（Ordinary Object Pointers），即相同宽度的字段会分配到一起存放。</li>
+<li>父类中定义的变量会出现在子类之前。除非<code>+XX:CompactFields=true</code>，子类窄变量可以插入父类变量空隙之中。</li>
+</ul>
+<blockquote>
+<p>对齐填充</p>
+</blockquote>
+<p>&emsp;HotSpot要求对象起始地址必须是8字节的整数倍，如果不是则会占位。实际上对象头的结构已经被定为6的整数倍（31或者64），如果实例数据部分不是，则会对齐填充。</p>
+<p>&emsp;实例分析：分析new Object()对象大小</p>
+<p>&emsp;&emsp;对象头：8个字节 + 类指针4个字节（默认开启了-XX:+UseComparessedClassPointers，因此为4字节）</p>
+<p>   &emsp;&emsp;实例数据：成员变量没有，所以为0</p>
+<p>&emsp;&emsp;对齐填充：8 + 4 = 12，需要对齐 + 4</p>
+<p>&emsp;因此在64位下，SizeOf（Object） = 8 + 4 + 4 = 16字节。以下代码也可以验证：</p>
+<pre class="line-numbers language-none"><code class="language-none">public class ObjectSizeTest &#123;
+    public static void main(String[] args) &#123;
+        sizeOf();
+    &#125;
+
+    private static Object types() &#123;
+        return new Object();
+&#x2F;&#x2F;        return new Integer(1);
+&#x2F;&#x2F;        return new Short((short) 1);
+&#x2F;&#x2F;        return new Long(1);
+&#x2F;&#x2F;        return new Byte((byte) 0);
+&#x2F;&#x2F;        return new Character((char) 1);
+&#x2F;&#x2F;        return new Float(1);
+&#x2F;&#x2F;        return new Double(1);
+&#x2F;&#x2F;        return new Boolean(true);
+&#x2F;&#x2F;        return new String();
+
+&#x2F;&#x2F;        return new Object[0];
+&#x2F;&#x2F;        return new Object[1];
+&#x2F;&#x2F;        return new Object[2];
+&#x2F;&#x2F;        return new Object[3];
+&#x2F;&#x2F;        return new Object[4];
+&#x2F;&#x2F;        return new Object[5];
+    &#125;
+
+    private static final Runtime runtime &#x3D; Runtime.getRuntime();
+
+    private static void sizeOf() &#123;
+        final int count &#x3D; 100000;
+        Object[] objs &#x3D; new Object[count];
+        runGC();
+        long heapSizeBefore &#x3D; usedMemory();   &#x2F;&#x2F; before memory size
+        for (int i &#x3D; 0; i &lt; count; i++) &#123;
+            objs[i] &#x3D; types();
+        &#125;
+
+        runGC();
+        long heapSizeAfter &#x3D; usedMemory();      &#x2F;&#x2F; after memory size
+        System.out.println(&quot;heapSizeBefore &#x3D; &quot; + heapSizeBefore);
+        System.out.println(&quot;heapSizeAfter  &#x3D; &quot; + heapSizeAfter);
+        Long size &#x3D; Math.round((heapSizeAfter - heapSizeBefore) &#x2F; (double) count);
+        System.out.println(objs[0].getClass().getSimpleName() + &quot;_size&#x3D;&quot; + size);&#x2F;&#x2F;16
+    &#125;
+
+    private static void runGC() &#123;
+        long usedMemOld &#x3D; 0;
+        long usedMemNew &#x3D; usedMemory();
+        while (usedMemOld !&#x3D; usedMemNew) &#123;
+            runtime.runFinalization();&#x2F;&#x2F;强制调用已经失去引用的对象的finalize方法
+            runtime.gc();&#x2F;&#x2F;进行垃圾收集
+            Thread.yield();&#x2F;&#x2F;使当前线程从执行状态（运行状态）变为可执行态（就绪状态），给jvm去执行gc
+            usedMemOld &#x3D; usedMemNew;
+            usedMemNew &#x3D; usedMemory();
+        &#125;
+    &#125;
+
+
+    private static long usedMemory() &#123;
+        return runtime.totalMemory() - runtime.freeMemory();
+    &#125;
+
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-3-对象的访问定位"><a href="#2-3-对象的访问定位" class="headerlink" title="2.3 对象的访问定位"></a>2.3 对象的访问定位</h3><p>&emsp;建立对象是为了使用对象，我们通过栈上的reference数据来操作堆上的具体对象。由于reference类型在java虚拟机规范中只规定了一个指向对象的引用，并没有定义引用应该通过什么方式定位、访问堆中的对象具体位置，所以对象的访问方式取决于虚拟机的实现。</p>
+<p>&emsp;主流的方法分为<strong>句柄访问</strong>和<strong>直接指针访问</strong>两种，就HotSpot而言主要使用的是第二种直接指针访问进行对象访问（如果使用了ShenandoahGC收集器时会有额外的转发）</p>
+<blockquote>
+<p>句柄访问</p>
+</blockquote>
+<p>&emsp;Java堆中将可能会划分出一块内存在作为句柄池，reference中存储的是对象的句柄地址，而句柄中包含了对象实例数据和类型数据各自具体的地址信息。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200508115714208.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xpdXNoYW9Ncg==,size_16,color_FFFFFF,t_70" alt="句柄访问"></p>
+<blockquote>
+<p>直接指针访问</p>
+</blockquote>
+<p>&emsp;在使用直接指针访问时，Java堆中对象的内存布局就必须考虑如何放置访问类型数据的相关信息，reference中存储的直接就是对象实例地址，如果只是访问对象本身的话，就不需要多一次间接的定位开销</p>
+<p><img src="https://img-blog.csdnimg.cn/20200508115734399.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xpdXNoYW9Ncg==,size_16,color_FFFFFF,t_70" alt="指针直接访问"></p>
+<p>&emsp;</p>
 
             </div>
             <hr/>
@@ -870,7 +1031,7 @@ public void test4();
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://happykite777.github.io/2020/09/29/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">https://happykite777.github.io/2020/09/29/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</a>
+                    <a href="https://happykite777.github.io/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">https://happykite777.github.io/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1081,13 +1242,13 @@ public void test4();
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">
+                <a href="/2020/10/10/%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="JVM的简单介绍">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="类文件结构分析">
                         
-                        <span class="card-title">JVM的简单介绍</span>
+                        <span class="card-title">类文件结构分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1098,7 +1259,7 @@ public void test4();
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-10-09
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-10-10
                         </span>
                         <span class="publish-author">
                             
@@ -1130,13 +1291,13 @@ public void test4();
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/28/Mach-O%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/">
+                <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="Mach-O目标文件格式">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="JVM的简单介绍">
                         
-                        <span class="card-title">Mach-O目标文件格式</span>
+                        <span class="card-title">JVM的简单介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1147,12 +1308,16 @@ public void test4();
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-10-09
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            happyKite777
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category">
+                                    java
+                                </a>
+                            
                             
                         </span>
                     </div>
@@ -1160,8 +1325,8 @@ public void test4();
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">
-                        <span class="chip bg-color">编译和链接</span>
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
                     </a>
                     
                 </div>
