@@ -709,7 +709,7 @@ public class FinalizeEscapeGC &#123;
 
 <p>&emsp;在JDK 7之后，HotSpot虚拟机增加了一个新的参数<code>-XX：+UseCondCardMark</code>，用来决定是否开启卡表更新的条件判断。开启会增加一次额外判断的开销，但能够避免伪共享问题，两者各有性能损耗，是否打开要根据应用实际运行情况来进行测试权衡。</p>
 <h3 id="3-8-并发的可达性分析"><a href="#3-8-并发的可达性分析" class="headerlink" title="3.8 并发的可达性分析"></a>3.8 并发的可达性分析</h3><p>&emsp;当用户线程和垃圾收集工作同时进行时，有可能发生错误标记的情况，比如本来被标记为已死的对象被错误标记为存活，这种可以忍受，但是如果把存货对象标记为已死，则整个程序可能发生崩溃，这可是严重事故不可容忍的。</p>
-<p>&emsp;为了解决这个问题，我们先分析，“对象消失”可能产生的原因（具体参考网上的三色标记理论）：</p>
+<p>&emsp;为了解决这个问题，我们先分析，“对象消失”可能产生的原因（具体参考网上的<strong>三色标记</strong>理论）：</p>
 <ul>
 <li>赋值器在存活对象中又引用了一条或多条其他其他新引用。</li>
 <li>赋值器删除了全部本应该引用其他对象的直接或间接引用。</li>
@@ -720,7 +720,7 @@ public class FinalizeEscapeGC &#123;
 <li>原始快照：同上，记录新的引用关系，结束后再扫描一次。</li>
 </ul>
 <p>&emsp;CMS用到使用增量更新，G1和Shenandoah使用了原始快照。</p>
-<h2 id="4-垃圾收集器"><a href="#4-垃圾收集器" class="headerlink" title="4.垃圾收集器"></a>4.垃圾收集器</h2><p>&emsp;下图所示，7种作用域不同分代的收集器，如果有连线，说明他们可以搭配使用。每种收集器适合不同的场景，目前并没有哪一款是最好的。</p>
+<h2 id="4-垃圾收集器"><a href="#4-垃圾收集器" class="headerlink" title="4. 垃圾收集器"></a>4. 垃圾收集器</h2><p>&emsp;下图所示，7种作用域不同分代的收集器，如果有连线，说明他们可以搭配使用。每种收集器适合不同的场景，目前并没有哪一款是最好的。</p>
 <p><img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3382388939,3371678992&fm=15&gp=0.jpg" alt="经典垃圾收集器关系"></p>
 <blockquote>
 <p>经典垃圾收集器</p>
@@ -822,24 +822,77 @@ public class FinalizeEscapeGC &#123;
 <ol>
 <li><p>初始标记（Initial Marking）：与G1一样，只标记与GC Roots直接关联的对象，这个阶段仍是“Stop The World”的，但停顿时间与堆大小无关，只与GC Roots的数量相关。</p>
 </li>
-<li><p>并发标记（Concurrent Marking） ：与G1一样，从GC Root开始对堆中对象进行可达性分析，找出存活的对象，可与用户线程并发执行，不会造成停顿，时间的长度取决于堆中存活对象的数量和对象图的结构复杂度。</p>
+<li><p><strong>并发标记（Concurrent Marking）</strong> ：与G1一样，从GC Root开始对堆中对象进行可达性分析，找出存活的对象，可与用户线程并发执行，不会造成停顿，时间的长度取决于堆中存活对象的数量和对象图的结构复杂度。</p>
 </li>
 <li><p>最终标记（Final Marking）：与G1一样，处理剩余的SATB扫描，并在这个阶段统计出回收价值最高的Region，将这些Region构成一组回收集（Collection Set），会有一小段短暂的停顿。</p>
 </li>
 <li><p>并发清理（Concurrent Cleanup）：这个阶段用于清理那些整个区域内连一个存活对象都没有找到的Region（这类Region被称为Immediate Garbage Region）。</p>
 </li>
-<li><p>并发回收（Concurrent Evacuation） ：首先把回收集里面的存活对象先复制一份到其他未被使用的Region之中，然后通过读屏障和Brooks Pointers转发指针技术来解决在垃圾回收期间用户线程继续读写被移动对象的问题，并发回收阶段运行的时间长短取决于回收集的大小。</p>
+<li><p><strong>并发回收（Concurrent Evacuation）</strong> ：首先把回收集里面的存活对象先复制一份到其他未被使用的Region之中，然后通过读屏障和Brooks Pointers转发指针技术来解决在垃圾回收期间用户线程继续读写被移动对象的问题，并发回收阶段运行的时间长短取决于回收集的大小。</p>
 </li>
 <li><p>初始引用更新（Initial Update Reference）：并发回收阶段复制对象结束后，还需要把堆中所有指向旧对象的引用修正到复制后的新地址，这个操作称为引用更新。引用更新的初始化阶段实际上并未做什么具体的处理，设立这个阶段只是为了建立一个线程集合点，确保所有并发回收阶段中进行的收集器线程都已完成分配给它们的对象移动任务而已。初始引用更新时间很短，会产生一个非常短暂的停顿。</p>
 </li>
-<li><p>并发引用更新（Concurrent Update Reference） ：真正开始进行引用更新操作，这个阶段是与用户线程一起并发的，时间长短取决于内存中涉及的引用数量的多少。并发引用更新与并发标记不同，它不再需要沿着对象图来搜索，只需要按照内存物理地址的顺序，线性地搜索出引用类型，把旧值改为新值即可。</p>
+<li><p><strong>并发引用更新（Concurrent Update Reference）</strong> ：真正开始进行引用更新操作，这个阶段是与用户线程一起并发的，时间长短取决于内存中涉及的引用数量的多少。并发引用更新与并发标记不同，它不再需要沿着对象图来搜索，只需要按照内存物理地址的顺序，线性地搜索出引用类型，把旧值改为新值即可。</p>
 </li>
 <li><p>最终引用更新（Final Update Reference）：解决了堆中的引用更新后，还要修正存在于GCRoots中的引用。会产生一个非常短暂的停顿，停顿时间只与GC Roots的数量相关。</p>
 </li>
 <li><p>并发清理（Concurrent Cleanup）：经过并发回收和引用更新之后，整个回收集中所有的Region已再无存活对象，所以最后再调用一次并发清理过程来回收这些Region的内存空间，供以后新对象分配使用。</p>
 </li>
 </ol>
-<h3 id="4-9-ZGC收集器"><a href="#4-9-ZGC收集器" class="headerlink" title="4.9 ZGC收集器"></a>4.9 ZGC收集器</h3><h2 id="5-如何选择垃圾收集器"><a href="#5-如何选择垃圾收集器" class="headerlink" title="5.如何选择垃圾收集器"></a>5.如何选择垃圾收集器</h2>
+<h4 id="Brooks-Pointer转发指针技术"><a href="#Brooks-Pointer转发指针技术" class="headerlink" title="Brooks Pointer转发指针技术"></a><b style="color:red">Brooks Pointer转发指针技术</b></h4><p>&emsp;Brooks提出了使用转发指针技术来实现对象移动与用户程序并发的一种解决方案。Brooks 在原有对象布局结构的最前面统一增加一个新的引用字段，在正常不处于并发移动的情况下，该引用指向对象自己（类似句柄，一个是放在句柄池中，一个是放在对象头前面），如图：</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82NDY0MDg2LWJkYzk1YWU3ZDY3NWExMzIuanBn?x-oss-process=image/format,png"></p>
+<p>&emsp;在对象移动的时候我们只需要将Brooks Pointer 指向新对象，在对象访问过程中，只通一条<code>mov</code>指令就可以完成对新对象的访问了，如图：</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82NDY0MDg2LTE0YzlhYTc5NjFhN2Y5YjQuanBn?x-oss-process=image/format,png"></p>
+<p>&emsp;当写操作发生时，Shenandoah收集器是通过CAS（Compare And Swap）操作，来保证收集器线程或者用户线程只有其中之一可以进行修改操作，以此来保证并发时对象访问的正确性。</p>
+<h4 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a><b style="color:red">优缺点</b></h4><ul>
+<li>优点：延迟低</li>
+<li>缺点：高运行负担使得吞吐量下降；使用大量的读写屏障，尤其是读屏障，增大了系统的性能开销；</li>
+</ul>
+<h3 id="4-9-ZGC收集器"><a href="#4-9-ZGC收集器" class="headerlink" title="4.9 ZGC收集器"></a>4.9 ZGC收集器</h3><p>&emsp;ZGC（Z Garbage Collector）是一款由Oracle公司研发的，以低延迟为首要目标的一款垃圾收集器。它是基于<strong>动态Region</strong>内存布局，（暂时）<strong>不设年龄分代</strong>，使用了<strong>读屏障</strong>、<strong>染色指针</strong>和<strong>内存多重映射</strong>等技术来实现<strong>可并发的标记-整理算法</strong>的收集器。在JDK 11新加入，还在实验阶段，主要特点是：<strong>回收TB级内存（最大4T），停顿时间不超过10ms</strong>。</p>
+<h4 id="动态Region"><a href="#动态Region" class="headerlink" title="动态Region"></a><b style="color:red">动态Region</b></h4><p>&emsp;ZGC的Region具有动态性——动态创建和销毁，区域动态容量。</p>
+<ul>
+<li><strong>小型Region（Small Region）</strong>：容量固定为2MB，用于放置小于256KB的小对象。</li>
+<li><strong>中型Region（Medium Region）</strong>：容量固定为32MB，用于放置大于等于256KB但小于4MB的对象。·</li>
+<li><strong>大型Region（Large Region）</strong>：容量不固定，可以动态变化，但必须为2MB的整数倍，用于放置4MB或以上的大对象。<strong>每个大型Region中只会存放一个大对象</strong>，最小容量可低至4MB，因此大型Region可能小于中型Region。大型Region在ZGC的实现中是不会被重分配的，因为复制一个大对象的代价非常高昂。</li>
+</ul>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82NDY0MDg2LTY2ZDg0OGJkZjc5ZmY0NWUuanBn?x-oss-process=image/format,png" alt="动态容量"></p>
+<h4 id="并发整理算法的实现——染色指针技术"><a href="#并发整理算法的实现——染色指针技术" class="headerlink" title="并发整理算法的实现——染色指针技术"></a><b style="color:red">并发整理算法的实现——染色指针技术</b></h4><p>&emsp;HotSpot虚拟机的<strong>标记</strong>实现方案有如下几种：</p>
+<ol>
+<li>把标记直接记录在对象头上（如Serial收集器）；</li>
+<li>把标记记录在与对象相互独立的数据结构上（如G1、Shenandoah使用了一种相当于堆内存的1/64大小的，称为BitMap的结构来记录标记信息）；</li>
+<li>直接把标记信息记在引用对象的指针上（如ZGC）</li>
+</ol>
+<p>&emsp;<strong>染色指针</strong>是一种直接将少量额外的信息存储在指针上的技术。目前在Linux下64位的操作系统中高18位是不能用来寻址的，但是剩余的46为却可以支持64T的空间，到目前为止我们几乎还用不到这么多内存。于是ZGC将46位中的高4位取出，用来存储4个标志位，剩余的42位可以支持<strong>4T</strong>的内存，如图所示：</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82NDY0MDg2LWQ0ZTIyYWY3MDUwZTk5MDkucG5n?x-oss-process=image/format,png"></p>
+<ul>
+<li>Linux下64位指针的高18位不能用来寻址，所有不能使用；</li>
+<li>Finalizable：表示是否只能通过finalize()方法才能被访问到，其他途径不行；</li>
+<li>Remapped：表示是否进入了重分配集（即被移动过）；</li>
+<li>Marked1、Marked0：表示对象的三色标记状态；</li>
+<li>最后42用来存对象地址，最大支持4T；</li>
+</ul>
+<p>染色指针的三大优势：</p>
+<ul>
+<li>一旦某个Region的存活对象被移走之后，这个Region立即就能够被释放和重用掉，而不必等待整个堆中所有指向该Region的引用都被修正后才能清理。</li>
+<li>可以大幅减少在垃圾收集过程中内存屏障的使用数量，ZGC只使用了读屏障。</li>
+<li>染色指针具备强大的扩展性，它可以作为一种可扩展的存储结构用来记录更多与对象标记、重定位过程相关的数据，以便日后进一步提高性能。</li>
+</ul>
+<h4 id="内存多重映射"><a href="#内存多重映射" class="headerlink" title="内存多重映射"></a><b style="color:red">内存多重映射</b></h4><p>&emsp;将多个不同的虚拟内存地址映射到同一个物理内存地址上。把染色指针中的标志位看作是地址的分段符，那只要将这些不同的地址段都映射到同一个物理内存空间，经过多重映射转换后，就可以使用染色指针正常进行寻址了，效果如图：</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82NDY0MDg2LWZkNWM2YTdjNTEwYTc4ZTkucG5n?x-oss-process=image/format,png" alt="内存多重映射"></p>
+<p>&emsp;ZGC的多重映射只是它采用染色指针技术的伴生产物</p>
+<h4 id="ZGC运作流程"><a href="#ZGC运作流程" class="headerlink" title="ZGC运作流程"></a><b style="color:red">ZGC运作流程</b></h4><p>&emsp;可以分为四个阶段：</p>
+<ol>
+<li>并发标记（Concurrent Mark）：与G1、Shenandoah一样，并发标记是遍历对象图做可达性分析的阶段，它的初始标记和最终标记也会出现短暂的停顿，整个标记阶段只会更新染色指针中的Marked 0、Marked 1标志位。</li>
+<li>并发预备重分配（Concurrent Prepare for Relocate）：这个阶段需要根据特定的查询条件统计得出本次收集过程要清理哪些Region，将这些Region组成重分配集（Relocation Set）。ZGC每次回收都会扫描所有的Region，用范围更大的扫描成本换取省去G1中记忆集的维护成本。</li>
+<li>并发重分配（Concurrent Relocate）：重分配是ZGC执行过程中的核心阶段，这个过程要把重分配集中的存活对象复制到新的Region上，并为重分配集中的每个Region维护一个转发表（Forward Table），记录从旧对象到新对象的转向关系。ZGC收集器能仅从引用上就明确得知一个对象是否处于重分配集之中，如果用户线程此时并发访问了位于重分配集中的对象，这次访问将会被预置的内存屏障所截获，然后立即根据Region上的转发表记录将访问转发到新复制的对象上，并同时修正更新该引用的值，使其直接指向新对象，ZGC将这种行为称为指针的“自愈”（Self-Healing）能力。</li>
+<li>并发重映射（Concurrent Remap）：重映射所做的就是修正整个堆中指向重分配集中旧对象的所有引用，但是ZGC中对象引用存在“自愈”功能，所以这个重映射操作并不是很迫切。ZGC很巧妙地把并发重映射阶段要做的工作，合并到了下一次垃圾收集循环中的并发标记阶段里去完成，反正它们都是要遍历所有对象的，这样合并就节省了一次遍历对象图的开销。</li>
+</ol>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82NDY0MDg2LWFjMTU5ZDdlMTQ3ZTM3ZDkucG5n?x-oss-process=image/format,png"></p>
+<h4 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a><b style="color:red">优缺点</b></h4><ul>
+<li>优点：低停顿，高吞吐量，ZGC收集过程中额外耗费的内存小</li>
+<li>缺点：浮动垃圾。</li>
+</ul>
+
             </div>
             <hr/>
 
@@ -1071,18 +1124,17 @@ public class FinalizeEscapeGC &#123;
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+                <a href="/2020/12/28/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="JVM之垃圾回收">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="JVM之内存分配与回收策略">
                         
-                        <span class="card-title">JVM之垃圾回收</span>
+                        <span class="card-title">JVM之内存分配与回收策略</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1092,9 +1144,9 @@ public class FinalizeEscapeGC &#123;
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-12-28
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1107,7 +1159,6 @@ public class FinalizeEscapeGC &#123;
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
