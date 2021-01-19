@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="JVM之内存分配与回收策略, HappyKite777的博客">
+    <meta name="keywords" content="字节码指令简介, HappyKite777的博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>JVM之内存分配与回收策略 | HappyKite777的博客</title>
+    <title>字节码指令简介 | HappyKite777的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">JVM之内存分配与回收策略</h1>
+                    <h1 class="description center-align post-title">字节码指令简介</h1>
                 </div>
             </div>
         </div>
@@ -433,7 +433,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-12-28
+                    2021-01-19
                 </div>
                 
 
@@ -449,8 +449,41 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>&emsp;上一篇文章了解了<a href="https://happykite777.github.io/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">内存分代理论</a>，这次来具体了解下内存分配和回收策略。</p>
-<h3 id="1-对象优先在Eden区分配"><a href="#1-对象优先在Eden区分配" class="headerlink" title="1 对象优先在Eden区分配"></a>1 对象优先在Eden区分配</h3><h3 id="2-大对象直接进入老年代"><a href="#2-大对象直接进入老年代" class="headerlink" title="2 大对象直接进入老年代"></a>2 大对象直接进入老年代</h3><h3 id="3-长期存活的对象进入老年代"><a href="#3-长期存活的对象进入老年代" class="headerlink" title="3 长期存活的对象进入老年代"></a>3 长期存活的对象进入老年代</h3><h3 id="4-动态对象年龄判定"><a href="#4-动态对象年龄判定" class="headerlink" title="4 动态对象年龄判定"></a>4 动态对象年龄判定</h3><h3 id="5-空间分配担保"><a href="#5-空间分配担保" class="headerlink" title="5 空间分配担保"></a>5 空间分配担保</h3>
+                <p>&emsp;java虚拟机的指令由一个字节长度的，代表某种含义的数字（操作码，Opcode），以及跟在后面的若干参数组成。由于java虚拟机采用基于栈的指令集机构，因此大多数指令都只有操作码，参数则存在于操作数栈中。</p>
+<p>&emsp;字节码指令集只占1个字节，因此不会最多256条（0~255）。class文件编译后不会执行操作数长度对齐，因此在处理超过一个字节的数据时，必须重建出具体的数据结构，比如将1个16位长度的无符号整数使用2个无符号字节存起来。这种操作某种程度上会损失一些性能，但是由于放弃了长度对齐，可以节省大量的填充和符号间隔。</p>
+<p>&emsp;忽略掉异常，Java虚拟机解释器的执行模型大概如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">do&#123;
+  pc寄存器值+1
+  根据pc寄存器指示的位置，从字节码流中取出操作码
+  if(字节码存在操作数) 从字节码流中取出操作数
+  执行操作码所定义的操作
+&#125;while(字节码流长度 &gt; 0)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<h2 id="1-加载和存储指令"><a href="#1-加载和存储指令" class="headerlink" title="1. 加载和存储指令"></a>1. 加载和存储指令</h2><p>&emsp;将局部变量加载到操作数栈：<code>iload、iload_&lt;n&gt;、lload、lload_&lt;n&gt;、fload、fload_&lt;n&gt;、dload、dload_&lt;n&gt;、aload、aload_&lt;n&gt;</code>均以下省略_n，代表槽</p>
+<p>&emsp;将数值从操作数栈存储到局部变量表：<code>istore、lstore、fstore、dstore、astore</code></p>
+<p>&emsp;将常量加载到操作数栈：<code>bipush、sipush、ldc、ldc_w、ldc2_w、aconst_null、iconst_m1、iconst、lconst、fconst、dconst</code></p>
+<p>&emsp;扩充局部变量表的访问索引指令：<code>wide</code></p>
+<h2 id="2-运算指令"><a href="#2-运算指令" class="headerlink" title="2. 运算指令"></a>2. 运算指令</h2><p>&emsp;加法：<code>iadd、ladd、fadd、dadd</code><br>&emsp;减法：<code>isub、lsub、fsub、dsub</code><br>&emsp;乘法：<code>imul、lmul、fmul、dmul</code><br>&emsp;除法：<code>idiv、ldiv、fdiv、ddiv</code><br>&emsp;取余：<code>irem、lrem、frem、drem</code><br>&emsp;取反：<code>ineg、lneg、fneg、dneg</code><br>&emsp;位移：<code>ishl、ishr、iushr、lshl、lshr、lushr</code><br>&emsp;按位或：<code>ior、lor</code><br>&emsp;按位与：<code>iand、land</code><br>&emsp;按位异或：<code>ixor、lxor</code><br>&emsp;局部变量自增：<code>iinc</code><br>&emsp;比较：<code>dcmpg、dcmpl、fcmpg、fcmpl、lcmp</code></p>
+<h2 id="3-类型转换指令"><a href="#3-类型转换指令" class="headerlink" title="3. 类型转换指令"></a>3. 类型转换指令</h2><p>&emsp;java虚拟机直接支持小范围到大范围的安全转换，比如int -&gt; long、float、double等。</p>
+<p>显示转换指令：<code>i2b、i2c、i2s、l2i、f2l、d2i、d2l、d2f</code></p>
+<h2 id="4-对象创建指令"><a href="#4-对象创建指令" class="headerlink" title="4. 对象创建指令"></a>4. 对象创建指令</h2><p>&emsp;创建类实例：<code>new</code><br>&emsp;创建数组：<code>newarray、anewarray、multianewarray</code><br>&emsp;访问类字段：<code>getstatic、putstatic</code><br>&emsp;访问实例字段：<code>getfield、putfield</code><br>&emsp;加载数组元素到操作数栈：<code>baload、caload、saload、iaload、laload、faload、daload、aaload</code><br>&emsp;存储操作数栈的值到数组元素中：<code>bastore、castore、sastore、iastore、lastore、fastore、dastore、aastore、</code><br>&emsp;取数组长度：<code>arraylength</code><br>&emsp;检查实例类型：<code>instanceod、checkcast</code></p>
+<h2 id="5-操作数栈管理指令"><a href="#5-操作数栈管理指令" class="headerlink" title="5. 操作数栈管理指令"></a>5. 操作数栈管理指令</h2><p>&emsp;弹出操作数栈栈顶1到2个元素：<code>pop、pop2</code><br>&emsp;复制栈顶1或2个元素并重新入栈：<code>dup、dup2、dup_x1、dup2_x1、dup_x2、dup2_x2</code><br>&emsp;栈顶两个数值互换：<code>swap</code></p>
+<h2 id="6-控制转移指令"><a href="#6-控制转移指令" class="headerlink" title="6. 控制转移指令"></a>6. 控制转移指令</h2><p>&emsp;条件分支：<code>ifeg、iflt、ifne、ifgt、ifnull、ifnonnull、if_icmp eq、if_icmp ne、if_icmp lt、if_icmp gt、if_icmp le、if_icmp ge、if_acmp eq、if_acmp ne</code></p>
+<p>&emsp;符合条件分支：<code>tableswitch、lookupswitch</code></p>
+<p>&emsp;无条件分支：<code>goto、goto_w、jsr、jsr_w、ret</code></p>
+<h2 id="7-方法调用和返回指令"><a href="#7-方法调用和返回指令" class="headerlink" title="7. 方法调用和返回指令"></a>7. 方法调用和返回指令</h2><ul>
+<li>调用指令</li>
+</ul>
+<p>&emsp; <code>invokevirtual</code>：实例方法<br>&emsp; <code>invokeinterface</code>：接口方法<br>&emsp; <code>invokeinspecial</code>：构造方法、私有方法、父类方法<br>&emsp; <code>invokestatic</code>：静态方法<br>&emsp; <code>invokedynamic</code>：运行时动态解析出调用点限定符所引用的方法</p>
+<ul>
+<li>返回指令</li>
+</ul>
+<p>&emsp;<code>ireturn、lreturn、freturn、dreturn、areturn</code>注意：返回值为boolean、byte、char、short、int时采用ireturn指令</p>
+<h2 id="8-异常指令"><a href="#8-异常指令" class="headerlink" title="8. 异常指令"></a>8. 异常指令</h2><p>&emsp;显示抛出的异常：<code>athrow</code><br>&emsp;catch中捕获的异常不是字节码指令实现的，而是采用异常表。</p>
+<h2 id="9-同步指令"><a href="#9-同步指令" class="headerlink" title="9. 同步指令"></a>9. 同步指令</h2><p>&emsp;方法级的同步无需字节码指令控制，它实现在方法调用和返回之中。当调用时会检查方法表结构中的ACC_SYNCHRONIZED权限，如果设置了则会先获取管程（锁），执行完毕释放管程。如果抛出异常且没有处理此异常，管程将会在异常抛到方法边界之外时自动释放。</p>
+<p>&emsp; synchronized语句块指令：<code>monitorenter、monitorexit</code></p>
+
             </div>
             <hr/>
 
@@ -475,7 +508,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://happykite777.github.io/2020/12/28/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">https://happykite777.github.io/2020/12/28/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/</a>
+                    <a href="https://happykite777.github.io/2021/01/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4%E7%AE%80%E4%BB%8B/">https://happykite777.github.io/2021/01/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4%E7%AE%80%E4%BB%8B/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -682,18 +715,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/12/28/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">
+                <a href="/2021/01/19/JVM%E4%B9%8B%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91%E4%B8%8E%E4%BC%98%E5%8C%96/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="JVM之内存分配与回收策略">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="JVM之前端编译与优化">
                         
-                        <span class="card-title">JVM之内存分配与回收策略</span>
+                        <span class="card-title">JVM之前端编译与优化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -703,9 +735,9 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-28
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-01-19
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -718,7 +750,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -737,13 +768,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+                <a href="/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="JVM之垃圾回收">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="虚拟机字节码执行引擎">
                         
-                        <span class="card-title">JVM之垃圾回收</span>
+                        <span class="card-title">虚拟机字节码执行引擎</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -754,7 +785,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-28
                             </span>
                         <span class="publish-author">
                             

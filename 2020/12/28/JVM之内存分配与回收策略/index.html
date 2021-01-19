@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="JVM的简单介绍, HappyKite777的博客">
+    <meta name="keywords" content="JVM之内存分配与回收策略, HappyKite777的博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>JVM的简单介绍 | HappyKite777的博客</title>
+    <title>JVM之内存分配与回收策略 | HappyKite777的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">JVM的简单介绍</h1>
+                    <h1 class="description center-align post-title">JVM之内存分配与回收策略</h1>
                 </div>
             </div>
         </div>
@@ -433,7 +433,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-10-09
+                    2020-12-28
                 </div>
                 
 
@@ -449,203 +449,23 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1、虚拟机概念"><a href="#1、虚拟机概念" class="headerlink" title="1、虚拟机概念"></a>1、虚拟机概念</h2><p>&emsp;虚拟机就是指虚拟的计算机。它是一款软件，用来执行一系列虚拟计算机指令。大体上，虚拟机可以分为系统虚拟机和程序虚拟机。</p>
-<ul>
-<li>系统虚拟机：对物理计算机的仿真，提供可运行完整操作系统的虚拟平台，比如VirtualBox、VMware等。</li>
-<li>程序虚拟机：专门为执行单个计算机程序而设计，比如java虚拟机（JVM），在Java虚拟机中执行的指令我们称为Java字节码指令。</li>
-</ul>
-<h2 id="2、java虚拟机"><a href="#2、java虚拟机" class="headerlink" title="2、java虚拟机"></a>2、java虚拟机</h2><h3 id="2-1-java字节码"><a href="#2-1-java字节码" class="headerlink" title="2.1 java字节码"></a>2.1 java字节码</h3><p>&emsp;java字节码是指java语言编译成的字节码，任何能在jvm平台上执行的字节码格式都是一样的。所以应该统称为jvm字节码。</p>
-<p>&emsp;不同的编译器，可以编译出相同的字节码文件。任何语言只要能被编译器编译成字节码，就可以在jvm上运行。</p>
-<p>&emsp;Java虚拟机与Java语言并没有必然的联系，它只与特定的二进制文件格式——Class文件格式所关联，Class文件中包含了Java虚拟机指令集（或者称为字节码、Bytecodes）和符号表，还有一些其他辅助信息。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTIxNzI1MTg4LnBuZw?x-oss-process=image/format,png" alt="jvm只关注字节码，不关注源码"></p>
-<h3 id="2-2-java虚拟机"><a href="#2-2-java虚拟机" class="headerlink" title="2.2 java虚拟机"></a>2.2 java虚拟机</h3><p>&emsp;Java虚拟机是一台执行Java字节码的虚拟计算机，它拥有独立的运行机制。由图上可知，不只是java，其他语言也可以被编译成字节码运行在jvm上，因此<strong>jvm是跨语言的平台</strong>。</p>
-<p>&emsp;Java技术的核心就是Java虚拟机（JVM，Java Virtual Machine），因为所有的Java程序都运行在Java虚拟机内部。</p>
-<p>&emsp;Java虚拟机就是二进制字节码的运行环境，负责装载字节码到其内部，解释/编译为对应平台上的机器指令执行。每一条Java指令，Java虚拟机规范中都有详细定义，如怎么取操作数，怎么处理操作数，处理结果放在哪里等。</p>
-<p>&emsp;JVM的特点：</p>
-<ul>
-<li><ul>
-<li>一次编译，到处运行</li>
-</ul>
-</li>
-<li><ul>
-<li>自动内存管理</li>
-</ul>
-</li>
-<li><ul>
-<li>自动垃圾回收</li>
-</ul>
-</li>
-</ul>
-<h2 id="3、JVM的整体结构"><a href="#3、JVM的整体结构" class="headerlink" title="3、JVM的整体结构"></a>3、JVM的整体结构</h2><p>&emsp;JVM运行在操作系统之上，它与硬件没有直接的交互。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTIzNDMyMDgyLnBuZw?x-oss-process=image/format,png" alt="jvm的位置"><br>&emsp;jvm在java体系中处于比较底层的位置。<br><img src="https://img2018.cnblogs.com/blog/890598/201902/890598-20190220210053733-743773115.png" alt="java体系结构"></p>
-<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTMyMzMwNjgyLnBuZw?x-oss-process=image/format,png" alt="hotspot整体结构"></p>
-<ul>
-<li>HotSpot是OracleJDK和OpenJDK共用的jvm</li>
-<li>它采用解释器与即时编译器共存的结构</li>
-<li>今天，java程序运行性能已经达到可以和c/c++一较高下的程度</li>
-</ul>
-<p>&emsp;上图可以看出，字节码文件是jvm的入口，文件通过类加载器被加载到内存中，生成一个大的class对象。加载又被分为加载、链接、初始化步骤，后续会具体讲解。运行时数据区是把内存分为了不同区域，其中java栈是老叫法，现在叫java虚拟机栈，具体可看上一篇文章。执行引擎被分为解释器、JIT即时编译器和垃圾回收，解释器用来解释字节码文件，JIT是对热点代码进行提前编译，这里的编译被称为编译的后端（源码被编译成字节码的过程叫编译的前端），垃圾回收器对使用后的内存进行回收管理，后续会具体讲到。执行引擎的作用实际上是把字节码指令翻译成机器指令，供计算机识别。</p>
-<h2 id="4、java代码执行流程"><a href="#4、java代码执行流程" class="headerlink" title="4、java代码执行流程"></a>4、java代码执行流程</h2><p>&emsp;执行流程和一般的程序编译链接的差不多，具体可看<a href="https://happykite777.github.io/2020/09/27/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">编译和链接</a>，Java的后端编译和链接是jvm实现的。<br><img src="http://5b0988e595225.cdn.sohucs.com/images/20200312/391f35c99f90452898cfefe633737401.png" alt="java代码执行流程"></p>
-<h2 id="5、JVM架构模型"><a href="#5、JVM架构模型" class="headerlink" title="5、JVM架构模型"></a>5、JVM架构模型</h2><p>&emsp;java编译器输入的指令流基本上是一种<strong>基于栈的指令集架构</strong>，另一种指令集架构则是<strong>基于寄存器的指令集架构</strong>。</p>
-<p>&emsp;基于栈式架构的特点：</p>
-<ul>
-<li><ul>
-<li>设计和实现更简单，适用于资源受限的系统。（比如嵌入式平台、打印机）</li>
-</ul>
-</li>
-<li><ul>
-<li>避开寄存器的分配难题，使用零地址指令方式分配</li>
-</ul>
-</li>
-<li><ul>
-<li>指令流中的指令大部分是零地址指令，其执行过程依赖于操作占。指令集更小，编译器容易实现。</li>
-</ul>
-</li>
-<li><ul>
-<li>不需要硬件支持，可以执行更好，更好实现跨平台，可移植</li>
-</ul>
-</li>
-<li><ul>
-<li>在解释执行下，速度稍慢。但是经过即时编译器输出成物理机汇编指令流，就和指令没啥关系了</li>
-</ul>
-</li>
-</ul>
-<p>&emsp;基于寄存器架构的特点：</p>
-<ul>
-<li><ul>
-<li>典型的应用是x86的二进制指令集：比如传统的pc和Android的Davlik虚拟机</li>
-</ul>
-</li>
-<li><ul>
-<li>指令集架构完全依赖于硬件，可以执行差</li>
-</ul>
-</li>
-<li><ul>
-<li>性能优秀和执行更高效</li>
-</ul>
-</li>
-<li><ul>
-<li>花费更少的指令去完成一项操作 </li>
-</ul>
-</li>
-<li><ul>
-<li>在大部分情况下，基于寄存器架构的指令集往往都是以一地址指令、二地址指令和三地址指令为主，而基于栈式架构的指令集却是以零地址为主</li>
-</ul>
-</li>
-</ul>
-<h3 id="两种架构举例"><a href="#两种架构举例" class="headerlink" title="两种架构举例"></a>两种架构举例</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">StackStructTest</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> k <span class="token operator">=</span> i <span class="token operator">+</span> j<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>反编译，在生成的StackStructTest.class目录下执行 <code>javap -v  StackStructTest.class</code>，可以得到汇编代码</p>
-<pre class="line-numbers language-none"><code class="language-none">Classfile &#x2F;Users&#x2F;zhoumi&#x2F;IdeaProjects&#x2F;learn&#x2F;target&#x2F;classes&#x2F;com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest.class
-  Last modified 2020-10-10; size 484 bytes
-  MD5 checksum 7c6fc6746c6202d31f01b9dca6e74d98
-  Compiled from &quot;StackStructTest.java&quot;
-public class com.hk7.memory.StackStructTest
-  minor version: 0
-  major version: 49
-  flags: ACC_PUBLIC, ACC_SUPER
-Constant pool:
-   #1 &#x3D; Methodref          #3.#21         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
-   #2 &#x3D; Class              #22            &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest
-   #3 &#x3D; Class              #23            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object
-   #4 &#x3D; Utf8               &lt;init&gt;
-   #5 &#x3D; Utf8               ()V
-   #6 &#x3D; Utf8               Code
-   #7 &#x3D; Utf8               LineNumberTable
-   #8 &#x3D; Utf8               LocalVariableTable
-   #9 &#x3D; Utf8               this
-  #10 &#x3D; Utf8               Lcom&#x2F;hk7&#x2F;memory&#x2F;StackStructTest;
-  #11 &#x3D; Utf8               main
-  #12 &#x3D; Utf8               ([Ljava&#x2F;lang&#x2F;String;)V
-  #13 &#x3D; Utf8               args
-  #14 &#x3D; Utf8               [Ljava&#x2F;lang&#x2F;String;
-  #15 &#x3D; Utf8               i
-  #16 &#x3D; Utf8               I
-  #17 &#x3D; Utf8               j
-  #18 &#x3D; Utf8               k
-  #19 &#x3D; Utf8               SourceFile
-  #20 &#x3D; Utf8               StackStructTest.java
-  #21 &#x3D; NameAndType        #4:#5          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V
-  #22 &#x3D; Utf8               com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest
-  #23 &#x3D; Utf8               java&#x2F;lang&#x2F;Object
-&#123;
-  public com.hk7.memory.StackStructTest();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1
-         0: aload_0
-         1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
-         4: return
-      LineNumberTable:
-        line 9: 0
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       5     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;StackStructTest;
+                <p>&emsp;上一篇文章了解了<a href="https://happykite777.github.io/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">内存分代理论</a>，这次来具体了解下内存分配和回收策略。</p>
+<h3 id="1-对象优先在Eden区分配"><a href="#1-对象优先在Eden区分配" class="headerlink" title="1 对象优先在Eden区分配"></a>1 对象优先在Eden区分配</h3><p>&emsp;大多数对象都在Eden区分配，当Eden区没有足够的空间时，会发起一次Minor GC。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+* -Xmn10M:设置年轻代大小为10M
+* -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
+*/</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">testEden</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> a1<span class="token punctuation">,</span> a2<span class="token punctuation">,</span> a3<span class="token punctuation">,</span> a4<span class="token punctuation">;</span>
+  a1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  a2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  a3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  a4 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">4</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">//出现一次Minor GC</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-  public static void main(java.lang.String[]);
-    descriptor: ([Ljava&#x2F;lang&#x2F;String;)V
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack&#x3D;2, locals&#x3D;4, args_size&#x3D;1
-         0: iconst_2
-         1: istore_1
-         2: iconst_3
-         3: istore_2
-         4: iload_1
-         5: iload_2
-         6: iadd
-         7: istore_3
-         8: return
-      LineNumberTable:
-        line 11: 0
-        line 12: 2
-        line 13: 4
-        line 14: 8
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       9     0  args   [Ljava&#x2F;lang&#x2F;String;
-            2       7     1     i   I
-            4       5     2     j   I
-            8       1     3     k   I
-&#125;
-SourceFile: &quot;StackStructTest.java&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>同样执行2+3这种逻辑操作，其指令分别如下：</p>
-<ul>
-<li><p>基于栈的计算流程（以Java虚拟机为例）</p>
-<pre class="line-numbers language-none"><code class="language-none">0: iconst_2    &#x2F;&#x2F;常量2
-1: istore_1    &#x2F;&#x2F;把常量2保存到索引为1的操作数栈中
-2: iconst_3    &#x2F;&#x2F;常量3
-3: istore_2    &#x2F;&#x2F;把常量3保存到索引为2的操作数栈中
-4: iload_1     &#x2F;&#x2F;加载常量2
-5: iload_2     &#x2F;&#x2F;加载常量3
-6: iadd		   &#x2F;&#x2F;对常量2和3求和
-7: istore_3    &#x2F;&#x2F;把求和的结果保存在索引为3的操作数栈中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>&emsp;基于栈的指令都是不带参数的，使用操作数栈中的数据作为指令的运算输入，指令运算结果也存在与操作数栈之中。</p>
-</li>
-<li><p>而基于寄存器的计算流程</p>
-<pre class="line-numbers language-none"><code class="language-none">mov eax,2 &#x2F;&#x2F;将eax寄存器的值设为1
-add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
-</ul>
-<p><strong>由于跨平台性的设计，Java的指令都是根据栈来设计的。</strong></p>
-<h2 id="6、JVM的生命周期"><a href="#6、JVM的生命周期" class="headerlink" title="6、JVM的生命周期"></a>6、JVM的生命周期</h2><h3 id="虚拟机的启动"><a href="#虚拟机的启动" class="headerlink" title="虚拟机的启动"></a>虚拟机的启动</h3><p>&emsp;<strong>Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创建一个初始类（initial class）来完成的</strong>，这个类是由虚拟机的具体实现指定的。</p>
-<h3 id="虚拟机的执行"><a href="#虚拟机的执行" class="headerlink" title="虚拟机的执行"></a>虚拟机的执行</h3><ul>
-<li>一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序</li>
-<li>程序开始执行时他才运行，程序结束时他就停止</li>
-<li><strong>执行一个所谓的Java程序的时候，真真正正在执行的是一个叫做Java虚拟机的进程</strong>。可通<code>jps</code>来查看虚拟机中正在执行的进程。</li>
-</ul>
-<h3 id="虚拟机的退出"><a href="#虚拟机的退出" class="headerlink" title="虚拟机的退出"></a>虚拟机的退出</h3><ul>
-<li>程序正常执行结束</li>
-<li>程序在执行过程中遇到了异常或错误而异常终止</li>
-<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
-<li>某线程调用Runtime类或System类的exit()方法，或Runtime类的halt()方法，并且Java安全管理器也允许这次exit()或halt()操作。</li>
-<li>除此之外，JNI（Java Native Interface）规范描述了用JNI Invocation API来加载或卸载Java虚拟机时，Java虚拟机的退出情况。</li>
-</ul>
 
+<h3 id="2-大对象直接进入老年代"><a href="#2-大对象直接进入老年代" class="headerlink" title="2 大对象直接进入老年代"></a>2 大对象直接进入老年代</h3><h3 id="3-长期存活的对象进入老年代"><a href="#3-长期存活的对象进入老年代" class="headerlink" title="3 长期存活的对象进入老年代"></a>3 长期存活的对象进入老年代</h3><h3 id="4-动态对象年龄判定"><a href="#4-动态对象年龄判定" class="headerlink" title="4 动态对象年龄判定"></a>4 动态对象年龄判定</h3><h3 id="5-空间分配担保"><a href="#5-空间分配担保" class="headerlink" title="5 空间分配担保"></a>5 空间分配担保</h3>
             </div>
             <hr/>
 
@@ -670,7 +490,7 @@ add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="l
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://happykite777.github.io/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">https://happykite777.github.io/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/</a>
+                    <a href="https://happykite777.github.io/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">https://happykite777.github.io/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -881,13 +701,13 @@ add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="l
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                <a href="/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="JVM之内存模型">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="虚拟机字节码执行引擎">
                         
-                        <span class="card-title">JVM之内存模型</span>
+                        <span class="card-title">虚拟机字节码执行引擎</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -898,7 +718,7 @@ add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="l
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-10-10
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-12-28
                         </span>
                         <span class="publish-author">
                             
@@ -930,13 +750,13 @@ add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="l
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/28/Mach-O%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/">
+                <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="Mach-O目标文件格式">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="JVM之垃圾回收">
                         
-                        <span class="card-title">Mach-O目标文件格式</span>
+                        <span class="card-title">JVM之垃圾回收</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -947,12 +767,16 @@ add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="l
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            happyKite777
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category">
+                                    java
+                                </a>
+                            
                             
                         </span>
                     </div>
@@ -960,8 +784,8 @@ add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="l
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">
-                        <span class="chip bg-color">编译和链接</span>
+                    <a href="/tags/jvm/">
+                        <span class="chip bg-color">jvm</span>
                     </a>
                     
                 </div>
