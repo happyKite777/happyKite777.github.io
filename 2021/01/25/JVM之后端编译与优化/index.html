@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>JVM之后端编译与优化 - HappyKite777的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":150,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="JVM之后端编译与优化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-25 19:18" pubdate>
+        2021年1月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM之后端编译与优化</h1>
+            
+            <div class="markdown-body">
+              <p>&emsp;把class文件转换成与本地基础设施（硬件指令集、操作系统）相关的二进制机器码，这个过程可以看做是整个编译过程的后端。</p>
+<p>&emsp; JVM 的前端编译器： Javac。后端编译器：即时编译器（JIT 编译器）和提前编译器（AOT 编译器）。</p>
+<p>&emsp;java虚拟机规范中并没有规定必须包含即时编译或者提前编译，但是这些是提升编译的一个方案，用来衡量虚拟机的品质。以下提到的即时编译器特值HotSpot虚拟机内置的即时编译器，虚拟机特指HotSpot虚拟机。</p>
+<h2 id="1-即时编译器"><a href="#1-即时编译器" class="headerlink" title="1. 即时编译器"></a>1. 即时编译器</h2><p>&emsp;目前主流的两款商用 JVM（HotSpot、OpenJ9）中，Java 程序最初都是通过「<strong>解释器</strong>（Interpreter）」解释执行的，当 JVM 发现某个方法或代码块的执行特别频繁，就会认为它们是“<strong>热点代码</strong>（Hot Spot Code）”。</p>
+<p>&emsp;为了提高热点代码的执行效率，JVM 会在「运行时」把这部分代码编译成本地机器码，并用各种手段去优化代码。运行时完成这个任务的后端编译器被称为「<strong>即时编译器</strong>」。</p>
+<h3 id="1-1-解释器与编译器"><a href="#1-1-解释器与编译器" class="headerlink" title="1.1 解释器与编译器"></a>1.1 解释器与编译器</h3><p>解释器（Interpreter）：工作在「运行时」，对源码一行一行的解释然后执行，然后返回结果。</p>
+<p>编译器（Compiler）：往往是在「执行」之前完成，产出是一种可执行或需要再编译或者解释的「代码」。</p>
+<p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fstatic.zybuluo.com%2Ffeixuelove1009%2Fx6c0pdl90q1129rgfne1p5gy%2Fimage.png&refer=http%3A%2F%2Fstatic.zybuluo.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1614853202&t=6ebb39f7e91ae14bd363d39d8ddb8bdb" srcset="/img/loading.gif" alt="编译器和解释器的理解"></p>
+<p>&emsp;HotSpot中内置了2或3个编译器：</p>
+<ul>
+<li>客户端编译器（Client Compiler，C1）</li>
+<li>服务端编译器（Server Compiler，C2，也叫Opto编译器）</li>
+<li>Graal编译器（JDK 10 出现用于替代 C2）</li>
+</ul>
+<p>&emsp;分层编译出现前，解释器通常和其中一个编译器搭配使用。虚拟机默认会根据硬件来性能自动选择虚拟机运行在客户端模式还是服务器模式，也可以<code>-clent</code> <code>-server</code>手动指定。 </p>
+<p>&emsp;<strong>解释执行</strong>：启动速度快。<br>&emsp;<strong>C1 编译执行</strong>：预热较快，运行时，执行快，相对更高的编译速度。<br>&emsp;<strong>C2 编译执行</strong>：需要较慢，运行时，执行快，相对更好的编译质量。</p>
+<p>&emsp;现在的解释器和编译器并不是单独工作了，而是交互执行。</p>
+<p><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=4192503619,3653616387&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="交互执行"></p>
+<h3 id="1-2-分层编译"><a href="#1-2-分层编译" class="headerlink" title="1.2 分层编译"></a>1.2 分层编译</h3><p>&emsp;在分层编译的工作模式出现前，HotSpot 虚拟机通常时采用解释器与其中一个编译器直接搭配的方式工作。为了在程序启动相应速度与运行效率之间达到最佳平衡，HotSpot 虚拟机在编译子系统中加入了分层编译功能。</p>
+<p>&emsp;解释器和编译器搭配使用的方式称为”混合模式“。</p>
+<pre class="line-numbers language-none"><code class="language-none">java -version        &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, mixed mode)
+java -Xint -version  &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, interpreted mode)
+java -Xcomp -version &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, compiled mode)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+
+
+<ul>
+<li>level 0：interpreter 解释执行。</li>
+<li>level 1：C1 编译，无 profiling（性能监控）</li>
+<li>level 2：C1 编译，仅方法及循环 back-edge 执行次数的 profiling</li>
+<li>level 3：C1 编译，除 level 2 中的 profiling 外还包括 branch（针对分支跳转字节码）及 receiver type（针对成员方法调用或类检测，如 checkcast，instnaceof，aastore 字节码）的 profiling</li>
+<li>level 4：C2 编译，将字节码编译成本地代码。相比客户端，会启用更多耗时长的优化。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200910212623971.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM0OTAyODA=,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="分层编译"></p>
+<p>&emsp;以上层次并不是一层不变的，根据不同的运行参数，虚拟机可以调整分层的数量，分层编译的交互如下如所示：</p>
+<p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F340444%2F202012%2F340444-20201228145824696-1515231115.png&refer=http%3A%2F%2Fimg2020.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1615289603&t=189b53163ab56a8a25182025ce04e184" srcset="/img/loading.gif" alt="分层编译交互"></p>
+<p>上图列举了4 种编译模式（非全部）。</p>
+<ol>
+<li>通常情况下，一个方法先被解释执行（level 0），然后被C1 编译（level 3），再然后被得到profile 数据的C2 编译（level 4）。</li>
+<li>如果编译对象非常简单，虚拟机认为通过C1 编译或通过C2 编译并无区别，便会直接由C1 编译且不插入profiling 代码（level 1）。</li>
+<li>在C1 忙碌的情况下，interpreter 会触发profiling，而后方法会直接被C2 编译；</li>
+<li>在C2 忙碌的情况下，方法则会先由C1 编译并保持较少的profiling（level 2），以获取较高的执行效率（与3 级相比高30%）。</li>
+</ol>
+<p>&emsp;实施分层编译后，解释器、客户端编译器和服务端编译器会同时工作，热点代码可能会被多次编译。用C1获取更高的编译速度，用C2获取更好的编译质量，在解释执行时也无需承担额外性能监控的任务，在C2采用高复杂度的优化算法时，C1可以采用简单优化来为它争取更多的编译时间。</p>
+<h3 id="1-2-热点代码和热点探测"><a href="#1-2-热点代码和热点探测" class="headerlink" title="1.2 热点代码和热点探测"></a>1.2 热点代码和热点探测</h3><blockquote>
+<p>热点代码</p>
+</blockquote>
+<p>&emsp;运行时会被即时编译器编译的目标是“热点代码”，主要包括下面两类：</p>
+<ol>
+<li>被多次调用的方法。</li>
+<li>被多次执行的循环体。</li>
+</ol>
+<p>&emsp;前者是jvm标准的即时编译，以整个方法作为编译对象。</p>
+<p>&emsp;后者依然以方法作为编译对象，但是触发即时编译的入口不一样（即不是从方法的第一行开始）。编译时会传入执行入口点的字节码序号（ByteCodeIndex，BCI）。由于该情况发生在方法执行的过程中，也被称为栈上替换（On Stack Replacement，OSR）。也就是方法的栈帧还在栈上，但方法已经被替换了。</p>
+<blockquote>
+<p>热点探测</p>
+</blockquote>
+<p>&emsp;只有探测出了该代码是热点代码，才会执行即时编译。主流的热点探测方式有以下2种：</p>
+<ol>
+<li><p><strong>基于采样的热点探测</strong>（Sample Based Hot Spot Code Detection）</p>
+<p>周期性的去检查一下所有线程的调用栈顶，若发现某些方法经常出现在栈顶，该方法就会被认为是“热点代码”。J9 虚拟机使用过该方法。</p>
+<p>优点：实现简单高效，而且可以通过堆栈信息获取到方法之间的调用关系；</p>
+<p>缺点：难以精确的确定方法热度，容易受到线程阻塞的干扰（即方法阻塞时可能长时间处于栈顶，可能产生误判）。</p>
+</li>
+<li><p><strong>基于计数器的热点探测</strong>（Counter Based Hot Spot Code Detection）</p>
+<p>为每个方法（或代码块）建立计数器来统计方法的执行次数，当次数超过一定的阈值就认为是“热点代码”。HotSpot 虚拟机就是使用该方法进行探测的。</p>
+<p>优点：统计结果更加精确严谨；</p>
+<p>缺点：统计起来稍麻烦（要为每个方法建立并维护计数器），而且不能直接获取到方法的调用关系。</p>
+</li>
+</ol>
+<p>&emsp;在HotSpot中采用的是基于计数器的热点探测技术。HotSpot使用了2种计数器：</p>
+<ul>
+<li><p>方法调用计数器（Invocation Counter）：统计方法被调用的次数。</p>
+<p>客户端阈值：1500。服务端阈值：10000。可以使用<code>-XX:CompileThreadhod</code>设定。</p>
+</li>
+<li><p>回边计数器（Back Edge Counter）：统计方法中循环体代码执行的次数，目的是触发栈上替换。</p>
+<p>字节码中遇到控制流向后跳转的指令称为“<strong>回边</strong>”。</p>
+</li>
+</ul>
+<p><b style="color:red">方法调用计数器流程</b></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL3N6X21tYml6X3BuZy9vcGhUYjkwb1lDVFVDanJNckdBcDNBdkdnbmppYnhFZ1lTeERpYUVtYlVwczlqSk1NZFM2OTFhWXVaRFdWZVAwd3M1NnBZc3IzNVRQdlZpYlM2ZGhXZGNnUS82NDA?x-oss-process=image/format,png" srcset="/img/loading.gif"></p>
+<p>&emsp;方法调用计数器统计的并非方法被调用的绝对次数，而是是一个相对的执行频率。</p>
+<p>&emsp;在一段时间内，如果方法的调用次数未到达阈值，计数器就会减少为原先的一半。该过程被称为<strong>热度衰减</strong>（Counter Decay），这段时间则被称为<strong>半衰周期</strong>（Counter Half Life Time）。这样的话，只要程序运行的时间足够长，程序中大部分代码都会被编译成本地代码。<code>-XX: UseCounterDecay</code>来设置关闭热度衰减，<code>-XX: CounterHalfLifeTime</code>设置半衰周期（秒）。</p>
+<p><b style="color:red">回边计数器流程</b></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL3N6X21tYml6X3BuZy9vcGhUYjkwb1lDVFVDanJNckdBcDNBdkdnbmppYnhFZ1lueXRrWDVBWEFUaWJpYzRVT2RzWkVaYzlpY285TmtMekVFN3VwallxV0htVXVyeFBYSkF5Yk45R0EvNjQw?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="回边计数器流程"></p>
+<p>&emsp;<code>-XX:CompileThreadhod</code>阈值。</p>
+<p>&emsp;<code>-XX: OnStackReplacePercentage</code>调整回边计数器的阈值的OSR比例，默认933。</p>
+<p>&emsp;<code>-XX:InterpreterProfilePercentage </code> 解释器监控比率，默认 33。</p>
+<p>&emsp;客户单模式下，<code>阈值 = 阈值 * OSR比例 / 100  </code> ，默认为13995。</p>
+<p>&emsp;服务器模式下，<code>阈值 = 阈值 * (OSR比例 - 解释器监控比率) / 100  </code> ，默认为10700。</p>
+<p>&emsp;回边计数器没有热度衰减，因此这个值就是循环的绝对次数。</p>
+<p>&emsp;以上两个附图实际上描述的是客户端模式下的探测过程，服务端模式下，更复杂。</p>
+<h3 id="1-3-编译过程"><a href="#1-3-编译过程" class="headerlink" title="1.3 编译过程"></a>1.3 编译过程</h3><p>&emsp;默认情况下， 不论是方法调用产生的标准编译请求还是栈上替换编译请求，在编译器完成编译之前，虚拟机都将按照解释方式执行代码，而编译动作会在后台继续进行。可使用<code>-XX: -BackgroundCompilation</code>来禁止后台编译，禁止后，如果触发了即时编译，执行线程会向虚拟机提交编译请求，然后阻塞直至编译完成，然后执行编译器输出的本地代码。</p>
+<p>&emsp;那么在后台编译的过程中，编译器具体会做什么事情呢？</p>
+<blockquote>
+<p> 客户端编译器编译过程</p>
+</blockquote>
+<p>&emsp;编译器主要目的是提供各种优化手段，客户端编译器的关注点在于局部性的优化，而服务端的关注点在耗时较长的全局性优化。</p>
+<p>&emsp;客户端编译的优化过程分为3个阶段：</p>
+<ul>
+<li>阶段1：将字节码构造成<strong>高级中间代码表示</strong>（High-Level Intermediate Representation，HIR，与目标机器指令集<strong>无关</strong>的中间表示）。<ul>
+<li>在构造HIR之前，编译器会在字节码上做部分基础优化，比如方法内联、常量传播等。</li>
+<li>HIR使用静态单分配（Static Single Assignment，SSA）的形式来表示代码值，这样可以让一些在HIR的构造过程之中和之后进行的优化动作更容易实现。</li>
+</ul>
+</li>
+<li>阶段2：将HIR构造成<strong>低级中间代码表示</strong>（LIR，与目标机器指令<strong>相关</strong>的中间表示）。<ul>
+<li>在构造LIR之前，编译器会在HIR上完成一些优化，比如空值检查消除、范围检查消除等，</li>
+</ul>
+</li>
+<li>阶段3：使用线性扫描算法（Liner Scan Register Allocation）在LIR上分配寄存器、并在LIR上做窥孔（Peep hole）优化，然后产生机器代码。这一部分和平台相关，也就是系统平台相关，比如x86架构会产生x86指令，arm产生arm指令等，</li>
+</ul>
+<p>&emsp;客户端编译器执行过程如下图所示：</p>
+<p><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3219334368,1848653826&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="client compile"></p>
+<blockquote>
+<p>服务端编译器编译过程</p>
+</blockquote>
+<p>&emsp;服务端编译器是专门面向服务端的典型应用场景，并特意针对服务端配置调整过的编译器，是一个能容忍高复杂优化的高级编译器。塔会执行大部分经典的优化动作：</p>
+<ul>
+<li>无用代码消除（Dead Code Elimination）</li>
+<li>循环展开（Loop Unrolling）</li>
+<li>循环表达式外提（Loop Expression Hoisting）</li>
+<li>消除公共子表达式（Common Subexpression Elimination）</li>
+<li>常量传播（Constant Propagation）</li>
+<li>基本块重排序（Basic Block Reordering）</li>
+<li>……</li>
+<li>范围检查消除（Range Check Elimination）</li>
+<li>空值检查消除（Null CheckElimination ）</li>
+<li>……</li>
+<li>守护内联（Guarded Inlining）</li>
+<li>分支频率预测（Branch Frequency Prediction）</li>
+<li>……</li>
+</ul>
+<p>服务端编译是一个复杂的过程，部分细节参考1.4</p>
+<h3 id="1-4-实战：查看及分析即时编译结果"><a href="#1-4-实战：查看及分析即时编译结果" class="headerlink" title="1.4 实战：查看及分析即时编译结果"></a>1.4 实战：查看及分析即时编译结果</h3><h2 id="2-提前编译器"><a href="#2-提前编译器" class="headerlink" title="2. 提前编译器"></a>2. 提前编译器</h2>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jvm/">jvm</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/19/JVM%E4%B9%8B%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91%E4%B8%8E%E4%BC%98%E5%8C%96/">
+                        <span class="hidden-mobile">JVM之前端编译与优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

@@ -1,37 +1,568 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>编译和链接基础知识 - HappyKite777的博客</title>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":150,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
     </div>
   </div>
+</nav>
 
-{% endblock %}
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="编译和链接基础知识">
+              
+            </span>
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-09-27 16:40" pubdate>
+        2020年9月27日 下午
+      </time>
+    </span>
+  
+</div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      40
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">编译和链接基础知识</h1>
+            
+            <div class="markdown-body">
+              <ul>
+<li>机器语言：能够被计算机识别和执行的二进制指令。</li>
+<li>汇编语言：面向机器的程序设计语言，汇编指令和机器语言之间有着一一对应的关系，人看汇编代码很吃力，但是比起一大串的01代码还是简单的多。</li>
+<li>高级语言：程序员编写的语言，C、C++、Java等。</li>
+</ul>
+<p>&emsp;程序员编写的高级语言符合人类的思维模式，但是计算机只认识0和1，无法识别高级语言，因此，我们编写好的代码，需要一种中间过程，将我们写好的代码，转换为二进制代码，从而让计算机得以执行。</p>
+<p>&emsp;源文件转换为二进制文件经历了以下几个阶段：预处理(prepressing)、编译(compilation)、汇编(assembly)、链接(linking)，如下图所示：<br><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2496969140,4180722254&fm=26&gp=0.jpg" srcset="/img/loading.gif"></p>
+<p>&emsp;hello.c文件</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello World\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;经过gcc编译器编译（指以上的所有阶段，不是单指编译阶段）后，得到可执行文件。</p>
+<pre class="line-numbers language-none"><code class="language-none">gcc hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>&emsp;预处理需要预处理程序（c中叫cpp）处理、编译需要编译程序（c中叫cc1、c++中叫cc1plus、oc叫cc1obj、java叫jc1……）处理、汇编需要汇编程序程序（c中叫as）处理，链接需要链接器（c中叫ld）处理。gcc实际上是对这些过程的封装，通过不同的参数调用不同的处理程序。<br>&emsp;以上编译过程可以拆解为：</p>
+<pre class="line-numbers language-none"><code class="language-none">gcc -E hello.c -o hello.i        &#x2F;&#x2F; 预编译
+gcc -S hello.i -o hello.s        &#x2F;&#x2F; 编译
+gcc -c hello.s -o hello.o      &#x2F;&#x2F; 汇编，目标文件
+gcc hello.o -o hello.out      &#x2F;&#x2F; 链接，可执行文件<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="1-源代码是如何到二进制的"><a href="#1-源代码是如何到二进制的" class="headerlink" title="1. 源代码是如何到二进制的"></a>1. 源代码是如何到二进制的</h2><h3 id="1-1-预编译"><a href="#1-1-预编译" class="headerlink" title="1.1 预编译"></a>1.1 预编译</h3><p>预编译主要是对源文件中的预编译指令进行处理，比如#include、#define等。处理规则如下：</p>
+<ul>
+<li>删除所有的”#define”，并展开所有宏定义  </li>
+<li>处理所有的条件预编译指令，比如 #if、#ifdef……</li>
+<li>处理#include预编译指令，将所有被包含的文件插入进该指令位置</li>
+<li>删除所有的注释</li>
+<li>添加行号和文件名标识，便于编译是产生调试用的信息</li>
+<li>保留所有的#pragma指令，供后续使用<pre class="line-numbers language-none"><code class="language-none">gcc -E hello.c -o hello.i        &#x2F;&#x2F; 预编译<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+预编译之后，文件不再包含任何宏信息，以下是预处理之后文件的部分代码<pre class="line-numbers language-none"><code class="language-none"># 1 &quot;hello.c&quot;
+# 1 &quot;&lt;built-in&gt;&quot; 1
+# 1 &quot;&lt;built-in&gt;&quot; 3
+# 361 &quot;&lt;built-in&gt;&quot; 3
+# 1 &quot;&lt;command line&gt;&quot; 1
+# 1 &quot;&lt;built-in&gt;&quot; 2
+# 1 &quot;hello.c&quot; 2
+# 1 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;stdio.h&quot; 1 3 4
+# 64 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;stdio.h&quot; 3 4
+# 1 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;_stdio.h&quot; 1 3 4
+
+…………
+
+extern int __vsnprintf_chk (char * restrict, size_t, int, size_t,
+       const char * restrict, va_list);
+# 412 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;stdio.h&quot; 2 3 4
+# 2 &quot;hello.c&quot; 2
+
+int main(int argc, char const *argv[])
+&#123;
+ printf(&quot;%s\n&quot;, &quot;Hello World!&quot;);
+ return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+</li>
+</ul>
+<h3 id="1-2-编译"><a href="#1-2-编译" class="headerlink" title="1.2 编译"></a>1.2 编译</h3><p>&emsp;编译过程主要是把预处理之后的文件进行一系列的词法分析、语法分析、语义分析及源码优化，编译后会产生相应的汇编源文件。这也是整个过程中最复杂的一部分。</p>
+<pre class="line-numbers language-none"><code class="language-none">gcc -s hello.i -o hello.s<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>&emsp;现代的gcc把预编译和编译两个步骤合并，使用cc1一步完成。</p>
+<h3 id="1-3-汇编"><a href="#1-3-汇编" class="headerlink" title="1.3 汇编"></a>1.3 汇编</h3><p>&emsp;汇编器将汇编代码编程机器可以执行的指令， 每一条汇编指令都对应着一条机器指令。汇编器的执行很简单，不需要优化，只需要对照汇编指令和机器指令表一一翻译即可。</p>
+<pre class="line-numbers language-none"><code class="language-none">gcc -c hello.c -o hello.o<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="1-4-链接"><a href="#1-4-链接" class="headerlink" title="1.4 链接"></a>1.4 链接</h3><p>通常我们看到链接会链接一大串文件，如下图所示，它会把编译生成的目标文件和运行时需要的库等打包放一起。具体后面会讲。</p>
+<pre class="line-numbers language-none"><code class="language-none">$ld -static &#x2F;usr&#x2F;lib&#x2F;crt1.o &#x2F;usr&#x2F;lib&#x2F;crti.o &#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-linux-
+gnu&#x2F;4.1.3&#x2F;crtbeginT.o -L&#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-linux-gnu&#x2F;4.1.3 -L&#x2F;usr&#x2F;lib -
+L&#x2F;lib hello.o --start-group -lgcc -lgcc_eh -lc --end-group &#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-
+linux-gnu&#x2F;4.1.3&#x2F;crtend.o &#x2F;usr&#x2F;lib&#x2F;crtn.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">gcc hello.o -o hello.out
+gcc hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="2-编译的过程"><a href="#2-编译的过程" class="headerlink" title="2. 编译的过程"></a>2. 编译的过程</h2><p>&emsp;编译主要分为6步：<strong>词法分析、语法分析、语义分析、中间代码优化、目标代码生成和目标代码优化。</strong>这里的编译实际上是上述的编译和汇编两个过程。<br><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1750648939,4195670772&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="编译过程"><br>&emsp;其中前4个步骤生成中间代码，它是和机器无关的，被称为<strong>前端编译</strong>，后2个步骤，和具体的平台架构、字长等相关，又叫做<strong>后端编译</strong>。</p>
+<h3 id="2-1-词法分析"><a href="#2-1-词法分析" class="headerlink" title="2.1 词法分析"></a>2.1 词法分析</h3><p>&emsp;源代码程序被输入到扫描器，它会做语法分析，运用算法将字符串分割成一系列的记号。<br>&emsp;比如有一行c源码：</p>
+<pre class="line-numbers language-none"><code class="language-none">array[index] &#x3D; (index + 4) * (2 + 6)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>&emsp;包含28个非空字符，扫描后，分割成16个记号。</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body >
+    <table align="center" width="200px">
+        <tr><th>记号</th><th>类型</th></tr>
+        <tr><td>array</td><td>标识符 </td></tr>
+        <tr><td>[</td><td>左方括号 </td></tr>
+        <tr><td>]</td><td>右方括号 </td></tr>
+        <tr><td>=</td><td>赋值 </td></tr>
+        <tr><td>(</td><td>左圆括号 </td></tr>
+        <tr><td>index</td><td>标识符 </td></tr>
+        <tr><td>\+</td><td>加号 </td></tr>
+        <tr><td>4</td><td>数字 </td></tr>
+        <tr><td>)</td><td>右圆括号 </td></tr>
+        <tr><td>\*</td><td>乘号 </td></tr>
+        <tr><td>(</td><td>左圆括号 </td></tr>
+        <tr><td>2</td><td>数字 </td></tr>
+        <tr><td>\+</td><td>加号 </td></tr>
+        <tr><td>6</td><td>数字 </td></tr>
+        <tr><td>)</td><td>右圆括号 </td></tr>
+    </table>
+</body>
+</html>
+
+<p>&emsp;词法分析产生的记号有几类：关键字、标识符、字面量和特殊符号（加号、括号等），扫描器在识别的同时会做一些其他的事，比如将标识符放到符号表，将数字字符串常量存放到文字表等。</p>
+<h3 id="2-2-语法分析"><a href="#2-2-语法分析" class="headerlink" title="2.2 语法分析"></a>2.2 语法分析</h3><p>&emsp;语法分析器会将词法分析器产生的记号进行语法分析，产生语法分析树。比如以上产生的语法树如下：<br><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3153678276,3283363363&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="语法树"></p>
+<h3 id="2-3-语义分析"><a href="#2-3-语义分析" class="headerlink" title="2.3 语义分析"></a>2.3 语义分析</h3><p>&emsp;语义分析由语义分析器完成，它会对上述生成的语法树进行合法性分析，比如数字和数字相加是合法的，但是数字和指针相加则会报错。<br>&emsp;编译器只能做静态语义分析。比如声明和类型的匹配、类型的转换等。经过语义分析后，产生的语法树如下：<br><img src="https://www.pianshen.com/images/621/6cd6f41ffec80b27c299440e4d41f29d.png" srcset="/img/loading.gif" alt="语义分析后的语法树"></p>
+<h3 id="2-4-中间代码优化"><a href="#2-4-中间代码优化" class="headerlink" title="2.4 中间代码优化"></a>2.4 中间代码优化</h3><p>&emsp;在生成汇编语言之前，编译器会对源代码进行优化。比如上述例子中的2+6，在编译时期是可以确定的，这是属于源代码优化的一种，类似的还有很多。<br><img src="https://www.pianshen.com/images/892/24b52fae4922dbb5d48677376e07b02c.png" srcset="/img/loading.gif" alt="优化之后的语法树"><br>&emsp;但是编译器直接对语法树进行优化很难，因此它会将整个语法树转换成<strong>中间代码</strong>。它是语法树的中间表示，很接近目标代码，但是和机器无关。<br>&emsp;中间代码在不同的编译器中有不同形式，常见的有三地址码（Three-address Code）和P-代码（P-Code）。<br>&emsp;最基本的三地址码：x = y op z，表示将y和z进行op操作后，赋值给x。因此，上述代码被翻译成三地址码后是这样的</p>
+<pre class="line-numbers language-none"><code class="language-none">t1 &#x3D; 2 + 6
+t2 &#x3D; index + 4
+t3 &#x3D; t2 * t1
+array[index] &#x3D; t3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以被优化成这样</p>
+<pre class="line-numbers language-none"><code class="language-none">t2 &#x3D; index + 4
+t2 &#x3D; t2 * 8
+array[index] &#x3D; t2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;中间代码是编译分为前端和后端。前端负责产生和机器无关的中间代码（不是汇编代码），后端服务将中间代码转换成目标机器代码。一些跨平台的语言编译时，可以使用一个前端和不同的多个后端。</p>
+<h3 id="2-5-目标代码生成与优化"><a href="#2-5-目标代码生成与优化" class="headerlink" title="2.5 目标代码生成与优化"></a>2.5 目标代码生成与优化</h3><p>&emsp;编译器后端主要包括代码生成器和目标代码优化器。代码生成器会将中间转换成目标机器代码，这个过程依赖目标机器，不同的机器字长、寄存器、整型长度等都不一样。假设目标机器cpu使用x86架构，则会生成以下汇编代码</p>
+<pre class="line-numbers language-none"><code class="language-none">movl index, %ecx			; index放入ecx寄存器
+addl $4, %ecx				; ecx &#x3D; ecx + 4
+mull $8, %ecx				; ecx &#x3D; ecx * 8
+movl index, %eax			; index放入eax寄存器
+movl %ecx, array(,eax,4) 	; array[index] &#x3D; ecx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;最后代码优化器对上述代码进行优化，比如选择合适的寻址方式、使用位移来代替乘法、删除多余的指令等。</p>
+<h2 id="3-链接的过程"><a href="#3-链接的过程" class="headerlink" title="3. 链接的过程"></a>3. 链接的过程</h2><p>&emsp;经过编译器的词法分析、语法分析、语义分析、源代码优化、代码生成和目标代码优化后，源代码终于被编译成了目标代码。但是目标代码中有一个问题：index和array的地址还没有确定？如果引用的是其他程序模块变量，地址怎么确定呢？<br>&emsp;事实上，定义的其他模块的全局变量和函数最终运行时的绝对地址都要在最终链接的时候确定，这个过程由链接器实现。<br>&emsp;链接器是一个将编译器产生的目标文件打包成可执行文件或者库文件或者目标文件的程序。<br>&emsp;程序由若干个模块组成，各个模块之间会进行通信，比如调用其他模块的函数，需要知道函数的地址，访问其他模块的变量，也需要变量的地址，这都归结于一种方式，即模块间符号的引用。<br>&emsp;<strong>模块间依靠符号来通信，定义符号的模块多出来的区域，刚好拼接上引用该符号的模块缺少的区域，这个拼接的过程就叫：链接</strong>。<br><img src="https://img-blog.csdn.net/20180917213258403?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dpdGh1Yl8zNzM4MjMxOQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" alt="链接"></p>
+<p>&emsp;链接器主要的工作就是把一些指令对其他符号地址的引用修正为真正的地址。<br>&emsp;链接过程主要包括<strong>地址和空间分配（Address and Storage Allocation）、符号决议（Symbol Resolution）和重定向（Relocation）</strong>等步骤。<br>&emsp;符号决议在在静态链接的时候称为符号决议或者名称决议（Name Resolution），在动态链接的时候被叫做<strong>符号绑定（Symbol Binding）</strong>或者名称绑定（Name Binding），有时候甚至叫做地址绑定（Address Binding）、指令绑定（Instruction Binding）。从名称上可以区分出来，决议偏向静态链接，绑定偏向动态链接。</p>
+<ul>
+<li>符号决议：其实就是指用符号来去标识一个地址。比如说 int a = 6;这样一句代码，用a来标识一个块4个字节大小的空间，空间里边存放的内容就是4.</li>
+<li>重新计算各个目标的地址过程叫做重定位。</li>
+</ul>
+<h3 id="3-1-静态链接"><a href="#3-1-静态链接" class="headerlink" title="3.1 静态链接"></a>3.1 静态链接</h3><p>&emsp;如下图，最基本的静态链接就是把目标文件和库文件一起链接，形成最终可执行文件。最常见的库是运行时库。<br><img src="http://blog.chinaunix.net/attachment/201308/8/26548237_1375965656F2Fy.png" srcset="/img/loading.gif" alt="静态链接过程"><br>&emsp;我们在main.c模块中调用另一个模块func.c中的函数foo，必须知道foo的地址，但是每个模块都是单独编译的，在编译main.c的的时候并不知道foo函数的地址，所以编译器会暂时搁置调用foo的指令的目标地址，等链接的时候，链接器会根据引用符号foo，自动去相应的func.c模块查找foo的地址，然后将main.c模块中所有引用到foo的指令重新修正，让他们的目标地址为真正foo函数的地址。这就是静态链接最基本的过程和作用。<br>&emsp;假设A里面有个全局变量p，我们再B里面要访问这个全局变量，B里面有这么一条指令：</p>
+<pre class="line-numbers language-none"><code class="language-none">movl $0x2a, p     &#x2F;&#x2F; p &#x3D; 42，x86架构<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>&emsp;意思是给p变量赋值0x2a。编译B得到指令机器码  <u>C7 05</u>  <u>00 00 00 00</u>  <u>2a 00 00 00</u>，c705是mov指令码，2a为源常量，由于不知道地址所以暂时置为0，等链接器链接A和B的时候，假设确定p的地址为0x1000，则把目标地址修改为0x1000，即<u>C7 05</u>  <u>00 00 10 00</u>  <u>2a 00 00 00</u>。</p>
+<h3 id="3-2-动态链接"><a href="#3-2-动态链接" class="headerlink" title="3.2 动态链接"></a>3.2 动态链接</h3><p>&emsp;把程序按照模块拆分成各个相对独立部分，在程序运行时才将它们链接在一起形成一个完整的程序，而不是像静态链接一样把所有程序模块都链接成一个单独的可执行文件</p>
+<p>&emsp;假设现在有两个程序program1.o和program2.o，这两者共用同一个库lib.o,假设首先运行程序program1，系统首先加载program1.o，当系统发现program1.o中用到了lib.o，即program1.o依赖于lib.o，那么系统接着加载lib.o，如果program1.o和lib.o还依赖于其他目标文件，则依次全部加载到内存中。当program2运行时，同样的加载program2.o，然后发现program2.o依赖于lib.o，但是此时lib.o已经存在于内存中，这个时候就不再进行重新加载，而是将内存中已经存在的lib.o映射到program2的虚拟地址空间中，从而进行链接（这个链接过程和静态链接类似）形成可执行程序。</p>
+<p>&emsp;链接是一个很复杂的过程，后续有时间再写。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">编译和链接</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/28/Mach-O%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Mach-O目标文件格式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/">
+                        <span class="hidden-mobile">MySQL索引及其优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

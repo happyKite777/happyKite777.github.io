@@ -1,37 +1,640 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>JVM的简单介绍 - HappyKite777的博客</title>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":150,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
     </div>
   </div>
+</nav>
 
-{% endblock %}
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="JVM的简单介绍">
+              
+            </span>
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-09 18:03" pubdate>
+        2020年10月9日 晚上
+      </time>
+    </span>
+  
+</div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      27
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM的简单介绍</h1>
+            
+            <div class="markdown-body">
+              <h2 id="1、虚拟机概念"><a href="#1、虚拟机概念" class="headerlink" title="1、虚拟机概念"></a>1、虚拟机概念</h2><p>&emsp;虚拟机就是指虚拟的计算机。它是一款软件，用来执行一系列虚拟计算机指令。大体上，虚拟机可以分为系统虚拟机和程序虚拟机。</p>
+<ul>
+<li>系统虚拟机：对物理计算机的仿真，提供可运行完整操作系统的虚拟平台，比如VirtualBox、VMware等。</li>
+<li>程序虚拟机：专门为执行单个计算机程序而设计，比如java虚拟机（JVM），在Java虚拟机中执行的指令我们称为Java字节码指令。</li>
+</ul>
+<h2 id="2、java虚拟机"><a href="#2、java虚拟机" class="headerlink" title="2、java虚拟机"></a>2、java虚拟机</h2><h3 id="2-1-java字节码"><a href="#2-1-java字节码" class="headerlink" title="2.1 java字节码"></a>2.1 java字节码</h3><p>&emsp;java字节码是指java语言编译成的字节码，任何能在jvm平台上执行的字节码格式都是一样的。所以应该统称为jvm字节码。</p>
+<p>&emsp;不同的编译器，可以编译出相同的字节码文件。任何语言只要能被编译器编译成字节码，就可以在jvm上运行。</p>
+<p>&emsp;Java虚拟机与Java语言并没有必然的联系，它只与特定的二进制文件格式——Class文件格式所关联，Class文件中包含了Java虚拟机指令集（或者称为字节码、Bytecodes）和符号表，还有一些其他辅助信息。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTIxNzI1MTg4LnBuZw?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="jvm只关注字节码，不关注源码"></p>
+<h3 id="2-2-java虚拟机"><a href="#2-2-java虚拟机" class="headerlink" title="2.2 java虚拟机"></a>2.2 java虚拟机</h3><p>&emsp;Java虚拟机是一台执行Java字节码的虚拟计算机，它拥有独立的运行机制。由图上可知，不只是java，其他语言也可以被编译成字节码运行在jvm上，因此<strong>jvm是跨语言的平台</strong>。</p>
+<p>&emsp;Java技术的核心就是Java虚拟机（JVM，Java Virtual Machine），因为所有的Java程序都运行在Java虚拟机内部。</p>
+<p>&emsp;Java虚拟机就是二进制字节码的运行环境，负责装载字节码到其内部，解释/编译为对应平台上的机器指令执行。每一条Java指令，Java虚拟机规范中都有详细定义，如怎么取操作数，怎么处理操作数，处理结果放在哪里等。</p>
+<p>&emsp;JVM的特点：</p>
+<ul>
+<li><ul>
+<li>一次编译，到处运行</li>
+</ul>
+</li>
+<li><ul>
+<li>自动内存管理</li>
+</ul>
+</li>
+<li><ul>
+<li>自动垃圾回收</li>
+</ul>
+</li>
+</ul>
+<h2 id="3、JVM的整体结构"><a href="#3、JVM的整体结构" class="headerlink" title="3、JVM的整体结构"></a>3、JVM的整体结构</h2><p>&emsp;JVM运行在操作系统之上，它与硬件没有直接的交互。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTIzNDMyMDgyLnBuZw?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="jvm的位置"><br>&emsp;jvm在java体系中处于比较底层的位置。<br><img src="https://img2018.cnblogs.com/blog/890598/201902/890598-20190220210053733-743773115.png" srcset="/img/loading.gif" alt="java体系结构"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTMyMzMwNjgyLnBuZw?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="hotspot整体结构"></p>
+<ul>
+<li>HotSpot是OracleJDK和OpenJDK共用的jvm</li>
+<li>它采用解释器与即时编译器共存的结构</li>
+<li>今天，java程序运行性能已经达到可以和c/c++一较高下的程度</li>
+</ul>
+<p>&emsp;上图可以看出，字节码文件是jvm的入口，文件通过类加载器被加载到内存中，生成一个大的class对象。加载又被分为加载、链接、初始化步骤，后续会具体讲解。运行时数据区是把内存分为了不同区域，其中java栈是老叫法，现在叫java虚拟机栈，具体可看上一篇文章。执行引擎被分为解释器、JIT即时编译器和垃圾回收，解释器用来解释字节码文件，JIT是对热点代码进行提前编译，这里的编译被称为编译的后端（源码被编译成字节码的过程叫编译的前端），垃圾回收器对使用后的内存进行回收管理，后续会具体讲到。执行引擎的作用实际上是把字节码指令翻译成机器指令，供计算机识别。</p>
+<h2 id="4、java代码执行流程"><a href="#4、java代码执行流程" class="headerlink" title="4、java代码执行流程"></a>4、java代码执行流程</h2><p>&emsp;执行流程和一般的程序编译链接的差不多，具体可看<a href="https://happykite777.github.io/2020/09/27/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5/">编译和链接</a>，Java的后端编译和链接是jvm实现的。<br><img src="http://5b0988e595225.cdn.sohucs.com/images/20200312/391f35c99f90452898cfefe633737401.png" srcset="/img/loading.gif" alt="java代码执行流程"></p>
+<h2 id="5、JVM架构模型"><a href="#5、JVM架构模型" class="headerlink" title="5、JVM架构模型"></a>5、JVM架构模型</h2><p>&emsp;java编译器输入的指令流基本上是一种<strong>基于栈的指令集架构</strong>，另一种指令集架构则是<strong>基于寄存器的指令集架构</strong>。</p>
+<p>&emsp;基于栈式架构的特点：</p>
+<ul>
+<li><ul>
+<li>设计和实现更简单，适用于资源受限的系统。（比如嵌入式平台、打印机）</li>
+</ul>
+</li>
+<li><ul>
+<li>避开寄存器的分配难题，使用零地址指令方式分配</li>
+</ul>
+</li>
+<li><ul>
+<li>指令流中的指令大部分是零地址指令，其执行过程依赖于操作占。指令集更小，编译器容易实现。</li>
+</ul>
+</li>
+<li><ul>
+<li>不需要硬件支持，可以执行更好，更好实现跨平台，可移植</li>
+</ul>
+</li>
+<li><ul>
+<li>在解释执行下，速度稍慢。但是经过即时编译器输出成物理机汇编指令流，就和指令没啥关系了</li>
+</ul>
+</li>
+</ul>
+<p>&emsp;基于寄存器架构的特点：</p>
+<ul>
+<li><ul>
+<li>典型的应用是x86的二进制指令集：比如传统的pc和Android的Davlik虚拟机</li>
+</ul>
+</li>
+<li><ul>
+<li>指令集架构完全依赖于硬件，可以执行差</li>
+</ul>
+</li>
+<li><ul>
+<li>性能优秀和执行更高效</li>
+</ul>
+</li>
+<li><ul>
+<li>花费更少的指令去完成一项操作 </li>
+</ul>
+</li>
+<li><ul>
+<li>在大部分情况下，基于寄存器架构的指令集往往都是以一地址指令、二地址指令和三地址指令为主，而基于栈式架构的指令集却是以零地址为主</li>
+</ul>
+</li>
+</ul>
+<h3 id="两种架构举例"><a href="#两种架构举例" class="headerlink" title="两种架构举例"></a>两种架构举例</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">StackStructTest</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> k <span class="token operator">=</span> i <span class="token operator">+</span> j<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>反编译，在生成的StackStructTest.class目录下执行 <code>javap -v  StackStructTest.class</code>，可以得到汇编代码</p>
+<pre class="line-numbers language-none"><code class="language-none">Classfile &#x2F;Users&#x2F;zhoumi&#x2F;IdeaProjects&#x2F;learn&#x2F;target&#x2F;classes&#x2F;com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest.class
+  Last modified 2020-10-10; size 484 bytes
+  MD5 checksum 7c6fc6746c6202d31f01b9dca6e74d98
+  Compiled from &quot;StackStructTest.java&quot;
+public class com.hk7.memory.StackStructTest
+  minor version: 0
+  major version: 49
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 &#x3D; Methodref          #3.#21         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
+   #2 &#x3D; Class              #22            &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest
+   #3 &#x3D; Class              #23            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object
+   #4 &#x3D; Utf8               &lt;init&gt;
+   #5 &#x3D; Utf8               ()V
+   #6 &#x3D; Utf8               Code
+   #7 &#x3D; Utf8               LineNumberTable
+   #8 &#x3D; Utf8               LocalVariableTable
+   #9 &#x3D; Utf8               this
+  #10 &#x3D; Utf8               Lcom&#x2F;hk7&#x2F;memory&#x2F;StackStructTest;
+  #11 &#x3D; Utf8               main
+  #12 &#x3D; Utf8               ([Ljava&#x2F;lang&#x2F;String;)V
+  #13 &#x3D; Utf8               args
+  #14 &#x3D; Utf8               [Ljava&#x2F;lang&#x2F;String;
+  #15 &#x3D; Utf8               i
+  #16 &#x3D; Utf8               I
+  #17 &#x3D; Utf8               j
+  #18 &#x3D; Utf8               k
+  #19 &#x3D; Utf8               SourceFile
+  #20 &#x3D; Utf8               StackStructTest.java
+  #21 &#x3D; NameAndType        #4:#5          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V
+  #22 &#x3D; Utf8               com&#x2F;hk7&#x2F;memory&#x2F;StackStructTest
+  #23 &#x3D; Utf8               java&#x2F;lang&#x2F;Object
+&#123;
+  public com.hk7.memory.StackStructTest();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1
+         0: aload_0
+         1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
+         4: return
+      LineNumberTable:
+        line 9: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;StackStructTest;
+
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava&#x2F;lang&#x2F;String;)V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack&#x3D;2, locals&#x3D;4, args_size&#x3D;1
+         0: iconst_2
+         1: istore_1
+         2: iconst_3
+         3: istore_2
+         4: iload_1
+         5: iload_2
+         6: iadd
+         7: istore_3
+         8: return
+      LineNumberTable:
+        line 11: 0
+        line 12: 2
+        line 13: 4
+        line 14: 8
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       9     0  args   [Ljava&#x2F;lang&#x2F;String;
+            2       7     1     i   I
+            4       5     2     j   I
+            8       1     3     k   I
+&#125;
+SourceFile: &quot;StackStructTest.java&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>同样执行2+3这种逻辑操作，其指令分别如下：</p>
+<ul>
+<li><p>基于栈的计算流程（以Java虚拟机为例）</p>
+<pre class="line-numbers language-none"><code class="language-none">0: iconst_2    &#x2F;&#x2F;常量2
+1: istore_1    &#x2F;&#x2F;把常量2保存到索引为1的操作数栈中
+2: iconst_3    &#x2F;&#x2F;常量3
+3: istore_2    &#x2F;&#x2F;把常量3保存到索引为2的操作数栈中
+4: iload_1     &#x2F;&#x2F;加载常量2
+5: iload_2     &#x2F;&#x2F;加载常量3
+6: iadd		   &#x2F;&#x2F;对常量2和3求和
+7: istore_3    &#x2F;&#x2F;把求和的结果保存在索引为3的操作数栈中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&emsp;基于栈的指令都是不带参数的，使用操作数栈中的数据作为指令的运算输入，指令运算结果也存在与操作数栈之中。</p>
+</li>
+<li><p>而基于寄存器的计算流程</p>
+<pre class="line-numbers language-none"><code class="language-none">mov eax,2 &#x2F;&#x2F;将eax寄存器的值设为1
+add eax,3 &#x2F;&#x2F;使eax寄存器的值加3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<p><strong>由于跨平台性的设计，Java的指令都是根据栈来设计的。</strong></p>
+<h2 id="6、JVM的生命周期"><a href="#6、JVM的生命周期" class="headerlink" title="6、JVM的生命周期"></a>6、JVM的生命周期</h2><h3 id="虚拟机的启动"><a href="#虚拟机的启动" class="headerlink" title="虚拟机的启动"></a>虚拟机的启动</h3><p>&emsp;<strong>Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创建一个初始类（initial class）来完成的</strong>，这个类是由虚拟机的具体实现指定的。</p>
+<h3 id="虚拟机的执行"><a href="#虚拟机的执行" class="headerlink" title="虚拟机的执行"></a>虚拟机的执行</h3><ul>
+<li>一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序</li>
+<li>程序开始执行时他才运行，程序结束时他就停止</li>
+<li><strong>执行一个所谓的Java程序的时候，真真正正在执行的是一个叫做Java虚拟机的进程</strong>。可通<code>jps</code>来查看虚拟机中正在执行的进程。</li>
+</ul>
+<h3 id="虚拟机的退出"><a href="#虚拟机的退出" class="headerlink" title="虚拟机的退出"></a>虚拟机的退出</h3><ul>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+<li>某线程调用Runtime类或System类的exit()方法，或Runtime类的halt()方法，并且Java安全管理器也允许这次exit()或halt()操作。</li>
+<li>除此之外，JNI（Java Native Interface）规范描述了用JNI Invocation API来加载或卸载Java虚拟机时，Java虚拟机的退出情况。</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jvm/">jvm</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JVM之内存模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/28/Mach-O%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/">
+                        <span class="hidden-mobile">Mach-O目标文件格式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

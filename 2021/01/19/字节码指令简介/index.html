@@ -1,37 +1,478 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>字节码指令简介 - HappyKite777的博客</title>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":150,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
     </div>
   </div>
+</nav>
 
-{% endblock %}
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="字节码指令简介">
+              
+            </span>
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-19 12:00" pubdate>
+        2021年1月19日 中午
+      </time>
+    </span>
+  
+</div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">字节码指令简介</h1>
+            
+            <div class="markdown-body">
+              <p>&emsp;java虚拟机的指令由一个字节长度的，代表某种含义的数字（操作码，Opcode），以及跟在后面的若干参数组成。由于java虚拟机采用基于栈的指令集机构，因此大多数指令都只有操作码，参数则存在于操作数栈中。</p>
+<p>&emsp;字节码指令集只占1个字节，因此不会最多256条（0~255）。class文件编译后不会执行操作数长度对齐，因此在处理超过一个字节的数据时，必须重建出具体的数据结构，比如将1个16位长度的无符号整数使用2个无符号字节存起来。这种操作某种程度上会损失一些性能，但是由于放弃了长度对齐，可以节省大量的填充和符号间隔。</p>
+<p>&emsp;忽略掉异常，Java虚拟机解释器的执行模型大概如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">do&#123;
+  pc寄存器值+1
+  根据pc寄存器指示的位置，从字节码流中取出操作码
+  if(字节码存在操作数) 从字节码流中取出操作数
+  执行操作码所定义的操作
+&#125;while(字节码流长度 &gt; 0)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<h2 id="1-加载和存储指令"><a href="#1-加载和存储指令" class="headerlink" title="1. 加载和存储指令"></a>1. 加载和存储指令</h2><p>&emsp;将局部变量加载到操作数栈：<code>iload、iload_&lt;n&gt;、lload、lload_&lt;n&gt;、fload、fload_&lt;n&gt;、dload、dload_&lt;n&gt;、aload、aload_&lt;n&gt;</code>均以下省略_n，代表槽</p>
+<p>&emsp;将数值从操作数栈存储到局部变量表：<code>istore、lstore、fstore、dstore、astore</code></p>
+<p>&emsp;将常量加载到操作数栈：<code>bipush、sipush、ldc、ldc_w、ldc2_w、aconst_null、iconst_m1、iconst、lconst、fconst、dconst</code></p>
+<p>&emsp;扩充局部变量表的访问索引指令：<code>wide</code></p>
+<h2 id="2-运算指令"><a href="#2-运算指令" class="headerlink" title="2. 运算指令"></a>2. 运算指令</h2><p>&emsp;加法：<code>iadd、ladd、fadd、dadd</code><br>&emsp;减法：<code>isub、lsub、fsub、dsub</code><br>&emsp;乘法：<code>imul、lmul、fmul、dmul</code><br>&emsp;除法：<code>idiv、ldiv、fdiv、ddiv</code><br>&emsp;取余：<code>irem、lrem、frem、drem</code><br>&emsp;取反：<code>ineg、lneg、fneg、dneg</code><br>&emsp;位移：<code>ishl、ishr、iushr、lshl、lshr、lushr</code><br>&emsp;按位或：<code>ior、lor</code><br>&emsp;按位与：<code>iand、land</code><br>&emsp;按位异或：<code>ixor、lxor</code><br>&emsp;局部变量自增：<code>iinc</code><br>&emsp;比较：<code>dcmpg、dcmpl、fcmpg、fcmpl、lcmp</code></p>
+<h2 id="3-类型转换指令"><a href="#3-类型转换指令" class="headerlink" title="3. 类型转换指令"></a>3. 类型转换指令</h2><p>&emsp;java虚拟机直接支持小范围到大范围的安全转换，比如int -&gt; long、float、double等。</p>
+<p>显示转换指令：<code>i2b、i2c、i2s、l2i、f2l、d2i、d2l、d2f</code></p>
+<h2 id="4-对象创建指令"><a href="#4-对象创建指令" class="headerlink" title="4. 对象创建指令"></a>4. 对象创建指令</h2><p>&emsp;创建类实例：<code>new</code><br>&emsp;创建数组：<code>newarray、anewarray、multianewarray</code><br>&emsp;访问类字段：<code>getstatic、putstatic</code><br>&emsp;访问实例字段：<code>getfield、putfield</code><br>&emsp;加载数组元素到操作数栈：<code>baload、caload、saload、iaload、laload、faload、daload、aaload</code><br>&emsp;存储操作数栈的值到数组元素中：<code>bastore、castore、sastore、iastore、lastore、fastore、dastore、aastore、</code><br>&emsp;取数组长度：<code>arraylength</code><br>&emsp;检查实例类型：<code>instanceod、checkcast</code></p>
+<h2 id="5-操作数栈管理指令"><a href="#5-操作数栈管理指令" class="headerlink" title="5. 操作数栈管理指令"></a>5. 操作数栈管理指令</h2><p>&emsp;弹出操作数栈栈顶1到2个元素：<code>pop、pop2</code><br>&emsp;复制栈顶1或2个元素并重新入栈：<code>dup、dup2、dup_x1、dup2_x1、dup_x2、dup2_x2</code><br>&emsp;栈顶两个数值互换：<code>swap</code></p>
+<h2 id="6-控制转移指令"><a href="#6-控制转移指令" class="headerlink" title="6. 控制转移指令"></a>6. 控制转移指令</h2><p>&emsp;条件分支：<code>ifeg、iflt、ifne、ifgt、ifnull、ifnonnull、if_icmp eq、if_icmp ne、if_icmp lt、if_icmp gt、if_icmp le、if_icmp ge、if_acmp eq、if_acmp ne</code></p>
+<p>&emsp;符合条件分支：<code>tableswitch、lookupswitch</code></p>
+<p>&emsp;无条件分支：<code>goto、goto_w、jsr、jsr_w、ret</code></p>
+<h2 id="7-方法调用和返回指令"><a href="#7-方法调用和返回指令" class="headerlink" title="7. 方法调用和返回指令"></a>7. 方法调用和返回指令</h2><ul>
+<li>调用指令</li>
+</ul>
+<p>&emsp; <code>invokevirtual</code>：实例方法<br>&emsp; <code>invokeinterface</code>：接口方法<br>&emsp; <code>invokeinspecial</code>：构造方法、私有方法、父类方法<br>&emsp; <code>invokestatic</code>：静态方法<br>&emsp; <code>invokedynamic</code>：运行时动态解析出调用点限定符所引用的方法</p>
+<ul>
+<li>返回指令</li>
+</ul>
+<p>&emsp;<code>ireturn、lreturn、freturn、dreturn、areturn</code>注意：返回值为boolean、byte、char、short、int时采用ireturn指令</p>
+<h2 id="8-异常指令"><a href="#8-异常指令" class="headerlink" title="8. 异常指令"></a>8. 异常指令</h2><p>&emsp;显示抛出的异常：<code>athrow</code><br>&emsp;catch中捕获的异常不是字节码指令实现的，而是采用异常表。</p>
+<h2 id="9-同步指令"><a href="#9-同步指令" class="headerlink" title="9. 同步指令"></a>9. 同步指令</h2><p>&emsp;方法级的同步无需字节码指令控制，它实现在方法调用和返回之中。当调用时会检查方法表结构中的ACC_SYNCHRONIZED权限，如果设置了则会先获取管程（锁），执行完毕释放管程。如果抛出异常且没有处理此异常，管程将会在异常抛到方法边界之外时自动释放。</p>
+<p>&emsp; synchronized语句块指令：<code>monitorenter、monitorexit</code></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jvm/">jvm</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/19/JVM%E4%B9%8B%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91%E4%B8%8E%E4%BC%98%E5%8C%96/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JVM之前端编译与优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">
+                        <span class="hidden-mobile">虚拟机字节码执行引擎</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
