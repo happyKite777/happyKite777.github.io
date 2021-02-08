@@ -55,7 +55,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":150,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":100,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.9k 字
+      6.8k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      31
+      76
        分钟
     </span>
   
@@ -230,9 +230,9 @@
               <p>&emsp;把class文件转换成与本地基础设施（硬件指令集、操作系统）相关的二进制机器码，这个过程可以看做是整个编译过程的后端。</p>
 <p>&emsp; JVM 的前端编译器： Javac。后端编译器：即时编译器（JIT 编译器）和提前编译器（AOT 编译器）。</p>
 <p>&emsp;java虚拟机规范中并没有规定必须包含即时编译或者提前编译，但是这些是提升编译的一个方案，用来衡量虚拟机的品质。以下提到的即时编译器特值HotSpot虚拟机内置的即时编译器，虚拟机特指HotSpot虚拟机。</p>
-<h2 id="1-即时编译器"><a href="#1-即时编译器" class="headerlink" title="1. 即时编译器"></a>1. 即时编译器</h2><p>&emsp;目前主流的两款商用 JVM（HotSpot、OpenJ9）中，Java 程序最初都是通过「<strong>解释器</strong>（Interpreter）」解释执行的，当 JVM 发现某个方法或代码块的执行特别频繁，就会认为它们是“<strong>热点代码</strong>（Hot Spot Code）”。</p>
+<h1 id="1-即时编译器"><a href="#1-即时编译器" class="headerlink" title="1. 即时编译器"></a>1. 即时编译器</h1><p>&emsp;目前主流的两款商用 JVM（HotSpot、OpenJ9）中，Java 程序最初都是通过「<strong>解释器</strong>（Interpreter）」解释执行的，当 JVM 发现某个方法或代码块的执行特别频繁，就会认为它们是“<strong>热点代码</strong>（Hot Spot Code）”。</p>
 <p>&emsp;为了提高热点代码的执行效率，JVM 会在「运行时」把这部分代码编译成本地机器码，并用各种手段去优化代码。运行时完成这个任务的后端编译器被称为「<strong>即时编译器</strong>」。</p>
-<h3 id="1-1-解释器与编译器"><a href="#1-1-解释器与编译器" class="headerlink" title="1.1 解释器与编译器"></a>1.1 解释器与编译器</h3><p>解释器（Interpreter）：工作在「运行时」，对源码一行一行的解释然后执行，然后返回结果。</p>
+<h2 id="1-1-解释器与编译器"><a href="#1-1-解释器与编译器" class="headerlink" title="1.1 解释器与编译器"></a>1.1 解释器与编译器</h2><p>解释器（Interpreter）：工作在「运行时」，对源码一行一行的解释然后执行，然后返回结果。</p>
 <p>编译器（Compiler）：往往是在「执行」之前完成，产出是一种可执行或需要再编译或者解释的「代码」。</p>
 <p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fstatic.zybuluo.com%2Ffeixuelove1009%2Fx6c0pdl90q1129rgfne1p5gy%2Fimage.png&refer=http%3A%2F%2Fstatic.zybuluo.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1614853202&t=6ebb39f7e91ae14bd363d39d8ddb8bdb" srcset="/img/loading.gif" alt="编译器和解释器的理解"></p>
 <p>&emsp;HotSpot中内置了2或3个编译器：</p>
@@ -245,11 +245,9 @@
 <p>&emsp;<strong>解释执行</strong>：启动速度快。<br>&emsp;<strong>C1 编译执行</strong>：预热较快，运行时，执行快，相对更高的编译速度。<br>&emsp;<strong>C2 编译执行</strong>：需要较慢，运行时，执行快，相对更好的编译质量。</p>
 <p>&emsp;现在的解释器和编译器并不是单独工作了，而是交互执行。</p>
 <p><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=4192503619,3653616387&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="交互执行"></p>
-<h3 id="1-2-分层编译"><a href="#1-2-分层编译" class="headerlink" title="1.2 分层编译"></a>1.2 分层编译</h3><p>&emsp;在分层编译的工作模式出现前，HotSpot 虚拟机通常时采用解释器与其中一个编译器直接搭配的方式工作。为了在程序启动相应速度与运行效率之间达到最佳平衡，HotSpot 虚拟机在编译子系统中加入了分层编译功能。</p>
+<h2 id="1-2-分层编译"><a href="#1-2-分层编译" class="headerlink" title="1.2 分层编译"></a>1.2 分层编译</h2><p>&emsp;在分层编译的工作模式出现前，HotSpot 虚拟机通常时采用解释器与其中一个编译器直接搭配的方式工作。为了在程序启动相应速度与运行效率之间达到最佳平衡，HotSpot 虚拟机在编译子系统中加入了分层编译功能。</p>
 <p>&emsp;解释器和编译器搭配使用的方式称为”混合模式“。</p>
-<pre class="line-numbers language-none"><code class="language-none">java -version        &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, mixed mode)
-java -Xint -version  &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, interpreted mode)
-java -Xcomp -version &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, compiled mode)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">java</span> -version        //Java HotSpot(TM) <span class="hljs-number">64</span>-Bit Server VM (build <span class="hljs-number">25</span>.<span class="hljs-number">211</span>-b<span class="hljs-number">12</span>, mixed mode)<br><span class="hljs-attribute">java</span> -Xint -version  //Java HotSpot(TM) <span class="hljs-number">64</span>-Bit Server VM (build <span class="hljs-number">25</span>.<span class="hljs-number">211</span>-b<span class="hljs-number">12</span>, interpreted mode)<br><span class="hljs-attribute">java</span> -Xcomp -version //Java HotSpot(TM) <span class="hljs-number">64</span>-Bit Server VM (build <span class="hljs-number">25</span>.<span class="hljs-number">211</span>-b<span class="hljs-number">12</span>, compiled mode)<br></code></pre></td></tr></table></figure>
 
 
 
@@ -271,7 +269,7 @@ java -Xcomp -version &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211
 <li>在C2 忙碌的情况下，方法则会先由C1 编译并保持较少的profiling（level 2），以获取较高的执行效率（与3 级相比高30%）。</li>
 </ol>
 <p>&emsp;实施分层编译后，解释器、客户端编译器和服务端编译器会同时工作，热点代码可能会被多次编译。用C1获取更高的编译速度，用C2获取更好的编译质量，在解释执行时也无需承担额外性能监控的任务，在C2采用高复杂度的优化算法时，C1可以采用简单优化来为它争取更多的编译时间。</p>
-<h3 id="1-2-热点代码和热点探测"><a href="#1-2-热点代码和热点探测" class="headerlink" title="1.2 热点代码和热点探测"></a>1.2 热点代码和热点探测</h3><blockquote>
+<h2 id="1-2-热点代码和热点探测"><a href="#1-2-热点代码和热点探测" class="headerlink" title="1.2 热点代码和热点探测"></a>1.2 热点代码和热点探测</h2><blockquote>
 <p>热点代码</p>
 </blockquote>
 <p>&emsp;运行时会被即时编译器编译的目标是“热点代码”，主要包括下面两类：</p>
@@ -319,7 +317,7 @@ java -Xcomp -version &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211
 <p>&emsp;服务器模式下，<code>阈值 = 阈值 * (OSR比例 - 解释器监控比率) / 100  </code> ，默认为10700。</p>
 <p>&emsp;回边计数器没有热度衰减，因此这个值就是循环的绝对次数。</p>
 <p>&emsp;以上两个附图实际上描述的是客户端模式下的探测过程，服务端模式下，更复杂。</p>
-<h3 id="1-3-编译过程"><a href="#1-3-编译过程" class="headerlink" title="1.3 编译过程"></a>1.3 编译过程</h3><p>&emsp;默认情况下， 不论是方法调用产生的标准编译请求还是栈上替换编译请求，在编译器完成编译之前，虚拟机都将按照解释方式执行代码，而编译动作会在后台继续进行。可使用<code>-XX: -BackgroundCompilation</code>来禁止后台编译，禁止后，如果触发了即时编译，执行线程会向虚拟机提交编译请求，然后阻塞直至编译完成，然后执行编译器输出的本地代码。</p>
+<h2 id="1-3-编译过程"><a href="#1-3-编译过程" class="headerlink" title="1.3 编译过程"></a>1.3 编译过程</h2><p>&emsp;默认情况下， 不论是方法调用产生的标准编译请求还是栈上替换编译请求，在编译器完成编译之前，虚拟机都将按照解释方式执行代码，而编译动作会在后台继续进行。可使用<code>-XX: -BackgroundCompilation</code>来禁止后台编译，禁止后，如果触发了即时编译，执行线程会向虚拟机提交编译请求，然后阻塞直至编译完成，然后执行编译器输出的本地代码。</p>
 <p>&emsp;那么在后台编译的过程中，编译器具体会做什么事情呢？</p>
 <blockquote>
 <p> 客户端编译器编译过程</p>
@@ -360,7 +358,114 @@ java -Xcomp -version &#x2F;&#x2F;Java HotSpot(TM) 64-Bit Server VM (build 25.211
 <li>……</li>
 </ul>
 <p>服务端编译是一个复杂的过程，部分细节参考1.4</p>
-<h3 id="1-4-实战：查看及分析即时编译结果"><a href="#1-4-实战：查看及分析即时编译结果" class="headerlink" title="1.4 实战：查看及分析即时编译结果"></a>1.4 实战：查看及分析即时编译结果</h3><h2 id="2-提前编译器"><a href="#2-提前编译器" class="headerlink" title="2. 提前编译器"></a>2. 提前编译器</h2>
+<h2 id="1-4-实战：查看及分析即时编译结果"><a href="#1-4-实战：查看及分析即时编译结果" class="headerlink" title="1.4 实战：查看及分析即时编译结果"></a>1.4 实战：查看及分析即时编译结果</h2><p>需要支持FastDebug或者SlowDebug优化级别的HotSpot虚拟机才能支持，Produce级别无法使用。因此需要自行编译jdk源码，等我编译了再来写。</p>
+<h1 id="2-提前编译器"><a href="#2-提前编译器" class="headerlink" title="2. 提前编译器"></a>2. 提前编译器</h1><h2 id="2-1-提前编译的优缺点"><a href="#2-1-提前编译的优缺点" class="headerlink" title="2.1 提前编译的优缺点"></a>2.1 提前编译的优缺点</h2><p>&emsp;提前编译器（Ahead Of Time Compiler，AOT编译器）：直接把程序编译成与目标机器指令集相关的二进制代码的过程。目前有两种主要的实现方式：</p>
+<ul>
+<li><p>1.与传统C/C++编译器类似，在程序运行之前<strong>把程序代码编译成机器码的静态翻译</strong>工作</p>
+</li>
+<li><p>2.把原本即时编译器在运行时要做的编译工作提前做好并保存下来，下次运行到这些代码（譬如公共库代码在被同一台机器其他Java进程使用）时直接把它加载进来使用</p>
+</li>
+</ul>
+<p>&emsp;即时编译缺点：要占用程序运行时间和运算资源，即使现在的JIT编译器已经很先进，采用分层编译可以先用快且低质量的即时编译器为高质量的即时编译器争取出更多时间，但是消耗的运算资源都是原本可以用于程序运行的。例如最耗时的优化措施之一“过程间分析”，需要在全程序范围内做大量工作。</p>
+<p>&emsp;如果是在程序运行之前进行静态编译，这些耗时操作就可以大胆的进行，因此方式1弥补了即时编译的缺点。</p>
+<p>&emsp;方式2本质上是给即时编译器做缓存加速，去改善Java程序的启动时间，以及需要一段时间预热之后才能达到最高性能的问题。这种提前编译被称为<strong>动态提前编译</strong>或者直接叫<strong>即时编译缓存</strong>。HotSpot运行时可以直接加载这些编译结果，实现快速程序启动速度，减少程序达到全速运行状态所需要的时间。</p>
+<p>JIT编译器相比AOT编译器的优点：</p>
+<ul>
+<li><strong>性能分析制导优化</strong>。解释器和客户端编译器在运行期间会不断收集性能监控信息，这些信息一般无法在静态分析是获得，或者不一定存在唯一的解，但在动态运行时很容易得到。</li>
+<li><strong>激进预测性优化</strong>。<ul>
+<li>静态优化无论何时都必须保证优化后的所有程序外部可见影响（不仅仅是执行结果）与优化前必须是一致的，否则优化会导致程序报错或不对。</li>
+<li>即时编译的策略就可以不必那么保守，如果性能监控信息能够支持它做出一些正确的可能很大但是无法保证绝对正确的预测判断，就可以进行大胆的优化，大不了退回到低级i按一起甚至解释器上运行。而这样的优化往往能够大幅度降低目标程序的复杂度，输出运行速度非常高的代码。</li>
+<li><strong>链接时优化</strong>。由于Java天生是动态连接的，一个个class文件在运行期被加载到虚拟机内存中，然后在即时编译器里产生优化后的代码。而C++等的主程序和动态链接库代码在编译时是完全独立的，当跨界调用的时候，需要做相应的优化。提前编译无法做到链接后的优化。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-2-实战：Jaotc的提前编译"><a href="#2-2-实战：Jaotc的提前编译" class="headerlink" title="2.2 实战：Jaotc的提前编译"></a>2.2 实战：Jaotc的提前编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 生成字节码文件</span><br>javac Hello.java<br><span class="hljs-comment"># 生成静态链接库，jaotc在jdk/bin目录下，jdk9及其之后才有</span><br>jaotc --output libHello.a Hello.classs<br><br><span class="hljs-comment"># 现在可以使用这个静态链接库来执行程序了</span><br>java -XX:AOTLibrary=./libHello.a Hello    <span class="hljs-comment">## Hello为类名</span><br></code></pre></td></tr></table></figure>
+
+<p>&emsp;这是个很小的jaotc提前编译的例子，目前为止jaotc还有许多需要完善的地方，仍然难以直接编译spring boot、mybatis等常见的第三方工具库，甚至众多java模块中，只能顺利编译的只有java.base模块。但是随着Graal编译器的逐渐成熟，Jaotc未来可期。</p>
+<h1 id="3-编译器优化技术"><a href="#3-编译器优化技术" class="headerlink" title="3. 编译器优化技术"></a>3. 编译器优化技术</h1><p>&emsp;<a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/HotSpot/PerformanceTacticIndex">https://wiki.openjdk.java.net/display/HotSpot/PerformanceTacticIndex</a></p>
+<p>&emsp;以上是HotSpot团队列出的比较全面的即时编译器优化技术，特别多，但是不难理解，举个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 原始代码</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> </span>&#123;<br>	<span class="hljs-keyword">int</span> value;<br>  <span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">return</span> value;<br>  &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>&#123;<br>	y = b.get();<br>  <span class="hljs-comment">//do sth</span><br>  z = b.get();<br>  sum = y + z;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;以上代码看起来很简单，实际上仍然可以优化。</p>
+<p>&emsp;<b style="color:red">第1步，优化内联</b></p>
+<p>&emsp;优点：1.去除调用方法成本（方法版本查找，建立栈帧等）。2.为其他优化建立良好的基础。优化后，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span>&#123;<br>  y = b.value;<br>  <span class="hljs-comment">//do sth</span><br>  z = b.value;<br>  sum = y + z;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;<b style="color:red">第2步，冗余访问消除</b><br>&emsp;假设注释部分的do sth不会改变b.value的值，那么<code>y=b.value</code>保证了<code>y</code>与<code>b.value</code>的值一致，如此则不必再访问b的局部变量了。如果<code>b.value</code>看作是表达式，那么该优化可以看作是一种<strong>公共子表达式消除</strong>。优化后代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span>&#123;<br>  y = b.value;<br>  <span class="hljs-comment">//do sth</span><br>  z = y;<br>  sum = y + z;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;<b style="color:red">第3步，复写传播</b></p>
+<p>&emsp;程序中没必要使用一个额外的变量z，它完全等于y，因此可以使用y代替z。复写传播后代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span>&#123;<br>  y = b.value;<br>  <span class="hljs-comment">//do sth</span><br>  y = y;<br>  sum = y + y;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;<b style="color:red">第4步，无用代码消除</b></p>
+<p>&emsp;无用代码：完全没意义的代码，或者永远不会被执行的代码。优化后，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span>&#123;<br>  y = b.value;<br>  <span class="hljs-comment">//do sth</span><br>  sum = y + y;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;优化后的代码在效果上和原始代码一致，但是在字节码和机器码指令的执行上，可就大大提高了效率。</p>
+<p>&emsp;优化手段众多，其中最具代表性的优化技术有以下4种：</p>
+<p>
+
+<ul>
+<li><b style="color:blue">方法内联</b>：最重要</li>
+<li><b style="color:blue">逃逸分析</b>：最前沿</li>
+<li><b style="color:blue">公共子表达式消除</b>：最经典，语言无关</li>
+<li><b style="color:blue">数组边界检查消除</b>：最经典，语言相关</li>
+</ul>
+<h2 id="3-1-方法内联"><a href="#3-1-方法内联" class="headerlink" title="3.1 方法内联"></a>3.1 方法内联</h2><p>&emsp;最重要的优化技术之一，是所有优化的基础，被业内称为“优化之母”。</p>
+<p>&emsp;方法内联：<strong>把目标代码的源代码原封不动的“复制”到发起调用的方法之中</strong>，避免发生真实的调用。</p>
+<p>&emsp;注意：这里的代码指的被编译后的字节码或者机器码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">(Object obj)</span> </span>&#123;<br>  <span class="hljs-keyword">if</span> (obj != <span class="hljs-keyword">null</span>) &#123;<br>    System.out.println(<span class="hljs-string">&quot;hello&quot;</span>);<br>  &#125;<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testInline</span><span class="hljs-params">()</span> </span>&#123;<br>  Object obj = <span class="hljs-keyword">null</span>;<br>  foo(obj);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;方法内联看起来简单，实际上实现起来很复杂。由于<a href="https://happykite777.github.io/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/#2-%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8">方法调用</a>中，虚方法只有在运行期间才能确定下来方法版本，因此编译器在编译时很难确定方法版本。又由于java是面向对象编程，对象的默认方法就是虚方法，所以大大增加了内联的难度。</p>
+<p>&emsp;为了解决这个问题，C/C++选择了在默认方法前加上<code>final</code>，使得默认方法不为虚方法，当需要用到多态的时候，用<code>virtual</code>关键字来修饰。但是java选择了在虚拟机中解决这个问题。</p>
+<p>&emsp;为了解决虚方法的内联问题，Java虚拟机引入了<strong>类型继承关系分析（Class Hierarchy Analysis，CHA）</strong>技术。主要用于确定整个应用程序范围内，目前已加载的类中，某个接口是否有多于一种实现、某个类是否存在子类、某个子类是否覆盖了父亲的某个虚方法等信息。这样在进行内联时，会根据情况来进行不同的内联。</p>
+<ul>
+<li>如果是<strong>非虚方法</strong>，不必选择方法版本，<strong>直接进行内联</strong>，这种方式百分之百安全。</li>
+<li>如果是<strong>虚方法，则查询CHA</strong>，确定是否真的有多个版本可供选择<ul>
+<li>如果只有一个版本，则“假设程序就是按照当前来运行的”，进行内联，这种方式叫<strong>守护内联</strong>（Guarded Inlining）。但是由于程序动态链接，说不定下一刻就会加载新的类型从而更改CHA结论，因此该方法属于激进预测性优化，必须留好退路。如果一直没有加载新的类型，则继续进行下去，如果加载了，则抛弃已经编译好的代码，进行解释执行或者重新编译。</li>
+<li>如果有多个版本，那么JIT编译器会使用<strong>内联缓存</strong>（Inline Cache）的方式来缩减方法调用开销。内联缓存是一个建立在目标方法正常入口之前的缓存。<ul>
+<li>未发生方法调用之前，内联缓存状态为空。</li>
+<li>当第一次调用发生后，缓存记录下方法接收者的版本信息，并且每次进行方法调用时都比较接收者的版本。</li>
+<li>以后进来的每次调用的方法接收者版本都是一样的，那么这时它就是种<strong>单态内联缓存</strong>(Monomorphic Inline Cache)，通过这种方式，开销仅仅只是比非虚方法多了一次类型判断而已。</li>
+<li>如果出现方法接收者不一致， 就说明程序用到了 虚方法的多态特性， 这时候会退化成<strong>超多态内联缓存</strong>(Megamorphic Inline Cache)，其开销相当于真正查找虚方法表来进行。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-2-逃逸分析"><a href="#3-2-逃逸分析" class="headerlink" title="3.2 逃逸分析"></a>3.2 逃逸分析</h2><p>&emsp;原理：分析对象动态作用域，当一个对象在方法里面被定义之后，它可能被外部方法所引用，例如作为调用参数传入到其他方法中，这种称为<strong>方法逃逸</strong>；甚至还有可能被外部线程访问到，譬如赋值给可以在其他线程中访问的实例变量，这种称为<strong>线程逃逸</strong>。</p>
+<p>&emsp;  对象逃逸程度由低到高：从不逃逸、方法逃逸、线程逃逸。根据逃逸程度可以进行不同程度的优化：</p>
+<ul>
+<li><b style="color:red">栈上分配（Stack Allocation）</b>：对一个不会逃逸出线程的对象在栈上分配就是一个不错的主意，对象所占用的内存会随着栈桢的出栈而销毁，大量对象会随着方法的结束而自动销毁，垃圾收集系统也会减少压力。栈上分配支持方法逃逸，不支持线程逃逸。</li>
+<li><b style="color:red">标量替换（Scalar Replacement）</b>：把Java对象拆散，根据程序访问的情况，将其用到的成员变量恢复为原始类型来访问，这个过程就称为标量替换。假如逃逸分析证明一个对象不会被方法外部访问，并且可以将这个对象拆散，那么程序真正执行的时候就不会去创建该对象，而改为直接创建它的若干个被这个方法使用的成员变量来代替，而且这些成员变量还可以分配在栈上。不允许对象逃逸出方法范围。</li>
+<li><b style="color:red">同步消除（Synchronization Elimination）</b>：线程同步本身是一个相当耗时的过程，如果逃逸分析·能够确定一个变量不会逃逸出线程，无法被其他线程访问，那么这个变量的读写肯定就不会有竞争，对这个变量实施的同步措施就可以安全的消除掉。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//原始代码</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span> </span>&#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> x;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> y;<br>  <span class="hljs-comment">// getter/setter ...</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">test</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>  <span class="hljs-keyword">int</span> xx = x + <span class="hljs-number">2</span>;<br>  Point p = <span class="hljs-keyword">new</span> Point(xx, <span class="hljs-number">42</span>);<br>  <span class="hljs-keyword">return</span> p.getX();<br>&#125;<br><br><br><br><span class="hljs-comment">// 方法内联优化后</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">test</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>  <span class="hljs-keyword">int</span> xx = x + <span class="hljs-number">2</span>;<br>  Point p = point_memory_alloc(); <span class="hljs-comment">// 堆中分配内存示意方法</span><br>  p.x = xx; <span class="hljs-comment">// Point 构造函数内联后</span><br>  p.y = <span class="hljs-number">42</span>;<br>  <span class="hljs-keyword">return</span> p.x; <span class="hljs-comment">// p.getX() 方法内联后</span><br>&#125;<br><br><br><br><span class="hljs-comment">// 逃逸分析：标量替换优化后</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">test</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>  <span class="hljs-keyword">int</span> xx = x + <span class="hljs-number">2</span>;<br>  <span class="hljs-keyword">int</span> px = xx; <span class="hljs-comment">// 标量替换</span><br>  <span class="hljs-keyword">int</span> py = <span class="hljs-number">42</span>;<br>  <span class="hljs-keyword">return</span> px;<br>&#125;<br><br><br><span class="hljs-comment">// 无效代码消除优化</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">test</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>  <span class="hljs-keyword">return</span> x + <span class="hljs-number">2</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不过现在逃逸分析仍然不成熟，原因是逃逸分析的计算成本非常高，甚至不能保证逃逸分析带来的性能收益会高于它的消耗。</p>
+<p> <code>-XX:+DoEscapeAnalysis</code>：手动开启逃逸分析</p>
+<p> <code>-XX:+PrintEscapeAnalysis</code>：查看分析结果</p>
+<p> <code>-XX:+EliminateAloocations</code>：开启标量替换</p>
+<p><code>-XX:+EliminateLocks</code>：开启同步消除</p>
+<p><code>-XX:+PrintEliminateLocks</code>：查看同步消除情况</p>
+<h2 id="3-3-公共子表达式消除"><a href="#3-3-公共子表达式消除" class="headerlink" title="3.3 公共子表达式消除"></a>3.3 公共子表达式消除</h2><p>&emsp;定义：如果一个表达式E之前就被计算过了，并且先前的计算到现在E中所有变量的值都没有改变过，那么E的这次出现就称为公共子表达式。对于这种表达式，没有必要花时间在对它重新进行计算，只需要直接用前面计算过的表达式结果替代E。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> d = (c * b) * <span class="hljs-number">12</span> + a + (a + b * c);<br><br><span class="hljs-comment">//未优化前，它的字节码指令执行如下：每次都会重新计算</span><br>         <span class="hljs-number">6</span>: iload_3<br>         <span class="hljs-number">7</span>: iload_2<br>         8: imul    # 计算 b*c<br>         <span class="hljs-number">9</span>: bipush        <span class="hljs-number">12</span><br>        11: imul    # 计算 (c * b) * 12<br>        <span class="hljs-number">12</span>: iload_1<br>        13: iadd    # 计算 (c * b) * 12 + a<br>        <span class="hljs-number">14</span>: iload_1<br>        <span class="hljs-number">15</span>: iload_2<br>        <span class="hljs-number">16</span>: iload_3<br>        17: imul    # 计算 b*c<br>        18: iadd    # 计算 (a + b * c)<br>        19: iadd    # 计算 (c * b) * 12 + a + (a + b * c)<br>        <span class="hljs-number">20</span>: istore        <span class="hljs-number">4</span><br>        <span class="hljs-number">22</span>: iload         <span class="hljs-number">4</span><br>        <span class="hljs-number">24</span>: ireturn<br><br></code></pre></td></tr></table></figure>
+
+<p>&emsp;这段代码进入即时编译器后，将进行优化，编译器检测到 c * b 与 b * c 是一样的表达式，且在计算期间 b 和 c 的值不变，因此：<code>int d = E * 12 + a + (a + E);</code>，此时，编译器还可能进行代数化简<code>int d = E * 13 + a + a;</code>这样计算起来就可以节省一些时间。</p>
+<h2 id="3-4-数组边界检查消除"><a href="#3-4-数组边界检查消除" class="headerlink" title="3.4 数组边界检查消除"></a>3.4 数组边界检查消除</h2><p>&emsp;由于Java语言是一门动态安全检查的语言，对于数组foo[]，访问数组元素foo[i]的时候系统会自动进行上下界范围检查，即i必须满足<code>i&gt;=0 &amp;&amp; i&lt;foo.length</code>的访问条件，否则将抛出运行时异常。这样每一次读写都要进行一次检查无疑是一种负担。</p>
+<p>&emsp;有时数组边界检查不是必须继续进行的，此时就可以省略。</p>
+<p>&emsp;例如数组下标是一个常量，如foo[3]，只要在编译期根据数据流分析来确定foo.length的值，并判断下表“3”没有越界，执行时的时候就无需判断了。</p>
+<p>&emsp;又比如对于数组访问发生在循环中，并且使用循环变量对数组进行访问。如果编译器只要通过数据流分析就可以判定循环遍历取值范围永远在[0, foo.length)之内，那就可以把数组边界检查消除。</p>
+<p>&emsp;隐式异常优化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(foo != <span class="hljs-keyword">null</span>)&#123;<br>  <span class="hljs-keyword">return</span> foo.value;<br>&#125;<span class="hljs-keyword">else</span>&#123;<br>  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointException();<br>&#125;<br><br><span class="hljs-comment">//隐式异常优化后,伪代码</span><br><span class="hljs-keyword">try</span>&#123;<br>  <span class="hljs-keyword">return</span> foo.value;<br>&#125;<span class="hljs-keyword">catch</span>(segment_default)&#123;<br>  uncommon_trap();<br>&#125;<br><span class="hljs-comment">//当程序中大量foo不为空的时候，可以节省开销，因为只有为空的时候才判断。</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="4-实战：深入理解Graal编译器"><a href="#4-实战：深入理解Graal编译器" class="headerlink" title="4. 实战：深入理解Graal编译器"></a>4. 实战：深入理解Graal编译器</h1><p>&emsp;从JDK10起，HotSpot就同时拥有3款不同的即时编译器，C1、C2和Graal编译器。</p>
+<p>&emsp;Graal编译器支持提前编译和即时编译。JDK9事，Graal编译器以Jaotc提前编译工具的形式加入官方JDK，从JDK10起，Graal编译器可以替换服务端编译器C2，称为HotSpot分层编译中最顶层的即时编译器。</p>
+
             </div>
             <hr>
             <div>
