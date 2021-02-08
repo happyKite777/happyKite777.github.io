@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="happyKite777">
   <meta name="keywords" content="">
-  <title>JVM之内存模型 - HappyKite777的博客</title>
+  <title>JVM之内存管理 - HappyKite777的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="JVM之内存模型">
+            <span class="h2" id="subtitle" title="JVM之内存管理">
               
             </span>
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      100
+      98
        分钟
     </span>
   
@@ -224,7 +224,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">JVM之内存模型</h1>
+            <h1 style="display: none">JVM之内存管理</h1>
             
             <div class="markdown-body">
               <p>&emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。</p>
@@ -312,37 +312,9 @@
 <li><strong>局部变量表中的变量只在当前方法调用中有效。</strong>方法调用结束，方法栈帧出栈，局部变量表也会销毁。</li>
 </ul>
 <p>实例：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LocalVariablesTest</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">private</span> <span class="token keyword">int</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-#<span class="token number">14</span>    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-#<span class="token number">15</span>        <span class="token class-name">LocalVariablesTest</span> test <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LocalVariablesTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-#<span class="token number">16</span>        <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-#<span class="token number">17</span><span class="token comment">//        test.test1();</span>
-#<span class="token number">18</span>    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LocalVariablesTest</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;<br><br>#14    public static void main(String[] args) &#123;<br>#15        LocalVariablesTest test = new LocalVariablesTest();<br>#16        int num = 10;<br>#17//        test.test1();<br>#18    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>&emsp;执行反汇编<code>javap -v LocalVariablesTest.class</code>得到字节码指令</p>
-<pre class="line-numbers language-none"><code class="language-none">public static void main(java.lang.String[]);
-  descriptor: ([Ljava&#x2F;lang&#x2F;String;)V
-  flags: ACC_PUBLIC, ACC_STATIC
-  Code:
-    stack&#x3D;2, locals&#x3D;3, args_size&#x3D;1
-       0: new           #3                  &#x2F;&#x2F; class com&#x2F;hk7&#x2F;memory&#x2F;LocalVariablesTest
-       3: dup
-       4: invokespecial #4                  &#x2F;&#x2F; Method &quot;&lt;init&gt;&quot;:()V
-       7: astore_1
-       8: bipush        10
-      10: istore_2
-      11: return
-    LineNumberTable:
-      line 15: 0
-      line 16: 8
-      line 18: 11
-    LocalVariableTable:
-      Start  Length  Slot  Name   Signature
-          0      12     0  args   [Ljava&#x2F;lang&#x2F;String;
-          8       4     1  test   Lcom&#x2F;hk7&#x2F;memory&#x2F;LocalVariablesTest;
-         11       1     2   num   I<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> static <span class="hljs-built_in">void</span> main(java.lang.String[]);<br>  descriptor: ([Ljava/lang/String;)V<br>  flags: ACC_PUBLIC, ACC_STATIC<br>  Code:<br>    stack=<span class="hljs-number">2</span>, locals=<span class="hljs-number">3</span>, args_size=<span class="hljs-number">1</span><br>       <span class="hljs-number">0</span>: new           #<span class="hljs-number">3</span>                  <span class="hljs-comment">// class com/hk7/memory/LocalVariablesTest</span><br>       <span class="hljs-number">3</span>: dup<br>       <span class="hljs-number">4</span>: invokespecial #<span class="hljs-number">4</span>                  <span class="hljs-comment">// Method &quot;&lt;init&gt;&quot;:()V</span><br>       <span class="hljs-number">7</span>: astore_1<br>       <span class="hljs-number">8</span>: bipush        <span class="hljs-number">10</span><br>      <span class="hljs-number">10</span>: istore_2<br>      <span class="hljs-number">11</span>: <span class="hljs-keyword">return</span><br>    LineNumberTable:<br>      line <span class="hljs-number">15</span>: <span class="hljs-number">0</span><br>      line <span class="hljs-number">16</span>: <span class="hljs-number">8</span><br>      line <span class="hljs-number">18</span>: <span class="hljs-number">11</span><br>    LocalVariableTable:<br>      Start  Length  Slot  Name   Signature<br>          <span class="hljs-number">0</span>      <span class="hljs-number">12</span>     <span class="hljs-number">0</span>  args   [Ljava/lang/String;<br>          <span class="hljs-number">8</span>       <span class="hljs-number">4</span>     <span class="hljs-number">1</span>  test   Lcom/hk7/memory/LocalVariablesTest;<br>         <span class="hljs-number">11</span>       <span class="hljs-number">1</span>     <span class="hljs-number">2</span>   num   I<br></code></pre></td></tr></table></figure>
 <p>&emsp;由上可知，<code>locals=3</code>代表局部变量表大小为3，分别为args参数、test对象和num变量。代码指令一共12行，<strong>LineNumberTable</strong>表示pc指令地址和源码所在行的对应关系。<strong>LocalVariableTable</strong>局部变量表，<em>start</em>表示当前变量的作用域，变量都是定义之后生效，比如test的start是8，从LineNumberTable表可知，8对应line16，也就是从16行开始test变量生效。<em>length</em>表示变量作用域的长度，从表中可看到三个变量起始位置+长度=12，因此所有变量作用域的结束都是方法的}。<br><br></p>
 <p><strong>关于Slot的理解</strong></p>
 <ul>
@@ -354,49 +326,7 @@
 <li>6、<strong>如果当前栈帧是由构造方法或者实例方法创建的，那么该对象引用this将会存放在index为0的slot处，其余的参数按照参数表顺序继续排列</strong>。如下图jclasslib插件中可以看到字节码文件信息，test2位实例方法，它的this占了index=0的插槽。由于静态方法中栈帧局部变量表没有存储this变量，因此静态方法中无法使用<code>this.xxx</code>。<br><img src="https://img-blog.csdnimg.cn/20201012182107466.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="this变量存储"></li>
 </ul>
 <p><strong>Slot的重复利用</strong><br>局部变量槽是可以重复利用的，如果一个局部变量过了其作用域被销毁了，则下一个局部变量可以利用这个局部变量槽。比如以下代码：</p>
-<pre class="line-numbers language-none"><code class="language-none">public void test4() &#123;
-    int a &#x3D; 0;
-    &#123;
-        int b &#x3D; 0;
-        b &#x3D; a + 1;
-    &#125;
-    &#x2F;&#x2F;b出了作用域，变量b被销毁，但是数组已经分配，因此c可以利用这个slot
-    &#x2F;&#x2F;变量c使用之前已经销毁的变量b占据的slot的位置
-    int c &#x3D; a + 1;
-&#125;
-
-
-
-public void test4();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack&#x3D;2, locals&#x3D;3, args_size&#x3D;1
-         0: iconst_0
-         1: istore_1
-         2: iconst_0
-         3: istore_2
-         4: iload_1
-         5: iconst_1
-         6: iadd
-         7: istore_2
-         8: iload_1
-         9: iconst_1
-        10: iadd
-        11: istore_2
-        12: return
-      LineNumberTable:
-        line 36: 0
-        line 38: 2
-        line 39: 4
-        line 43: 8
-        line 44: 12
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            4       4     2     b   I
-            0      13     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;LocalVariablesTest;
-            2      11     1     a   I
-           12       1     2     c   I<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> test4() &#123;<br>    <span class="hljs-built_in">int</span> a = <span class="hljs-number">0</span>;<br>    &#123;<br>        <span class="hljs-built_in">int</span> b = <span class="hljs-number">0</span>;<br>        b = a + <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-comment">//b出了作用域，变量b被销毁，但是数组已经分配，因此c可以利用这个slot</span><br>    <span class="hljs-comment">//变量c使用之前已经销毁的变量b占据的slot的位置</span><br>    <span class="hljs-built_in">int</span> c = a + <span class="hljs-number">1</span>;<br>&#125;<br><br><br><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> test4();<br>    descriptor: ()V<br>    flags: ACC_PUBLIC<br>    Code:<br>      stack=<span class="hljs-number">2</span>, locals=<span class="hljs-number">3</span>, args_size=<span class="hljs-number">1</span><br>         <span class="hljs-number">0</span>: iconst_0<br>         <span class="hljs-number">1</span>: istore_1<br>         <span class="hljs-number">2</span>: iconst_0<br>         <span class="hljs-number">3</span>: istore_2<br>         <span class="hljs-number">4</span>: iload_1<br>         <span class="hljs-number">5</span>: iconst_1<br>         <span class="hljs-number">6</span>: iadd<br>         <span class="hljs-number">7</span>: istore_2<br>         <span class="hljs-number">8</span>: iload_1<br>         <span class="hljs-number">9</span>: iconst_1<br>        <span class="hljs-number">10</span>: iadd<br>        <span class="hljs-number">11</span>: istore_2<br>        <span class="hljs-number">12</span>: <span class="hljs-keyword">return</span><br>      LineNumberTable:<br>        line <span class="hljs-number">36</span>: <span class="hljs-number">0</span><br>        line <span class="hljs-number">38</span>: <span class="hljs-number">2</span><br>        line <span class="hljs-number">39</span>: <span class="hljs-number">4</span><br>        line <span class="hljs-number">43</span>: <span class="hljs-number">8</span><br>        line <span class="hljs-number">44</span>: <span class="hljs-number">12</span><br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            <span class="hljs-number">4</span>       <span class="hljs-number">4</span>     <span class="hljs-number">2</span>     b   I<br>            <span class="hljs-number">0</span>      <span class="hljs-number">13</span>     <span class="hljs-number">0</span>  <span class="hljs-keyword">this</span>   Lcom/hk7/memory/LocalVariablesTest;<br>            <span class="hljs-number">2</span>      <span class="hljs-number">11</span>     <span class="hljs-number">1</span>     a   I<br>           <span class="hljs-number">12</span>       <span class="hljs-number">1</span>     <span class="hljs-number">2</span>     c   I<br></code></pre></td></tr></table></figure>
 <p><font color=green>&emsp;局部变量表和性能调优密切相关，局部变量表占了栈帧的主要空间，因此它和栈溢出息息相关。局部变量表中的变量是垃圾回收的根节点，被局部变量表中的直接或间接引用的对象不会被回收。</font></p>
 <blockquote>
 <ol start="2">
@@ -410,22 +340,9 @@ public void test4();
 <li>64bit的类型占用两个栈单位深度</li>
 </ul>
 <p>&emsp;<strong>代码追踪实例</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">public static void main(String[] args) &#123;
-    byte i &#x3D; 15;
-    int j &#x3D; 800;
-    int k &#x3D; i + j;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">String</span>[] args)</span> </span>&#123;<br>    <span class="hljs-keyword">byte</span> i = <span class="hljs-number">15</span>;<br>    <span class="hljs-keyword">int</span> j = <span class="hljs-number">800</span>;<br>    <span class="hljs-keyword">int</span> k = i + j;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>javap -v xxx.class之后得到字节码指令</p>
-<pre class="line-numbers language-none"><code class="language-none">stack&#x3D;2, locals&#x3D;4, args_size&#x3D;1
- 0: bipush        15
- 2: istore_1
- 3: sipush        800
- 6: istore_2
- 7: iload_1
- 8: iload_2
- 9: iadd
-10: istore_3
-11: return<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">stack=<span class="hljs-number">2</span>, locals=<span class="hljs-number">4</span>, args_size=<span class="hljs-number">1</span><br> <span class="hljs-number">0</span>: bipush        <span class="hljs-number">15</span><br> <span class="hljs-number">2</span>: istore_1<br> <span class="hljs-number">3</span>: sipush        <span class="hljs-number">800</span><br> <span class="hljs-number">6</span>: istore_2<br> <span class="hljs-number">7</span>: iload_1<br> <span class="hljs-number">8</span>: iload_2<br> <span class="hljs-number">9</span>: iadd<br><span class="hljs-number">10</span>: istore_3<br><span class="hljs-number">11</span>: <span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
 <p>&emsp;以上代码的具体执行如下图，<strong>指令类型采用所能包含的值的最小整数类型指令</strong>：</p>
 <ul>
 <li><ol>
@@ -490,133 +407,7 @@ public void test4();
 <p>  &emsp;如下图所示，栈帧中有一个区域专门用来存储方法引用。方法区内存是多线程共享的，假设方法A和方法B都调用方法C，那么在运行时常量池会有方法C的方法引用，方法A和方法B对应的栈帧中的区域都会存储该方法引用。</p>
 <p>  <img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzA2MTAxMjUxODQ3LnBuZw?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="动态链接"></p>
 <p>  &emsp;以下代码，methodB()调用methodA()，反汇编之后的结果如下。从结果中我们可以看到，方法b中有指令<code>5: invokevirtual #5</code>，invokevirtual代表调用方法，<code>#5</code>为方法引用，表示常量池中的<code>#5 = Methodref          #28.#29</code></p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DynamicLink</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"methodA()...."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodB</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"methodB()...."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        num<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">//javap -v xxx.class</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> com<span class="token punctuation">.</span>hk7<span class="token punctuation">.</span>memory<span class="token punctuation">.</span><span class="token class-name">DynamicLink</span>
-  minor version<span class="token operator">:</span> <span class="token number">0</span>
-  major version<span class="token operator">:</span> <span class="token number">52</span>
-  flags<span class="token operator">:</span> ACC_PUBLIC<span class="token punctuation">,</span> ACC_SUPER
-<span class="token class-name">Constant</span> pool<span class="token operator">:</span>
-   #<span class="token number">1</span> <span class="token operator">=</span> <span class="token class-name">Methodref</span>          #<span class="token number">9.</span>#<span class="token number">23</span>         <span class="token comment">// java/lang/Object."&lt;init>":()V</span>
-   #<span class="token number">2</span> <span class="token operator">=</span> <span class="token class-name">Fieldref</span>           #<span class="token number">8.</span>#<span class="token number">24</span>         <span class="token comment">// com/hk7/memory/DynamicLink.num:I</span>
-   #<span class="token number">3</span> <span class="token operator">=</span> <span class="token class-name">Fieldref</span>           #<span class="token number">25.</span>#<span class="token number">26</span>        <span class="token comment">// java/lang/System.out:Ljava/io/PrintStream;</span>
-   #<span class="token number">4</span> <span class="token operator">=</span> <span class="token class-name">String</span>             #<span class="token number">27</span>            <span class="token comment">// methodA()....</span>
-   #<span class="token number">5</span> <span class="token operator">=</span> <span class="token class-name">Methodref</span>          #<span class="token number">28.</span>#<span class="token number">29</span>        <span class="token comment">// java/io/PrintStream.println:(Ljava/lang/String;)V</span>
-   #<span class="token number">6</span> <span class="token operator">=</span> <span class="token class-name">String</span>             #<span class="token number">30</span>            <span class="token comment">// methodB()....</span>
-   #<span class="token number">7</span> <span class="token operator">=</span> <span class="token class-name">Methodref</span>          #<span class="token number">8.</span>#<span class="token number">31</span>         <span class="token comment">// com/hk7/memory/DynamicLink.methodA:()V</span>
-   #<span class="token number">8</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">32</span>            <span class="token comment">// com/hk7/memory/DynamicLink</span>
-   #<span class="token number">9</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">33</span>            <span class="token comment">// java/lang/Object</span>
-  #<span class="token number">10</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               num
-  #<span class="token number">11</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">I</span>
-  #<span class="token number">12</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token generics"><span class="token punctuation">&lt;</span>init<span class="token punctuation">></span></span>
-  #<span class="token number">13</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
-  #<span class="token number">14</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">Code</span>
-  #<span class="token number">15</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">LineNumberTable</span>
-  #<span class="token number">16</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">LocalVariableTable</span>
-  #<span class="token number">17</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token keyword">this</span>
-  #<span class="token number">18</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
-  #<span class="token number">19</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               methodA
-  #<span class="token number">20</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               methodB
-  #<span class="token number">21</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">SourceFile</span>
-  #<span class="token number">22</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">DynamicLink</span><span class="token punctuation">.</span>java
-  #<span class="token number">23</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">12</span><span class="token operator">:</span>#<span class="token number">13</span>        <span class="token comment">// "&lt;init>":()V</span>
-  #<span class="token number">24</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">10</span><span class="token operator">:</span>#<span class="token number">11</span>        <span class="token comment">// num:I</span>
-  #<span class="token number">25</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">34</span>            <span class="token comment">// java/lang/System</span>
-  #<span class="token number">26</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">35</span><span class="token operator">:</span>#<span class="token number">36</span>        <span class="token comment">// out:Ljava/io/PrintStream;</span>
-  #<span class="token number">27</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  #<span class="token number">28</span> <span class="token operator">=</span> <span class="token class-name">Class</span>              #<span class="token number">37</span>            <span class="token comment">// java/io/PrintStream</span>
-  #<span class="token number">29</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">38</span><span class="token operator">:</span>#<span class="token number">39</span>        <span class="token comment">// println:(Ljava/lang/String;)V</span>
-  #<span class="token number">30</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token function">methodB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  #<span class="token number">31</span> <span class="token operator">=</span> <span class="token class-name">NameAndType</span>        #<span class="token number">19</span><span class="token operator">:</span>#<span class="token number">13</span>        <span class="token comment">// methodA:()V</span>
-  #<span class="token number">32</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               com<span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span>
-  #<span class="token number">33</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               java<span class="token operator">/</span>lang<span class="token operator">/</span><span class="token class-name">Object</span>
-  #<span class="token number">34</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               java<span class="token operator">/</span>lang<span class="token operator">/</span><span class="token class-name">System</span>
-  #<span class="token number">35</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               out
-  #<span class="token number">36</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token class-name">Ljava</span><span class="token operator">/</span>io<span class="token operator">/</span><span class="token class-name">PrintStream</span><span class="token punctuation">;</span>
-  #<span class="token number">37</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               java<span class="token operator">/</span>io<span class="token operator">/</span><span class="token class-name">PrintStream</span>
-  #<span class="token number">38</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               println
-  #<span class="token number">39</span> <span class="token operator">=</span> <span class="token class-name">Utf8</span>               <span class="token punctuation">(</span><span class="token class-name">Ljava</span><span class="token operator">/</span>lang<span class="token operator">/</span><span class="token class-name">String</span><span class="token punctuation">;</span><span class="token punctuation">)</span><span class="token class-name">V</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token keyword">int</span> num<span class="token punctuation">;</span>
-    descriptor<span class="token operator">:</span> <span class="token class-name">I</span>
-    flags<span class="token operator">:</span>
-
-  <span class="token keyword">public</span> com<span class="token punctuation">.</span>hk7<span class="token punctuation">.</span>memory<span class="token punctuation">.</span><span class="token class-name">DynamicLink</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
-    flags<span class="token operator">:</span> ACC_PUBLIC
-    <span class="token class-name">Code</span><span class="token operator">:</span>
-      stack<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
-         <span class="token number">0</span><span class="token operator">:</span> aload_0
-         <span class="token number">1</span><span class="token operator">:</span> invokespecial #<span class="token number">1</span>                  <span class="token comment">// Method java/lang/Object."&lt;init>":()V</span>
-         <span class="token number">4</span><span class="token operator">:</span> aload_0
-         <span class="token number">5</span><span class="token operator">:</span> bipush        <span class="token number">10</span>
-         <span class="token number">7</span><span class="token operator">:</span> putfield      #<span class="token number">2</span>                  <span class="token comment">// Field num:I</span>
-        <span class="token number">10</span><span class="token operator">:</span> <span class="token keyword">return</span>
-      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
-        line <span class="token number">9</span><span class="token operator">:</span> <span class="token number">0</span>
-        line <span class="token number">11</span><span class="token operator">:</span> <span class="token number">4</span>
-      <span class="token class-name">LocalVariableTable</span><span class="token operator">:</span>
-        <span class="token class-name">Start</span>  <span class="token class-name">Length</span>  <span class="token class-name">Slot</span>  <span class="token class-name">Name</span>   <span class="token class-name">Signature</span>
-            <span class="token number">0</span>      <span class="token number">11</span>     <span class="token number">0</span>  <span class="token keyword">this</span>   <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
-    flags<span class="token operator">:</span> ACC_PUBLIC
-    <span class="token class-name">Code</span><span class="token operator">:</span>
-      stack<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
-         <span class="token number">0</span><span class="token operator">:</span> getstatic     #<span class="token number">3</span>                  <span class="token comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span>
-         <span class="token number">3</span><span class="token operator">:</span> ldc           #<span class="token number">4</span>                  <span class="token comment">// String methodA()....</span>
-         <span class="token number">5</span><span class="token operator">:</span> invokevirtual #<span class="token number">5</span>                  <span class="token comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
-         <span class="token number">8</span><span class="token operator">:</span> <span class="token keyword">return</span>
-      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
-        line <span class="token number">14</span><span class="token operator">:</span> <span class="token number">0</span>
-        line <span class="token number">15</span><span class="token operator">:</span> <span class="token number">8</span>
-      <span class="token class-name">LocalVariableTable</span><span class="token operator">:</span>
-        <span class="token class-name">Start</span>  <span class="token class-name">Length</span>  <span class="token class-name">Slot</span>  <span class="token class-name">Name</span>   <span class="token class-name">Signature</span>
-            <span class="token number">0</span>       <span class="token number">9</span>     <span class="token number">0</span>  <span class="token keyword">this</span>   <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">methodB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
-    flags<span class="token operator">:</span> ACC_PUBLIC
-    <span class="token class-name">Code</span><span class="token operator">:</span>
-      stack<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
-         <span class="token number">0</span><span class="token operator">:</span> getstatic     #<span class="token number">3</span>                  <span class="token comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span>
-         <span class="token number">3</span><span class="token operator">:</span> ldc           #<span class="token number">6</span>                  <span class="token comment">// String methodB()....</span>
-         <span class="token number">5</span><span class="token operator">:</span> invokevirtual #<span class="token number">5</span>                  <span class="token comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
-         <span class="token number">8</span><span class="token operator">:</span> aload_0
-         <span class="token number">9</span><span class="token operator">:</span> invokevirtual #<span class="token number">7</span>                  <span class="token comment">// Method methodA:()V</span>
-        <span class="token number">12</span><span class="token operator">:</span> aload_0
-        <span class="token number">13</span><span class="token operator">:</span> dup
-        <span class="token number">14</span><span class="token operator">:</span> getfield      #<span class="token number">2</span>                  <span class="token comment">// Field num:I</span>
-        <span class="token number">17</span><span class="token operator">:</span> iconst_1
-        <span class="token number">18</span><span class="token operator">:</span> iadd
-        <span class="token number">19</span><span class="token operator">:</span> putfield      #<span class="token number">2</span>                  <span class="token comment">// Field num:I</span>
-        <span class="token number">22</span><span class="token operator">:</span> <span class="token keyword">return</span>
-      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
-        line <span class="token number">18</span><span class="token operator">:</span> <span class="token number">0</span>
-        line <span class="token number">19</span><span class="token operator">:</span> <span class="token number">8</span>
-        line <span class="token number">20</span><span class="token operator">:</span> <span class="token number">12</span>
-        line <span class="token number">21</span><span class="token operator">:</span> <span class="token number">22</span>
-      <span class="token class-name">LocalVariableTable</span><span class="token operator">:</span>
-        <span class="token class-name">Start</span>  <span class="token class-name">Length</span>  <span class="token class-name">Slot</span>  <span class="token class-name">Name</span>   <span class="token class-name">Signature</span>
-            <span class="token number">0</span>      <span class="token number">23</span>     <span class="token number">0</span>  <span class="token keyword">this</span>   <span class="token class-name">Lcom</span><span class="token operator">/</span>hk7<span class="token operator">/</span>memory<span class="token operator">/</span><span class="token class-name">DynamicLink</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DynamicLink</span> </span>&#123;<br><br>    <span class="hljs-keyword">int</span> num = <span class="hljs-number">10</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">methodA</span><span class="hljs-params">()</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;methodA()....&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">methodB</span><span class="hljs-params">()</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;methodB()....&quot;</span>);<br>        methodA();<br>        num++;<br>    &#125;<br><br>&#125;<br><br><span class="hljs-comment">//javap -v xxx.class</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">com</span>.<span class="hljs-title">hk7</span>.<span class="hljs-title">memory</span>.<span class="hljs-title">DynamicLink</span></span><br>  minor version: 0<br>  major version: <span class="hljs-number">52</span><br>  flags: ACC_PUBLIC, ACC_SUPER<br>Constant pool:<br>   #1 = Methodref          #9.#23         // java/lang/Object.&quot;&lt;init&gt;&quot;:()V<br>   #2 = Fieldref           #8.#24         // com/hk7/memory/DynamicLink.num:I<br>   #3 = Fieldref           #25.#26        // java/lang/System.out:Ljava/io/PrintStream;<br>   #4 = String             #27            // methodA()....<br>   #5 = Methodref          #28.#29        // java/io/PrintStream.println:(Ljava/lang/String;)V<br>   #6 = String             #30            // methodB()....<br>   #7 = Methodref          #8.#31         // com/hk7/memory/DynamicLink.methodA:()V<br>   #8 = Class              #32            // com/hk7/memory/DynamicLink<br>   #9 = Class              #33            // java/lang/Object<br>  #10 = Utf8               num<br>  #11 = Utf8               I<br>  #12 = Utf8               &lt;init&gt;<br>  #13 = Utf8               ()V<br>  #14 = Utf8               Code<br>  #15 = Utf8               LineNumberTable<br>  #16 = Utf8               LocalVariableTable<br>  #17 = Utf8               this<br>  #18 = Utf8               Lcom/hk7/memory/DynamicLink;<br>  #19 = Utf8               methodA<br>  #20 = Utf8               methodB<br>  #21 = Utf8               SourceFile<br>  #22 = Utf8               DynamicLink.java<br>  #23 = NameAndType        #12:#13        // &quot;&lt;init&gt;&quot;:()V<br>  #24 = NameAndType        #10:#11        // num:I<br>  #25 = Class              #34            // java/lang/System<br>  #26 = NameAndType        #35:#36        // out:Ljava/io/PrintStream;<br>  #27 = Utf8               methodA()....<br>  #28 = Class              #37            // java/io/PrintStream<br>  #29 = NameAndType        #38:#39        // println:(Ljava/lang/String;)V<br>  #30 = Utf8               methodB()....<br>  #31 = NameAndType        #19:#13        // methodA:()V<br>  #32 = Utf8               com/hk7/memory/DynamicLink<br>  #33 = Utf8               java/lang/Object<br>  #34 = Utf8               java/lang/System<br>  #35 = Utf8               out<br>  #36 = Utf8               Ljava/io/PrintStream;<br>  #37 = Utf8               java/io/PrintStream<br>  #38 = Utf8               println<br>  #39 = Utf8               (Ljava/lang/String;)V<br>&#123;<br>  <span class="hljs-keyword">int</span> num;<br>    descriptor: I<br>    flags:<br><br>  <span class="hljs-keyword">public</span> com.hk7.memory.DynamicLink();<br>    descriptor: ()V<br>    flags: ACC_PUBLIC<br>    Code:<br>      stack=<span class="hljs-number">2</span>, locals=<span class="hljs-number">1</span>, args_size=<span class="hljs-number">1</span><br>         <span class="hljs-number">0</span>: aload_0<br>         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V<br>         <span class="hljs-number">4</span>: aload_0<br>         <span class="hljs-number">5</span>: bipush        <span class="hljs-number">10</span><br>         7: putfield      #2                  // Field num:I<br>        <span class="hljs-number">10</span>: <span class="hljs-keyword">return</span><br>      LineNumberTable:<br>        line <span class="hljs-number">9</span>: <span class="hljs-number">0</span><br>        line <span class="hljs-number">11</span>: <span class="hljs-number">4</span><br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            <span class="hljs-number">0</span>      <span class="hljs-number">11</span>     <span class="hljs-number">0</span>  <span class="hljs-keyword">this</span>   Lcom/hk7/memory/DynamicLink;<br><br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">methodA</span><span class="hljs-params">()</span></span>;<br>    descriptor: ()V<br>    flags: ACC_PUBLIC<br>    Code:<br>      stack=<span class="hljs-number">2</span>, locals=<span class="hljs-number">1</span>, args_size=<span class="hljs-number">1</span><br>         0: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;<br>         3: ldc           #4                  // String methodA()....<br>         5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V<br>         <span class="hljs-number">8</span>: <span class="hljs-keyword">return</span><br>      LineNumberTable:<br>        line <span class="hljs-number">14</span>: <span class="hljs-number">0</span><br>        line <span class="hljs-number">15</span>: <span class="hljs-number">8</span><br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            <span class="hljs-number">0</span>       <span class="hljs-number">9</span>     <span class="hljs-number">0</span>  <span class="hljs-keyword">this</span>   Lcom/hk7/memory/DynamicLink;<br><br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">methodB</span><span class="hljs-params">()</span></span>;<br>    descriptor: ()V<br>    flags: ACC_PUBLIC<br>    Code:<br>      stack=<span class="hljs-number">3</span>, locals=<span class="hljs-number">1</span>, args_size=<span class="hljs-number">1</span><br>         0: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;<br>         3: ldc           #6                  // String methodB()....<br>         5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V<br>         <span class="hljs-number">8</span>: aload_0<br>         9: invokevirtual #7                  // Method methodA:()V<br>        <span class="hljs-number">12</span>: aload_0<br>        <span class="hljs-number">13</span>: dup<br>        14: getfield      #2                  // Field num:I<br>        <span class="hljs-number">17</span>: iconst_1<br>        <span class="hljs-number">18</span>: iadd<br>        19: putfield      #2                  // Field num:I<br>        <span class="hljs-number">22</span>: <span class="hljs-keyword">return</span><br>      LineNumberTable:<br>        line <span class="hljs-number">18</span>: <span class="hljs-number">0</span><br>        line <span class="hljs-number">19</span>: <span class="hljs-number">8</span><br>        line <span class="hljs-number">20</span>: <span class="hljs-number">12</span><br>        line <span class="hljs-number">21</span>: <span class="hljs-number">22</span><br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            <span class="hljs-number">0</span>      <span class="hljs-number">23</span>     <span class="hljs-number">0</span>  <span class="hljs-keyword">this</span>   Lcom/hk7/memory/DynamicLink;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -679,12 +470,7 @@ public void test4();
 <p>&emsp;比如哈希吗、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。这部分数据的长度在32位和64位虚拟机（未开启指针压缩）中，分别为**4个字节(32bit)和8个字节(64bit)**。</p>
 <p>&emsp;对象头的结构是动态的，根据对象的状态复用存储空间。以便在极小的空间内存存储尽量多的数据，节省存储成本。</p>
 <p>&emsp;在不同的状态下（5种状态）对象头中所存储的内容会有所不同，如下所示：</p>
-<pre class="line-numbers language-none"><code class="language-none">状态								    标志位					存储内容
-无锁状态							||	01			||   对象哈希码、对象分代年龄
-轻量级锁							||  00			||   指向栈中锁记录的指针
-重量级锁							||  10			||   指向互斥量（重量级锁）的指针
-GC标记							||  11			||   空，不记录信息
-偏向锁，是否偏向锁为1		        ||	01			||   偏向线程ID、偏向时间戳、对象分代年龄<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs ruby">状态								    标志位					存储内容<br>无锁状态							<span class="hljs-params">||</span>	<span class="hljs-number">01</span>			<span class="hljs-params">||</span>   对象哈希码、对象分代年龄<br>轻量级锁							<span class="hljs-params">||</span>  <span class="hljs-number">00</span>			<span class="hljs-params">||</span>   指向栈中锁记录的指针<br>重量级锁							<span class="hljs-params">||</span>  <span class="hljs-number">10</span>			<span class="hljs-params">||</span>   指向互斥量（重量级锁）的指针<br>GC标记							<span class="hljs-params">||</span>  <span class="hljs-number">11</span>			<span class="hljs-params">||</span>   空，不记录信息<br>偏向锁，是否偏向锁为<span class="hljs-number">1</span>		        <span class="hljs-params">||</span>	<span class="hljs-number">01</span>			<span class="hljs-params">||</span>   偏向线程ID、偏向时间戳、对象分代年龄<br></code></pre></td></tr></table></figure>
 
 <p><img src="https://img-blog.csdnimg.cn/20200507092038123.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xpdXNoYW9Ncg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="32位和64位虚拟机中对象头结构"></p>
 <p>&emsp;比如：在64位的HotSpot虚拟机中，如对象处于无锁状态下时，对象头的64个字节中的26个bit处于空闲状态，HashCode占了31个bit，4个bit用来描述分代年龄，1个bit固定为0表示不是偏向锁，2个bit用于存储锁标志位。</p>
@@ -709,68 +495,7 @@ GC标记							||  11			||   空，不记录信息
 <p>   &emsp;&emsp;实例数据：成员变量没有，所以为0</p>
 <p>&emsp;&emsp;对齐填充：8 + 4 = 12，需要对齐 + 4</p>
 <p>&emsp;因此在64位下，SizeOf（Object） = 8 + 4 + 4 = 16字节。以下代码也可以验证：</p>
-<pre class="line-numbers language-none"><code class="language-none">public class ObjectSizeTest &#123;
-    public static void main(String[] args) &#123;
-        sizeOf();
-    &#125;
-
-    private static Object types() &#123;
-        return new Object();
-&#x2F;&#x2F;        return new Integer(1);
-&#x2F;&#x2F;        return new Short((short) 1);
-&#x2F;&#x2F;        return new Long(1);
-&#x2F;&#x2F;        return new Byte((byte) 0);
-&#x2F;&#x2F;        return new Character((char) 1);
-&#x2F;&#x2F;        return new Float(1);
-&#x2F;&#x2F;        return new Double(1);
-&#x2F;&#x2F;        return new Boolean(true);
-&#x2F;&#x2F;        return new String();
-
-&#x2F;&#x2F;        return new Object[0];
-&#x2F;&#x2F;        return new Object[1];
-&#x2F;&#x2F;        return new Object[2];
-&#x2F;&#x2F;        return new Object[3];
-&#x2F;&#x2F;        return new Object[4];
-&#x2F;&#x2F;        return new Object[5];
-    &#125;
-
-    private static final Runtime runtime &#x3D; Runtime.getRuntime();
-
-    private static void sizeOf() &#123;
-        final int count &#x3D; 100000;
-        Object[] objs &#x3D; new Object[count];
-        runGC();
-        long heapSizeBefore &#x3D; usedMemory();   &#x2F;&#x2F; before memory size
-        for (int i &#x3D; 0; i &lt; count; i++) &#123;
-            objs[i] &#x3D; types();
-        &#125;
-
-        runGC();
-        long heapSizeAfter &#x3D; usedMemory();      &#x2F;&#x2F; after memory size
-        System.out.println(&quot;heapSizeBefore &#x3D; &quot; + heapSizeBefore);
-        System.out.println(&quot;heapSizeAfter  &#x3D; &quot; + heapSizeAfter);
-        Long size &#x3D; Math.round((heapSizeAfter - heapSizeBefore) &#x2F; (double) count);
-        System.out.println(objs[0].getClass().getSimpleName() + &quot;_size&#x3D;&quot; + size);&#x2F;&#x2F;16
-    &#125;
-
-    private static void runGC() &#123;
-        long usedMemOld &#x3D; 0;
-        long usedMemNew &#x3D; usedMemory();
-        while (usedMemOld !&#x3D; usedMemNew) &#123;
-            runtime.runFinalization();&#x2F;&#x2F;强制调用已经失去引用的对象的finalize方法
-            runtime.gc();&#x2F;&#x2F;进行垃圾收集
-            Thread.yield();&#x2F;&#x2F;使当前线程从执行状态（运行状态）变为可执行态（就绪状态），给jvm去执行gc
-            usedMemOld &#x3D; usedMemNew;
-            usedMemNew &#x3D; usedMemory();
-        &#125;
-    &#125;
-
-
-    private static long usedMemory() &#123;
-        return runtime.totalMemory() - runtime.freeMemory();
-    &#125;
-
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> ObjectSizeTest &#123;<br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) &#123;<br>        sizeOf();<br>    &#125;<br><br>    private static <span class="hljs-keyword">Object</span> <span class="hljs-keyword">types</span>() &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>();<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-type">Integer</span>(<span class="hljs-number">1</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> Short((short) <span class="hljs-number">1</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> Long(<span class="hljs-number">1</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> Byte((byte) <span class="hljs-number">0</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-type">Character</span>((<span class="hljs-type">char</span>) <span class="hljs-number">1</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-type">Float</span>(<span class="hljs-number">1</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-type">Double</span>(<span class="hljs-number">1</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-type">Boolean</span>(<span class="hljs-keyword">true</span>);<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> String();<br><br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[<span class="hljs-number">0</span>];<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[<span class="hljs-number">1</span>];<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[<span class="hljs-number">2</span>];<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[<span class="hljs-number">3</span>];<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[<span class="hljs-number">4</span>];<br>//        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[<span class="hljs-number">5</span>];<br>    &#125;<br><br>    private static final Runtime runtime = Runtime.getRuntime();<br><br>    private static <span class="hljs-type">void</span> sizeOf() &#123;<br>        final <span class="hljs-type">int</span> count = <span class="hljs-number">100000</span>;<br>        <span class="hljs-keyword">Object</span>[] objs = <span class="hljs-built_in">new</span> <span class="hljs-keyword">Object</span>[count];<br>        runGC();<br>        long heapSizeBefore = usedMemory();   // <span class="hljs-keyword">before</span> memory size<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; count; i++) &#123;<br>            objs[i] = <span class="hljs-keyword">types</span>();<br>        &#125;<br><br>        runGC();<br>        long heapSizeAfter = usedMemory();      // <span class="hljs-keyword">after</span> memory size<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;heapSizeBefore = &quot; + heapSizeBefore);<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;heapSizeAfter  = &quot; + heapSizeAfter);<br>        Long size = Math.round((heapSizeAfter - heapSizeBefore) / (<span class="hljs-type">double</span>) count);<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(objs[<span class="hljs-number">0</span>].getClass().getSimpleName() + &quot;_size=&quot; + size);//<span class="hljs-number">16</span><br>    &#125;<br><br>    private static <span class="hljs-type">void</span> runGC() &#123;<br>        long usedMemOld = <span class="hljs-number">0</span>;<br>        long usedMemNew = usedMemory();<br>        <span class="hljs-keyword">while</span> (usedMemOld != usedMemNew) &#123;<br>            runtime.runFinalization();//强制调用已经失去引用的对象的finalize方法<br>            runtime.gc();//进行垃圾收集<br>            Thread.yield();//使当前线程从执行状态（运行状态）变为可执行态（就绪状态），给jvm去执行gc<br>            usedMemOld = usedMemNew;<br>            usedMemNew = usedMemory();<br>        &#125;<br>    &#125;<br><br><br>    private static long usedMemory() &#123;<br>        <span class="hljs-keyword">return</span> runtime.totalMemory() - runtime.freeMemory();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="2-3-对象的访问定位"><a href="#2-3-对象的访问定位" class="headerlink" title="2.3 对象的访问定位"></a>2.3 对象的访问定位</h3><p>&emsp;建立对象是为了使用对象，我们通过栈上的reference数据来操作堆上的具体对象。由于reference类型在java虚拟机规范中只规定了一个指向对象的引用，并没有定义引用应该通过什么方式定位、访问堆中的对象具体位置，所以对象的访问方式取决于虚拟机的实现。</p>
 <p>&emsp;主流的方法分为<strong>句柄访问</strong>和<strong>直接指针访问</strong>两种，就HotSpot而言主要使用的是第二种直接指针访问进行对象访问（如果使用了ShenandoahGC收集器时会有额外的转发）</p>

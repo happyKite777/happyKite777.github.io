@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.4k 字
+      3.3k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      40
+      38
        分钟
     </span>
   
@@ -235,19 +235,11 @@
 <p>&emsp;程序员编写的高级语言符合人类的思维模式，但是计算机只认识0和1，无法识别高级语言，因此，我们编写好的代码，需要一种中间过程，将我们写好的代码，转换为二进制代码，从而让计算机得以执行。</p>
 <p>&emsp;源文件转换为二进制文件经历了以下几个阶段：预处理(prepressing)、编译(compilation)、汇编(assembly)、链接(linking)，如下图所示：<br><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2496969140,4180722254&fm=26&gp=0.jpg" srcset="/img/loading.gif"></p>
 <p>&emsp;hello.c文件</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello World\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello World\n&quot;</span>);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>&emsp;经过gcc编译器编译（指以上的所有阶段，不是单指编译阶段）后，得到可执行文件。</p>
-<pre class="line-numbers language-none"><code class="language-none">gcc hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">gcc</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.c</span> <span class="hljs-selector-tag">-o</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.out</span><br></code></pre></td></tr></table></figure>
 <p>&emsp;预处理需要预处理程序（c中叫cpp）处理、编译需要编译程序（c中叫cc1、c++中叫cc1plus、oc叫cc1obj、java叫jc1……）处理、汇编需要汇编程序程序（c中叫as）处理，链接需要链接器（c中叫ld）处理。gcc实际上是对这些过程的封装，通过不同的参数调用不同的处理程序。<br>&emsp;以上编译过程可以拆解为：</p>
-<pre class="line-numbers language-none"><code class="language-none">gcc -E hello.c -o hello.i        &#x2F;&#x2F; 预编译
-gcc -S hello.i -o hello.s        &#x2F;&#x2F; 编译
-gcc -c hello.s -o hello.o      &#x2F;&#x2F; 汇编，目标文件
-gcc hello.o -o hello.out      &#x2F;&#x2F; 链接，可执行文件<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">gcc -E hello<span class="hljs-selector-class">.c</span> -o hello<span class="hljs-selector-class">.i</span>        <span class="hljs-comment">// 预编译</span><br>gcc -S hello<span class="hljs-selector-class">.i</span> -o hello<span class="hljs-selector-class">.s</span>        <span class="hljs-comment">// 编译</span><br>gcc -c hello<span class="hljs-selector-class">.s</span> -o hello<span class="hljs-selector-class">.o</span>      <span class="hljs-comment">// 汇编，目标文件</span><br>gcc hello<span class="hljs-selector-class">.o</span> -o hello<span class="hljs-selector-class">.out</span>      <span class="hljs-comment">// 链接，可执行文件</span><br></code></pre></td></tr></table></figure>
 <h2 id="1-源代码是如何到二进制的"><a href="#1-源代码是如何到二进制的" class="headerlink" title="1. 源代码是如何到二进制的"></a>1. 源代码是如何到二进制的</h2><h3 id="1-1-预编译"><a href="#1-1-预编译" class="headerlink" title="1.1 预编译"></a>1.1 预编译</h3><p>预编译主要是对源文件中的预编译指令进行处理，比如#include、#define等。处理规则如下：</p>
 <ul>
 <li>删除所有的”#define”，并展开所有宏定义  </li>
@@ -255,49 +247,23 @@ gcc hello.o -o hello.out      &#x2F;&#x2F; 链接，可执行文件<span aria-hi
 <li>处理#include预编译指令，将所有被包含的文件插入进该指令位置</li>
 <li>删除所有的注释</li>
 <li>添加行号和文件名标识，便于编译是产生调试用的信息</li>
-<li>保留所有的#pragma指令，供后续使用<pre class="line-numbers language-none"><code class="language-none">gcc -E hello.c -o hello.i        &#x2F;&#x2F; 预编译<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-预编译之后，文件不再包含任何宏信息，以下是预处理之后文件的部分代码<pre class="line-numbers language-none"><code class="language-none"># 1 &quot;hello.c&quot;
-# 1 &quot;&lt;built-in&gt;&quot; 1
-# 1 &quot;&lt;built-in&gt;&quot; 3
-# 361 &quot;&lt;built-in&gt;&quot; 3
-# 1 &quot;&lt;command line&gt;&quot; 1
-# 1 &quot;&lt;built-in&gt;&quot; 2
-# 1 &quot;hello.c&quot; 2
-# 1 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;stdio.h&quot; 1 3 4
-# 64 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;stdio.h&quot; 3 4
-# 1 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;_stdio.h&quot; 1 3 4
-
-…………
-
-extern int __vsnprintf_chk (char * restrict, size_t, int, size_t,
-       const char * restrict, va_list);
-# 412 &quot;&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.14.sdk&#x2F;usr&#x2F;include&#x2F;stdio.h&quot; 2 3 4
-# 2 &quot;hello.c&quot; 2
-
-int main(int argc, char const *argv[])
-&#123;
- printf(&quot;%s\n&quot;, &quot;Hello World!&quot;);
- return 0;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<li>保留所有的#pragma指令，供后续使用<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">gcc -E hello<span class="hljs-selector-class">.c</span> -o hello<span class="hljs-selector-class">.i</span>        <span class="hljs-comment">// 预编译</span><br></code></pre></td></tr></table></figure>
+预编译之后，文件不再包含任何宏信息，以下是预处理之后文件的部分代码<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs lsl"># <span class="hljs-number">1</span> <span class="hljs-string">&quot;hello.c&quot;</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;&lt;built-in&gt;&quot;</span> <span class="hljs-number">1</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;&lt;built-in&gt;&quot;</span> <span class="hljs-number">3</span><br># <span class="hljs-number">361</span> <span class="hljs-string">&quot;&lt;built-in&gt;&quot;</span> <span class="hljs-number">3</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;&lt;command line&gt;&quot;</span> <span class="hljs-number">1</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;&lt;built-in&gt;&quot;</span> <span class="hljs-number">2</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;hello.c&quot;</span> <span class="hljs-number">2</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h&quot;</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span><br># <span class="hljs-number">64</span> <span class="hljs-string">&quot;/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h&quot;</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span><br># <span class="hljs-number">1</span> <span class="hljs-string">&quot;/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h&quot;</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span><br><br>…………<br><br>extern int __vsnprintf_chk (char * restrict, size_t, int, size_t,<br>       const char * restrict, va_list);<br># <span class="hljs-number">412</span> <span class="hljs-string">&quot;/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h&quot;</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span><br># <span class="hljs-number">2</span> <span class="hljs-string">&quot;hello.c&quot;</span> <span class="hljs-number">2</span><br><br>int main(int argc, char const *argv[])<br>&#123;<br> printf(<span class="hljs-string">&quot;%s<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-string">&quot;Hello World!&quot;</span>);<br> return <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 </li>
 </ul>
 <h3 id="1-2-编译"><a href="#1-2-编译" class="headerlink" title="1.2 编译"></a>1.2 编译</h3><p>&emsp;编译过程主要是把预处理之后的文件进行一系列的词法分析、语法分析、语义分析及源码优化，编译后会产生相应的汇编源文件。这也是整个过程中最复杂的一部分。</p>
-<pre class="line-numbers language-none"><code class="language-none">gcc -s hello.i -o hello.s<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">gcc</span> <span class="hljs-selector-tag">-s</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.i</span> <span class="hljs-selector-tag">-o</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.s</span><br></code></pre></td></tr></table></figure>
 <p>&emsp;现代的gcc把预编译和编译两个步骤合并，使用cc1一步完成。</p>
 <h3 id="1-3-汇编"><a href="#1-3-汇编" class="headerlink" title="1.3 汇编"></a>1.3 汇编</h3><p>&emsp;汇编器将汇编代码编程机器可以执行的指令， 每一条汇编指令都对应着一条机器指令。汇编器的执行很简单，不需要优化，只需要对照汇编指令和机器指令表一一翻译即可。</p>
-<pre class="line-numbers language-none"><code class="language-none">gcc -c hello.c -o hello.o<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">gcc</span> <span class="hljs-selector-tag">-c</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.c</span> <span class="hljs-selector-tag">-o</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.o</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="1-4-链接"><a href="#1-4-链接" class="headerlink" title="1.4 链接"></a>1.4 链接</h3><p>通常我们看到链接会链接一大串文件，如下图所示，它会把编译生成的目标文件和运行时需要的库等打包放一起。具体后面会讲。</p>
-<pre class="line-numbers language-none"><code class="language-none">$ld -static &#x2F;usr&#x2F;lib&#x2F;crt1.o &#x2F;usr&#x2F;lib&#x2F;crti.o &#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-linux-
-gnu&#x2F;4.1.3&#x2F;crtbeginT.o -L&#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-linux-gnu&#x2F;4.1.3 -L&#x2F;usr&#x2F;lib -
-L&#x2F;lib hello.o --start-group -lgcc -lgcc_eh -lc --end-group &#x2F;usr&#x2F;lib&#x2F;gcc&#x2F;i486-
-linux-gnu&#x2F;4.1.3&#x2F;crtend.o &#x2F;usr&#x2F;lib&#x2F;crtn.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-none"><code class="language-none">gcc hello.o -o hello.out
-gcc hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crystal">$ld -static /usr/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">crt1</span>.<span class="hljs-title">o</span> /<span class="hljs-title">usr</span>/<span class="hljs-title">lib</span>/<span class="hljs-title">crti</span>.<span class="hljs-title">o</span> /<span class="hljs-title">usr</span>/<span class="hljs-title">lib</span>/<span class="hljs-title">gcc</span>/<span class="hljs-title">i486</span>-<span class="hljs-title">linux</span>-</span><br>gnu/<span class="hljs-number">4.1</span>.<span class="hljs-number">3</span>/crtbeginT.o -L/usr/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">gcc</span>/<span class="hljs-title">i486</span>-<span class="hljs-title">linux</span>-<span class="hljs-title">gnu</span>/4.1.3 -<span class="hljs-title">L</span>/<span class="hljs-title">usr</span>/<span class="hljs-title">lib</span> -</span><br>L/<span class="hljs-class"><span class="hljs-keyword">lib</span> <span class="hljs-title">hello</span>.<span class="hljs-title">o</span> --<span class="hljs-title">start</span>-<span class="hljs-title">group</span> -<span class="hljs-title">lgcc</span> -<span class="hljs-title">lgcc_eh</span> -<span class="hljs-title">lc</span> --<span class="hljs-title">end</span>-<span class="hljs-title">group</span> /<span class="hljs-title">usr</span>/<span class="hljs-title">lib</span>/<span class="hljs-title">gcc</span>/<span class="hljs-title">i486</span>-</span><br>linux-gnu/<span class="hljs-number">4.1</span>.<span class="hljs-number">3</span>/crtend.o /usr/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">crtn</span>.<span class="hljs-title">o</span></span><br></code></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">gcc</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.o</span> <span class="hljs-selector-tag">-o</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.out</span><br><span class="hljs-selector-tag">gcc</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.c</span> <span class="hljs-selector-tag">-o</span> <span class="hljs-selector-tag">hello</span><span class="hljs-selector-class">.out</span><br></code></pre></td></tr></table></figure>
 <h2 id="2-编译的过程"><a href="#2-编译的过程" class="headerlink" title="2. 编译的过程"></a>2. 编译的过程</h2><p>&emsp;编译主要分为6步：<strong>词法分析、语法分析、语义分析、中间代码优化、目标代码生成和目标代码优化。</strong>这里的编译实际上是上述的编译和汇编两个过程。<br><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1750648939,4195670772&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="编译过程"><br>&emsp;其中前4个步骤生成中间代码，它是和机器无关的，被称为<strong>前端编译</strong>，后2个步骤，和具体的平台架构、字长等相关，又叫做<strong>后端编译</strong>。</p>
 <h3 id="2-1-词法分析"><a href="#2-1-词法分析" class="headerlink" title="2.1 词法分析"></a>2.1 词法分析</h3><p>&emsp;源代码程序被输入到扫描器，它会做语法分析，运用算法将字符串分割成一系列的记号。<br>&emsp;比如有一行c源码：</p>
-<pre class="line-numbers language-none"><code class="language-none">array[index] &#x3D; (index + 4) * (2 + 6)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-built_in">array</span>[index] = (index + <span class="hljs-number">4</span>) * (<span class="hljs-number">2</span> + <span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
 <p>&emsp;包含28个非空字符，扫描后，分割成16个记号。</p>
 <!DOCTYPE html>
 <html>
@@ -330,21 +296,12 @@ gcc hello.c -o hello.out<span aria-hidden="true" class="line-numbers-rows"><span
 <h3 id="2-2-语法分析"><a href="#2-2-语法分析" class="headerlink" title="2.2 语法分析"></a>2.2 语法分析</h3><p>&emsp;语法分析器会将词法分析器产生的记号进行语法分析，产生语法分析树。比如以上产生的语法树如下：<br><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3153678276,3283363363&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="语法树"></p>
 <h3 id="2-3-语义分析"><a href="#2-3-语义分析" class="headerlink" title="2.3 语义分析"></a>2.3 语义分析</h3><p>&emsp;语义分析由语义分析器完成，它会对上述生成的语法树进行合法性分析，比如数字和数字相加是合法的，但是数字和指针相加则会报错。<br>&emsp;编译器只能做静态语义分析。比如声明和类型的匹配、类型的转换等。经过语义分析后，产生的语法树如下：<br><img src="https://www.pianshen.com/images/621/6cd6f41ffec80b27c299440e4d41f29d.png" srcset="/img/loading.gif" alt="语义分析后的语法树"></p>
 <h3 id="2-4-中间代码优化"><a href="#2-4-中间代码优化" class="headerlink" title="2.4 中间代码优化"></a>2.4 中间代码优化</h3><p>&emsp;在生成汇编语言之前，编译器会对源代码进行优化。比如上述例子中的2+6，在编译时期是可以确定的，这是属于源代码优化的一种，类似的还有很多。<br><img src="https://www.pianshen.com/images/892/24b52fae4922dbb5d48677376e07b02c.png" srcset="/img/loading.gif" alt="优化之后的语法树"><br>&emsp;但是编译器直接对语法树进行优化很难，因此它会将整个语法树转换成<strong>中间代码</strong>。它是语法树的中间表示，很接近目标代码，但是和机器无关。<br>&emsp;中间代码在不同的编译器中有不同形式，常见的有三地址码（Three-address Code）和P-代码（P-Code）。<br>&emsp;最基本的三地址码：x = y op z，表示将y和z进行op操作后，赋值给x。因此，上述代码被翻译成三地址码后是这样的</p>
-<pre class="line-numbers language-none"><code class="language-none">t1 &#x3D; 2 + 6
-t2 &#x3D; index + 4
-t3 &#x3D; t2 * t1
-array[index] &#x3D; t3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">t1</span> = <span class="hljs-number">2</span> + <span class="hljs-number">6</span><br><span class="hljs-attribute">t2</span> = index + <span class="hljs-number">4</span><br><span class="hljs-attribute">t3</span> = t<span class="hljs-number">2</span> * t<span class="hljs-number">1</span><br><span class="hljs-attribute">array</span>[index] = t<span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
 <p>可以被优化成这样</p>
-<pre class="line-numbers language-none"><code class="language-none">t2 &#x3D; index + 4
-t2 &#x3D; t2 * 8
-array[index] &#x3D; t2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">t2</span> = index + <span class="hljs-number">4</span><br><span class="hljs-attribute">t2</span> = t<span class="hljs-number">2</span> * <span class="hljs-number">8</span><br><span class="hljs-attribute">array</span>[index] = t<span class="hljs-number">2</span><br></code></pre></td></tr></table></figure>
 <p>&emsp;中间代码是编译分为前端和后端。前端负责产生和机器无关的中间代码（不是汇编代码），后端服务将中间代码转换成目标机器代码。一些跨平台的语言编译时，可以使用一个前端和不同的多个后端。</p>
 <h3 id="2-5-目标代码生成与优化"><a href="#2-5-目标代码生成与优化" class="headerlink" title="2.5 目标代码生成与优化"></a>2.5 目标代码生成与优化</h3><p>&emsp;编译器后端主要包括代码生成器和目标代码优化器。代码生成器会将中间转换成目标机器代码，这个过程依赖目标机器，不同的机器字长、寄存器、整型长度等都不一样。假设目标机器cpu使用x86架构，则会生成以下汇编代码</p>
-<pre class="line-numbers language-none"><code class="language-none">movl index, %ecx			; index放入ecx寄存器
-addl $4, %ecx				; ecx &#x3D; ecx + 4
-mull $8, %ecx				; ecx &#x3D; ecx * 8
-movl index, %eax			; index放入eax寄存器
-movl %ecx, array(,eax,4) 	; array[index] &#x3D; ecx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs perl">movl <span class="hljs-keyword">index</span>, %ecx			; <span class="hljs-keyword">index</span>放入ecx寄存器<br>addl $4, %ecx				; ecx = ecx + <span class="hljs-number">4</span><br>mull $8, %ecx				; ecx = ecx * <span class="hljs-number">8</span><br>movl <span class="hljs-keyword">index</span>, %eax			; <span class="hljs-keyword">index</span>放入eax寄存器<br>movl %ecx, array(,eax,<span class="hljs-number">4</span>) 	; array[<span class="hljs-keyword">index</span>] = ecx<br></code></pre></td></tr></table></figure>
 <p>&emsp;最后代码优化器对上述代码进行优化，比如选择合适的寻址方式、使用位移来代替乘法、删除多余的指令等。</p>
 <h2 id="3-链接的过程"><a href="#3-链接的过程" class="headerlink" title="3. 链接的过程"></a>3. 链接的过程</h2><p>&emsp;经过编译器的词法分析、语法分析、语义分析、源代码优化、代码生成和目标代码优化后，源代码终于被编译成了目标代码。但是目标代码中有一个问题：index和array的地址还没有确定？如果引用的是其他程序模块变量，地址怎么确定呢？<br>&emsp;事实上，定义的其他模块的全局变量和函数最终运行时的绝对地址都要在最终链接的时候确定，这个过程由链接器实现。<br>&emsp;链接器是一个将编译器产生的目标文件打包成可执行文件或者库文件或者目标文件的程序。<br>&emsp;程序由若干个模块组成，各个模块之间会进行通信，比如调用其他模块的函数，需要知道函数的地址，访问其他模块的变量，也需要变量的地址，这都归结于一种方式，即模块间符号的引用。<br>&emsp;<strong>模块间依靠符号来通信，定义符号的模块多出来的区域，刚好拼接上引用该符号的模块缺少的区域，这个拼接的过程就叫：链接</strong>。<br><img src="https://img-blog.csdn.net/20180917213258403?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dpdGh1Yl8zNzM4MjMxOQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" alt="链接"></p>
 <p>&emsp;链接器主要的工作就是把一些指令对其他符号地址的引用修正为真正的地址。<br>&emsp;链接过程主要包括<strong>地址和空间分配（Address and Storage Allocation）、符号决议（Symbol Resolution）和重定向（Relocation）</strong>等步骤。<br>&emsp;符号决议在在静态链接的时候称为符号决议或者名称决议（Name Resolution），在动态链接的时候被叫做<strong>符号绑定（Symbol Binding）</strong>或者名称绑定（Name Binding），有时候甚至叫做地址绑定（Address Binding）、指令绑定（Instruction Binding）。从名称上可以区分出来，决议偏向静态链接，绑定偏向动态链接。</p>
@@ -353,7 +310,7 @@ movl %ecx, array(,eax,4) 	; array[index] &#x3D; ecx<span aria-hidden="true" clas
 <li>重新计算各个目标的地址过程叫做重定位。</li>
 </ul>
 <h3 id="3-1-静态链接"><a href="#3-1-静态链接" class="headerlink" title="3.1 静态链接"></a>3.1 静态链接</h3><p>&emsp;如下图，最基本的静态链接就是把目标文件和库文件一起链接，形成最终可执行文件。最常见的库是运行时库。<br><img src="http://blog.chinaunix.net/attachment/201308/8/26548237_1375965656F2Fy.png" srcset="/img/loading.gif" alt="静态链接过程"><br>&emsp;我们在main.c模块中调用另一个模块func.c中的函数foo，必须知道foo的地址，但是每个模块都是单独编译的，在编译main.c的的时候并不知道foo函数的地址，所以编译器会暂时搁置调用foo的指令的目标地址，等链接的时候，链接器会根据引用符号foo，自动去相应的func.c模块查找foo的地址，然后将main.c模块中所有引用到foo的指令重新修正，让他们的目标地址为真正foo函数的地址。这就是静态链接最基本的过程和作用。<br>&emsp;假设A里面有个全局变量p，我们再B里面要访问这个全局变量，B里面有这么一条指令：</p>
-<pre class="line-numbers language-none"><code class="language-none">movl $0x2a, p     &#x2F;&#x2F; p &#x3D; 42，x86架构<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">movl</span> $<span class="hljs-number">0</span>x<span class="hljs-number">2</span>a, p     // p = <span class="hljs-number">42</span>，x<span class="hljs-number">86</span>架构<br></code></pre></td></tr></table></figure>
 <p>&emsp;意思是给p变量赋值0x2a。编译B得到指令机器码  <u>C7 05</u>  <u>00 00 00 00</u>  <u>2a 00 00 00</u>，c705是mov指令码，2a为源常量，由于不知道地址所以暂时置为0，等链接器链接A和B的时候，假设确定p的地址为0x1000，则把目标地址修改为0x1000，即<u>C7 05</u>  <u>00 00 10 00</u>  <u>2a 00 00 00</u>。</p>
 <h3 id="3-2-动态链接"><a href="#3-2-动态链接" class="headerlink" title="3.2 动态链接"></a>3.2 动态链接</h3><p>&emsp;把程序按照模块拆分成各个相对独立部分，在程序运行时才将它们链接在一起形成一个完整的程序，而不是像静态链接一样把所有程序模块都链接成一个单独的可执行文件</p>
 <p>&emsp;假设现在有两个程序program1.o和program2.o，这两者共用同一个库lib.o,假设首先运行程序program1，系统首先加载program1.o，当系统发现program1.o中用到了lib.o，即program1.o依赖于lib.o，那么系统接着加载lib.o，如果program1.o和lib.o还依赖于其他目标文件，则依次全部加载到内存中。当program2运行时，同样的加载program2.o，然后发现program2.o依赖于lib.o，但是此时lib.o已经存在于内存中，这个时候就不再进行重新加载，而是将内存中已经存在的lib.o映射到program2的虚拟地址空间中，从而进行链接（这个链接过程和静态链接类似）形成可执行程序。</p>
