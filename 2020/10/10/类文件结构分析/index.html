@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.5k 字
+      7.4k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      91
+      90
        分钟
     </span>
   
@@ -234,35 +234,10 @@
 <p><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3184539622,2942284202&fm=26&gp=0.jpg" srcset="/img/loading.gif" alt="class文件结构"></p>
 <h2 id="1-魔数和版本号"><a href="#1-魔数和版本号" class="headerlink" title="1 魔数和版本号"></a>1 魔数和版本号</h2><p>&emsp;class文件的头4个字节被称为魔数(Magic Number)，它用来标识该文件是否为有效的class文件，class文件的魔数值为“0xCAFABABE”，我们可以看到任何class文件都是以“0xCAFABABE”开头。</p>
 <p>&emsp;魔数之后是java的版本号，第5、6字节为次版本号，第7、8字节为主版本号。jdk版本号从45开始，jdk版本号和java版本的对应规则如下图所示。魔数版本号在验证阶段，都会对其进行校验。</p>
-<pre class="line-numbers language-none"><code class="language-none">JDK版本			版本号
-JDK 6				50
-JDK 7				51
-JDK 8				52
-JDK 9				53
-JDK 10			54
-JDK 11			55
-JDK 12			56
-JDK 13			56<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">JDK版本			版本号<br>JDK <span class="hljs-number">6</span>				<span class="hljs-number">50</span><br>JDK <span class="hljs-number">7</span>				<span class="hljs-number">51</span><br>JDK <span class="hljs-number">8</span>				<span class="hljs-number">52</span><br>JDK <span class="hljs-number">9</span>				<span class="hljs-number">53</span><br>JDK <span class="hljs-number">10</span>			<span class="hljs-number">54</span><br>JDK <span class="hljs-number">11</span>			<span class="hljs-number">55</span><br>JDK <span class="hljs-number">12</span>			<span class="hljs-number">56</span><br>JDK <span class="hljs-number">13</span>			<span class="hljs-number">56</span><br></code></pre></td></tr></table></figure>
 <p>&emsp;<a target="_blank" rel="noopener" href="https://img-blog.csdnimg.cn/20201013180326577.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70">jdk版本号对应关系图</a></p>
 <p>&emsp;比如有以下例子：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>hk7<span class="token punctuation">.</span>memory</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">Serializable</span><span class="token punctuation">;</span>
-
-<span class="token comment">/**
- * HelloWorld
- *
- * @author zhoumi
- * @date 2020/10/13
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ClassTest</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">private</span> <span class="token keyword">int</span> num<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hk7.memory;<br><br><span class="hljs-keyword">import</span> java.io.Serializable;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * HelloWorld</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> zhoumi</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/13</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ClassTest</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> num;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> num + <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 <p>&emsp;使用010editor打开，可以看到以<code>0xCAFEBABE</code>开头，主版本号是0x0034 = 52，表示该class文件可以被jdk8及其以上版本的虚拟机执行。</p>
 <p><img src="https://img-blog.csdnimg.cn/20201015191651490.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="字节码文件"></p>
@@ -537,30 +512,7 @@ JDK 13			56<span aria-hidden="true" class="line-numbers-rows"><span></span><span
 
 <p>&emsp;我们还是看上面的例子，<code>0A 00 04 00 13</code>,常量池常量个数位之后tag是 0x0A = 10，可知这是一个CONSTANT_Methodref_info类中方法的符号引用常量。再后面是2个index，类型为u2、u2，也就是0x0004 = 4 和 0x0013 = 19，分别指向常量池中的第4个常量项和第19个常量项，翻译完整个字节码，发现第4个常量是CONSTANT_Class_info类型，第19个常量是CONSTANT_NameAndType_info类型，符合定义，以此类推直至解析完整个常量池。</p>
 <p>&emsp;我们采用<code>javap -v xxx.class</code>来解析字节码如下，可以看到第1个常量是Methodref，第4个是Class，第19个是NameAndType，和我们手动计算的一致。</p>
-<pre class="line-numbers language-class" data-language="class"><code class="language-class">Constant pool:
-   #1 &#x3D; Methodref          #4.#19         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V
-   #2 &#x3D; Fieldref           #3.#20         &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;ClassTest.num:I
-   #3 &#x3D; Class              #21            &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;ClassTest
-   #4 &#x3D; Class              #22            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object
-   #5 &#x3D; Class              #23            &#x2F;&#x2F; java&#x2F;io&#x2F;Serializable
-   #6 &#x3D; Utf8               num
-   #7 &#x3D; Utf8               I
-   #8 &#x3D; Utf8               &lt;init&gt;
-   #9 &#x3D; Utf8               ()V
-  #10 &#x3D; Utf8               Code
-  #11 &#x3D; Utf8               LineNumberTable
-  #12 &#x3D; Utf8               LocalVariableTable
-  #13 &#x3D; Utf8               this
-  #14 &#x3D; Utf8               Lcom&#x2F;hk7&#x2F;memory&#x2F;ClassTest;
-  #15 &#x3D; Utf8               add
-  #16 &#x3D; Utf8               ()I
-  #17 &#x3D; Utf8               SourceFile
-  #18 &#x3D; Utf8               ClassTest.java
-  #19 &#x3D; NameAndType        #8:#9          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V
-  #20 &#x3D; NameAndType        #6:#7          &#x2F;&#x2F; num:I
-  #21 &#x3D; Utf8               com&#x2F;hk7&#x2F;memory&#x2F;ClassTest
-  #22 &#x3D; Utf8               java&#x2F;lang&#x2F;Object
-  #23 &#x3D; Utf8               java&#x2F;io&#x2F;Serializable<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs class">Constant pool:<br>   #1 &#x3D; Methodref          #4.#19         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V<br>   #2 &#x3D; Fieldref           #3.#20         &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;ClassTest.num:I<br>   #3 &#x3D; Class              #21            &#x2F;&#x2F; com&#x2F;hk7&#x2F;memory&#x2F;ClassTest<br>   #4 &#x3D; Class              #22            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object<br>   #5 &#x3D; Class              #23            &#x2F;&#x2F; java&#x2F;io&#x2F;Serializable<br>   #6 &#x3D; Utf8               num<br>   #7 &#x3D; Utf8               I<br>   #8 &#x3D; Utf8               &lt;init&gt;<br>   #9 &#x3D; Utf8               ()V<br>  #10 &#x3D; Utf8               Code<br>  #11 &#x3D; Utf8               LineNumberTable<br>  #12 &#x3D; Utf8               LocalVariableTable<br>  #13 &#x3D; Utf8               this<br>  #14 &#x3D; Utf8               Lcom&#x2F;hk7&#x2F;memory&#x2F;ClassTest;<br>  #15 &#x3D; Utf8               add<br>  #16 &#x3D; Utf8               ()I<br>  #17 &#x3D; Utf8               SourceFile<br>  #18 &#x3D; Utf8               ClassTest.java<br>  #19 &#x3D; NameAndType        #8:#9          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V<br>  #20 &#x3D; NameAndType        #6:#7          &#x2F;&#x2F; num:I<br>  #21 &#x3D; Utf8               com&#x2F;hk7&#x2F;memory&#x2F;ClassTest<br>  #22 &#x3D; Utf8               java&#x2F;lang&#x2F;Object<br>  #23 &#x3D; Utf8               java&#x2F;io&#x2F;Serializable<br></code></pre></td></tr></table></figure>
 
 <h2 id="3-访问标志"><a href="#3-访问标志" class="headerlink" title="3 访问标志"></a>3 访问标志</h2><p>&emsp;常量池之后紧接着的是访问标志，占2个字节，用于识别一些类或者接口层次的访问信息。标识符的类型和含义如下表所示：</p>
 <table>
@@ -737,42 +689,10 @@ JDK 13			56<span aria-hidden="true" class="line-numbers-rows"><span></span><span
 </ul>
 <h2 id="7-属性表集合"><a href="#7-属性表集合" class="headerlink" title="7 属性表集合"></a>7 属性表集合</h2><p>&emsp;属性表在class文件、字段表和方法表中都会出现，用来描述专有的信息。《java虚拟机规范》对属性表没有像字段表、方法表那样严格限制顺序，只要不和已有属性名重复，都可以编译器都可以写入自己定义的属性信息，java虚拟机运行时会忽略掉它不认识的属性。</p>
 <p>&emsp;属性的名称必须从常量池中引用uft8常量来表示，但是属性值的结构则不用，用长度说明属性值所占的位数即可。属性值的结构如下所示：</p>
-<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">attribute_info &#123;
-    u2 attribute_name_index;       # 属性名称
-    u4 attribute_length;           # 属性表长度
-    u1 info[attribute_length];     # 属性表具体内容
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">attribute_info &#123;<br>    u2 attribute_name_index;       # 属性名称<br>    u4 attribute_length;           # 属性表长度<br>    u1 info[attribute_length];     # 属性表具体内容<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;java虚拟机预定义的属性如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">属性名                                      含义                                                                                     使用位置
-ConstantValue                         || 由final关键字定义的常量值                                                                  ||   字段表
-Code                                  || java代码编译成的字节码指令                                                                  ||  方法表
-StackMapTable                         || jdk6新增属性，验证局部变量和操作数栈类型是否匹配                                               ||  Code属性
-Exceptions                            || 方法抛出的异常列表                                                                         ||  方法表
-InnerClasses                          || 内部类列表                                                                                ||  类文件
-EnclosingMethod                       || 只有局部类和匿名类才拥有该属性，标志这个类所在的外围方法                                         ||  类文件
-Synthetic                             || 标识方法或字段为编译器自动生成的                                                             ||  类、方法表、字段表
-Signature                             || jdk5新增属性，用于支持泛型的类、方法、字段的签名                                               ||   类、方法表、字段表
-SourceFile                            || 记录源文件名称                                                                             ||   类文件
-SourceDebugExtension                  || jdk5新增属性，存储额外的调试信息                                                             ||   类文件	
-LineNumberTable                       || java源码行号与字节码指令的对应关系                                                           ||   Code属性
-LocalVariableTable                    || 方法的局部变量描述                                                                          ||  Code属性
-LocalVariableTypeTable                || jdk5新增属性，使用特征签名代替描述符，为支持泛型添加的属性                                       ||  类文件
-Deprecated                            || 被声明为deprecated的方法和字段                                                              ||  类、方法表、字段表
-RuntimeVisibleAnnotations             || jdk5新增属性，为动态注解提供支持                                                             ||  类、方法表、字段表
-RuntimeInvisibleAnnotations           || 同上相反                                                                                  ||   类、方法表、字段表
-RuntimeVisibleParameterAnnotations    || 类似于RuntimeVisibleAnnotations，作用于方法                                                 ||  方法表
-RuntimeInvisibleParameterAnnotations  || 同上相反                                                                                   ||  方法表
-RuntimeVisibleTypeAnnotations         || jdk8新增属性，用于指明哪些类是运行时（即反射调用）可见的                                         ||  类、方法表、字段表
-RuntimeInvisibleTypeAnnotations       || 同上相反                                                                                   ||  类、方法表、字段表
-AnnotationDefault                     || jdk5新增属性，用于记录注解类元素的默认值                                                       ||  方法表
-BootstrapMethods                      || jdk7新增属性，用于保存invokedynamic指令引用的引导方法限定符                                     ||  类文件
-MethodParameters                      || jdk8新增属性，编译时加上-parameters参数可以将方法名称编译进Class文件中，并可运行时获取             ||  方法表
-Module                                || jdk9新增属性，用于记录一个Module的名称以及相关信息（requires、exports、opens、uses、provides）   ||  类文件
-ModulePackages                        || jdk9新增属性，用于记录一个模块中所有被exports或者opens的包                                      ||  类文件
-ModuleMainClass                       || jdk9新增属性，用于指定一个模块的主类                                                           ||  类文件
-NestHost                              || jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部类通过该属性得知自己的宿主类                 ||  类文件
-NestMembers                           || jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部宿主类通过该属性得知自己有哪些内部类          ||  类文件<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs ruby">属性名                                      含义                                                                                     使用位置<br>ConstantValue                         <span class="hljs-params">||</span> 由final关键字定义的常量值                                                                  <span class="hljs-params">||</span>   字段表<br>Code                                  <span class="hljs-params">||</span> java代码编译成的字节码指令                                                                  <span class="hljs-params">||</span>  方法表<br>StackMapTable                         <span class="hljs-params">||</span> jdk6新增属性，验证局部变量和操作数栈类型是否匹配                                               <span class="hljs-params">||</span>  Code属性<br>Exceptions                            <span class="hljs-params">||</span> 方法抛出的异常列表                                                                         <span class="hljs-params">||</span>  方法表<br>InnerClasses                          <span class="hljs-params">||</span> 内部类列表                                                                                <span class="hljs-params">||</span>  类文件<br>EnclosingMethod                       <span class="hljs-params">||</span> 只有局部类和匿名类才拥有该属性，标志这个类所在的外围方法                                         <span class="hljs-params">||</span>  类文件<br>Synthetic                             <span class="hljs-params">||</span> 标识方法或字段为编译器自动生成的                                                             <span class="hljs-params">||</span>  类、方法表、字段表<br>Signature                             <span class="hljs-params">||</span> jdk5新增属性，用于支持泛型的类、方法、字段的签名                                               <span class="hljs-params">||</span>   类、方法表、字段表<br>SourceFile                            <span class="hljs-params">||</span> 记录源文件名称                                                                             <span class="hljs-params">||</span>   类文件<br>SourceDebugExtension                  <span class="hljs-params">||</span> jdk5新增属性，存储额外的调试信息                                                             <span class="hljs-params">||</span>   类文件	<br>LineNumberTable                       <span class="hljs-params">||</span> java源码行号与字节码指令的对应关系                                                           <span class="hljs-params">||</span>   Code属性<br>LocalVariableTable                    <span class="hljs-params">||</span> 方法的局部变量描述                                                                          <span class="hljs-params">||</span>  Code属性<br>LocalVariableTypeTable                <span class="hljs-params">||</span> jdk5新增属性，使用特征签名代替描述符，为支持泛型添加的属性                                       <span class="hljs-params">||</span>  类文件<br>Deprecated                            <span class="hljs-params">||</span> 被声明为deprecated的方法和字段                                                              <span class="hljs-params">||</span>  类、方法表、字段表<br>RuntimeVisibleAnnotations             <span class="hljs-params">||</span> jdk5新增属性，为动态注解提供支持                                                             <span class="hljs-params">||</span>  类、方法表、字段表<br>RuntimeInvisibleAnnotations           <span class="hljs-params">||</span> 同上相反                                                                                  <span class="hljs-params">||</span>   类、方法表、字段表<br>RuntimeVisibleParameterAnnotations    <span class="hljs-params">||</span> 类似于RuntimeVisibleAnnotations，作用于方法                                                 <span class="hljs-params">||</span>  方法表<br>RuntimeInvisibleParameterAnnotations  <span class="hljs-params">||</span> 同上相反                                                                                   <span class="hljs-params">||</span>  方法表<br>RuntimeVisibleTypeAnnotations         <span class="hljs-params">||</span> jdk8新增属性，用于指明哪些类是运行时（即反射调用）可见的                                         <span class="hljs-params">||</span>  类、方法表、字段表<br>RuntimeInvisibleTypeAnnotations       <span class="hljs-params">||</span> 同上相反                                                                                   <span class="hljs-params">||</span>  类、方法表、字段表<br>AnnotationDefault                     <span class="hljs-params">||</span> jdk5新增属性，用于记录注解类元素的默认值                                                       <span class="hljs-params">||</span>  方法表<br>BootstrapMethods                      <span class="hljs-params">||</span> jdk7新增属性，用于保存invokedynamic指令引用的引导方法限定符                                     <span class="hljs-params">||</span>  类文件<br>MethodParameters                      <span class="hljs-params">||</span> jdk8新增属性，编译时加上-parameters参数可以将方法名称编译进Class文件中，并可运行时获取             <span class="hljs-params">||</span>  方法表<br>Module                                <span class="hljs-params">||</span> jdk9新增属性，用于记录一个Module的名称以及相关信息（requires、exports、opens、uses、provides）   <span class="hljs-params">||</span>  类文件<br>ModulePackages                        <span class="hljs-params">||</span> jdk9新增属性，用于记录一个模块中所有被exports或者opens的包                                      <span class="hljs-params">||</span>  类文件<br>ModuleMainClass                       <span class="hljs-params">||</span> jdk9新增属性，用于指定一个模块的主类                                                           <span class="hljs-params">||</span>  类文件<br>NestHost                              <span class="hljs-params">||</span> jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部类通过该属性得知自己的宿主类                 <span class="hljs-params">||</span>  类文件<br>NestMembers                           <span class="hljs-params">||</span> jdk11新增属性，用于支持嵌套类的反射和访问控制的API，内部宿主类通过该属性得知自己有哪些内部类          <span class="hljs-params">||</span>  类文件<br></code></pre></td></tr></table></figure>
 
 
 
@@ -784,35 +704,12 @@ NestMembers                           || jdk11新增属性，用于支持嵌套�
 <p>&emsp;目前Oracle实现的javac编译器的实现方式是：如果变量同时使用final和static修饰（java语法上的常量）且类型为基本类型或者String类型，则使用ConstantValue属性赋值。否则会在<code>&lt;cinit()&gt;</code>中赋值。</p>
 <p>&emsp;《java虚拟机规范》中没有强制要求final修饰的变量必须设置ACC_FINAL标志，只要求具有ConstantValue属性的字段必须设置ACC_STATIC标志。final关键字的要求是javac编译器自己加入的。</p>
 <p>&emsp;ConstantValue的结构如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">ConstantValue_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 constantvalue_index;     &#x2F;&#x2F; 对常量池中字面量常量的引用。
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">ConstantValue_attribute</span> <span class="hljs-string">&#123;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">attribute_name_index;</span><br>    <span class="hljs-attr">u4</span> <span class="hljs-string">attribute_length;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">constantvalue_index;     // 对常量池中字面量常量的引用。</span><br><span class="hljs-attr">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <p>&emsp;上述提到被final和static修饰的基本类型以及String类型的变量，才拥有ConstantValue属性，因此constantvalue_index指向的字面量常量只能是以下几种：</p>
-<pre class="line-numbers language-none"><code class="language-none">CONSTANT_Integer(int, short, char, byte, boolean)
-CONSTANT_Float（float）	
-CONSTANT_Long（long）
-CONSTANT_Double（double）
-CONSTANT_String（String）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arduino">CONSTANT_Integer(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">short</span>, <span class="hljs-keyword">char</span>, <span class="hljs-keyword">byte</span>, <span class="hljs-keyword">boolean</span>)<br>CONSTANT_Float（<span class="hljs-keyword">float</span>）	<br>CONSTANT_Long（<span class="hljs-keyword">long</span>）<br>CONSTANT_Double（<span class="hljs-keyword">double</span>）<br>CONSTANT_String（<span class="hljs-keyword">String</span>）<br></code></pre></td></tr></table></figure>
 
-<h3 id="7-2-Code属性"><a href="#7-2-Code属性" class="headerlink" title="7.2 Code属性"></a>7.2 Code属性</h3><pre class="line-numbers language-none"><code class="language-none">Code_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 max_stack;
-    u2 max_locals;
-    u4 code_length;
-    u1 code[code_length];
-    u2 exception_table_length;
-    &#123;   u2 start_pc;
-        u2 end_pc;
-        u2 handler_pc;
-        u2 catch_type;
-    &#125; exception_table[exception_table_length];
-    u2 attributes_count;
-    attribute_info attributes[attributes_count];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="7-2-Code属性"><a href="#7-2-Code属性" class="headerlink" title="7.2 Code属性"></a>7.2 Code属性</h3><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs abnf">Code_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br>    u2 max_stack<span class="hljs-comment">;</span><br>    u2 max_locals<span class="hljs-comment">;</span><br>    u4 code_length<span class="hljs-comment">;</span><br>    u1 code[code_length]<span class="hljs-comment">;</span><br>    u2 exception_table_length<span class="hljs-comment">;</span><br>    &#123;   u2 start_pc<span class="hljs-comment">;</span><br>        u2 end_pc<span class="hljs-comment">;</span><br>        u2 handler_pc<span class="hljs-comment">;</span><br>        u2 catch_type<span class="hljs-comment">;</span><br>    &#125; exception_table[exception_table_length]<span class="hljs-comment">;</span><br>    u2 attributes_count<span class="hljs-comment">;</span><br>    attribute_info attributes[attributes_count]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;从上面Code属性结构可以看到如下信息</p>
 <ul>
@@ -829,259 +726,57 @@ CONSTANT_String（String）<span aria-hidden="true" class="line-numbers-rows"><s
 </ul>
 <p>&emsp;Code属性是Class文件中最重要的属性，如果把java程序中的信息分为代码（Code，方法体中的代码）和元数据（类、字段、方法定义等），那么在整个class文件中，Code属性用于描述代码，其他所有数据都用于描述元数据。</p>
 <p>&emsp;继续前面的例子分析。继续分析add()的Code部分，attribute_name_index<code>0x000A</code>=10表示指向常量池#10，查常量池得#10为<code>Code</code>，表示这是Code代码，后面进入具体的代码结构。紧接着attribute_length<code>0x00000031</code>=49表示代码长度为49。再后max_stack<code>0x0002</code>=2表示add方法操作数栈最大深度为2，再后面max_locals<code>0x0001</code>=1表示局部变量表所需存储空间为1个槽。再后面code_length<code>0x00000007</code>=7表示字节码长度为7，即7个指令。接下来具体的7个字节码指令和气代表的含义分别为</p>
-<pre class="line-numbers language-none"><code class="language-none">0x2A    aload_0       将第一个引用类型本地变量推送至栈顶，也就是加载num
-0xB4    getfield      获取指定类的实例域，并将其值压入栈顶，将num入栈
-0x00    nop           什么都不做
-0x02    iconst_m1     将int型-1推送至栈顶，这是啥？num的默认值吗？
-0x04    iconst_1      将int型1推送至栈顶
-0x60    iadd          将栈顶两int型数值相加并将结果压入栈顶，num+1
-0xAC    ireturn       从当前方法返回int，return<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-number">0x2A</span>    aload_0       将第一个引用类型本地变量推送至栈顶，也就是加载num<br><span class="hljs-number">0xB4</span>    getfield      获取指定类的实例域，并将其值压入栈顶，将num入栈<br><span class="hljs-number">0x00</span>    nop           什么都不做<br><span class="hljs-number">0x02</span>    iconst_m1     将<span class="hljs-built_in">int</span>型<span class="hljs-number">-1</span>推送至栈顶，这是啥？num的默认值吗？<br><span class="hljs-number">0x04</span>    iconst_1      将<span class="hljs-built_in">int</span>型<span class="hljs-number">1</span>推送至栈顶<br><span class="hljs-number">0x60</span>    iadd          将栈顶两<span class="hljs-built_in">int</span>型数值相加并将结果压入栈顶，num+<span class="hljs-number">1</span><br><span class="hljs-number">0xAC</span>    ireturn       从当前方法返回<span class="hljs-built_in">int</span>，<span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
 <p>&emsp;在之后是关于异常表的信息exception_table_length<code>0x0000</code>表示没有异常。在之后是attributes_count<code>0x0002</code>表示属性长度为2，之后</p>
 <p>&emsp;使用javap -v ClassTest.class反汇编，可以得到如下关于add的信息。args_size=1是this所占的Slot。</p>
-<pre class="line-numbers language-none"><code class="language-none">public int add();
-    descriptor: ()I
-    flags: ACC_PUBLIC
-    Code:
-      stack&#x3D;2, locals&#x3D;1, args_size&#x3D;1
-         0: aload_0
-         1: getfield      #2                  &#x2F;&#x2F; Field num:I
-         4: iconst_1
-         5: iadd
-         6: ireturn
-      LineNumberTable:
-        line 15: 0
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       7     0  this   Lcom&#x2F;hk7&#x2F;memory&#x2F;ClassTest;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> add();<br>    descriptor: ()I<br>    flags: ACC_PUBLIC<br>    Code:<br>      stack=<span class="hljs-number">2</span>, locals=<span class="hljs-number">1</span>, args_size=<span class="hljs-number">1</span><br>         <span class="hljs-number">0</span>: aload_0<br>         <span class="hljs-number">1</span>: getfield      #<span class="hljs-number">2</span>                  <span class="hljs-comment">// Field num:I</span><br>         <span class="hljs-number">4</span>: iconst_1<br>         <span class="hljs-number">5</span>: iadd<br>         <span class="hljs-number">6</span>: ireturn<br>      LineNumberTable:<br>        line <span class="hljs-number">15</span>: <span class="hljs-number">0</span><br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            <span class="hljs-number">0</span>       <span class="hljs-number">7</span>     <span class="hljs-number">0</span>  <span class="hljs-keyword">this</span>   Lcom/hk7/memory/ClassTest;<br></code></pre></td></tr></table></figure>
 
 <h3 id="7-3-StackMapTable属性"><a href="#7-3-StackMapTable属性" class="headerlink" title="7.3 StackMapTable属性"></a>7.3 StackMapTable属性</h3><p>&emsp;StackMapTable属性是jdk6新增的属性，它很复杂，位于Code属性的属性表中。它会在虚拟机类加载的字节码验证阶段被类型检查器（Type Checker）使用，其目的在于代替以前比较消耗性能的基于数据流分析的类型推导验证器（加快类加载的字节码验证阶段）。</p>
 <p>&emsp;StackMapTable属性中包含零到多个栈映射帧（Stack Map Frame），每个栈帧代表一个字节码偏移量，用于表示执行到该字节码时局部变量表和操作数栈的验证类型。类型检查器会检查StackMapTable来确定一段字节码指令是否符合逻辑约束。StackMapTable的结构如下所示：</p>
-<pre class="line-numbers language-none"><code class="language-none">StackMapTable_attribute &#123;
-    u2              attribute_name_index;
-    u4              attribute_length;
-    u2              number_of_entries;
-    stack_map_frame entries[number_of_entries];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">StackMapTable_attribute</span> &#123;<br>    <span class="hljs-attribute">u2</span>              attribute_name_index;<br>    <span class="hljs-attribute">u4</span>              attribute_length;<br>    <span class="hljs-attribute">u2</span>              number_of_entries;<br>    <span class="hljs-attribute">stack_map_frame</span> entries[number_of_entries];<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;规定版本号&gt;=50.0的class文件，Code属性必须带有StackMapTable属性，如果没有则表示默认带了一个number_of_entries=0的StackMapTable属性。一个方法的Code属性只有一个StackMapTable属性，否则抛出异常。</p>
 <p>&emsp;StackMapTable具体见栈帧的内部结构。</p>
 <h3 id="7-4-Exceptions属性"><a href="#7-4-Exceptions属性" class="headerlink" title="7.4 Exceptions属性"></a>7.4 Exceptions属性</h3><p>&emsp;Exceptions属性和Code属性平级，不同于Code属性中的异常表。Exceptions的作用主要是列举方法中可能抛出的受检异常（Checked Exceptions），也就是throws后面的异常。它的结构如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">Exceptions_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 number_of_exceptions;													&#x2F;&#x2F;受检异常数量
-    u2 exception_index_table[number_of_exceptions];   &#x2F;&#x2F;指向常量池中CONSTANT_Class_info型的索引，代表该异常类型
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">Exceptions_attribute</span> <span class="hljs-string">&#123;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">attribute_name_index;</span><br>    <span class="hljs-attr">u4</span> <span class="hljs-string">attribute_length;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">number_of_exceptions;													//受检异常数量</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">exception_index_table[number_of_exceptions];   //指向常量池中CONSTANT_Class_info型的索引，代表该异常类型</span><br><span class="hljs-attr">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="7-5-InnerClass属性"><a href="#7-5-InnerClass属性" class="headerlink" title="7.5 InnerClass属性"></a>7.5 InnerClass属性</h3><p>&emsp;InnerClass属性用于记录内部类和宿主类之间的关联。它的结构如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">InnerClasses_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 number_of_classes;							 &#x2F;&#x2F;需要记录的内部类信息个数
-		&#123;   u2 inner_class_info_index;     &#x2F;&#x2F;指向常量池中的CONSTANT_Class_info型索引
-        u2 outer_class_info_index;     &#x2F;&#x2F;指向常量池中的CONSTANT_Class_info型索引
-        u2 inner_name_index;					 &#x2F;&#x2F;指向常量池中的CONSTANT_Utf8_info型索引	
-        u2 inner_class_access_flags;
-    &#125; classes[number_of_classes];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs abnf">InnerClasses_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br>    u2 number_of_classes<span class="hljs-comment">;							 //需要记录的内部类信息个数</span><br>		&#123;   u2 inner_class_info_index<span class="hljs-comment">;     //指向常量池中的CONSTANT_Class_info型索引</span><br>        u2 outer_class_info_index<span class="hljs-comment">;     //指向常量池中的CONSTANT_Class_info型索引</span><br>        u2 inner_name_index<span class="hljs-comment">;					 //指向常量池中的CONSTANT_Utf8_info型索引	</span><br>        u2 inner_class_access_flags<span class="hljs-comment">;</span><br>    &#125; classes[number_of_classes]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;inner_class_access_flags是内部类的访问标志，取值范围如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">Flag Name				Value		Interpretation
-ACC_PUBLIC			0x0001	内部类是否为public
-ACC_PRIVATE			0x0002	private
-ACC_PROTECTED		0x0004	protected
-ACC_STATIC			0x0008	static
-ACC_FINAL				0x0010	final
-ACC_INTERFACE		0x0200	接口
-ACC_ABSTRACT		0x0400	abstract
-ACC_SYNTHETIC		0x1000	内部类是否自动生成（非用户代码生成）
-ACC_ANNOTATION	0x2000	注解
-ACC_ENUM				0x4000	枚举<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Flag</span> Name				Value		Interpretation<br><span class="hljs-attribute">ACC_PUBLIC</span>			<span class="hljs-number">0</span>x<span class="hljs-number">0001</span>	内部类是否为public<br><span class="hljs-attribute">ACC_PRIVATE</span>			<span class="hljs-number">0</span>x<span class="hljs-number">0002</span>	private<br><span class="hljs-attribute">ACC_PROTECTED</span>		<span class="hljs-number">0</span>x<span class="hljs-number">0004</span>	protected<br><span class="hljs-attribute">ACC_STATIC</span>			<span class="hljs-number">0</span>x<span class="hljs-number">0008</span>	static<br><span class="hljs-attribute">ACC_FINAL</span>				<span class="hljs-number">0</span>x<span class="hljs-number">0010</span>	final<br><span class="hljs-attribute">ACC_INTERFACE</span>		<span class="hljs-number">0</span>x<span class="hljs-number">0200</span>	接口<br><span class="hljs-attribute">ACC_ABSTRACT</span>		<span class="hljs-number">0</span>x<span class="hljs-number">0400</span>	abstract<br><span class="hljs-attribute">ACC_SYNTHETIC</span>		<span class="hljs-number">0</span>x<span class="hljs-number">1000</span>	内部类是否自动生成（非用户代码生成）<br><span class="hljs-attribute">ACC_ANNOTATION</span>	<span class="hljs-number">0</span>x<span class="hljs-number">2000</span>	注解<br><span class="hljs-attribute">ACC_ENUM</span>				<span class="hljs-number">0</span>x<span class="hljs-number">4000</span>	枚举<br></code></pre></td></tr></table></figure>
 
 <h3 id="7-6-EnclosingMethod属性"><a href="#7-6-EnclosingMethod属性" class="headerlink" title="7.6 EnclosingMethod属性"></a>7.6 EnclosingMethod属性</h3><p>&emsp;EnclosingMethod属性标识当前匿名内所在的外部方法。结构如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">EnclosingMethod_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 class_index;					&#x2F;&#x2F;指向常量池中的CONSTANT_Class_info型索引
-    u2 method_index;				&#x2F;&#x2F;指向常量池中的CONSTANT_NameAndType_info型索引
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">EnclosingMethod_attribute</span> <span class="hljs-string">&#123;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">attribute_name_index;</span><br>    <span class="hljs-attr">u4</span> <span class="hljs-string">attribute_length;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">class_index;					//指向常量池中的CONSTANT_Class_info型索引</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">method_index;				//指向常量池中的CONSTANT_NameAndType_info型索引</span><br><span class="hljs-attr">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <p>&emsp;&emsp;如果不是内部类，则method_index必须为0。</p>
 <h3 id="7-7-Synthetic和Deprecated属性"><a href="#7-7-Synthetic和Deprecated属性" class="headerlink" title="7.7 Synthetic和Deprecated属性"></a>7.7 Synthetic和Deprecated属性</h3><p>&emsp;Synthetic标识方法或字段为编译器自动生成（即不是源码定义的）的。Deprecated标志方法是否过时，只有是和否，没有值。</p>
-<pre class="line-numbers language-none"><code class="language-none">Synthetic_attribute &#123;
-    u2 attribute_name_index;   &#x2F;&#x2F;指向常量池中的CONSTANT_Utf8_info型索引
-    u4 attribute_length;			 &#x2F;&#x2F;值固定为：0x00000000
-&#125;
-Deprecated同上<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">Synthetic_attribute &#123;<br>    u2 attribute_name_index;   <span class="hljs-regexp">//</span>指向常量池中的CONSTANT_Utf8_info型索引<br>    u4 attribute_length;			 <span class="hljs-regexp">//</span>值固定为：<span class="hljs-number">0</span>x00000000<br>&#125;<br>Deprecated同上<br></code></pre></td></tr></table></figure>
 
 <h3 id="7-8-Signature"><a href="#7-8-Signature" class="headerlink" title="7.8 Signature"></a>7.8 Signature</h3><p>&emsp;<strong>由于Java的泛型采用擦出法实现，在为了避免类型信息被擦除后导致签名混乱，需要这个属性记录泛型中的相关信息。</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">Signature_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 signature_index;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">Signature_attribute</span> &#123;<br>    <span class="hljs-attribute">u2</span> attribute_name_index;<br>    <span class="hljs-attribute">u4</span> attribute_length;<br>    <span class="hljs-attribute">u2</span> signature_index;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="7-9-SourceFile和SourceDebugExtension属性"><a href="#7-9-SourceFile和SourceDebugExtension属性" class="headerlink" title="7.9 SourceFile和SourceDebugExtension属性"></a>7.9 SourceFile和SourceDebugExtension属性</h3><p>&emsp;SourceFile记录生成这个class文件的源码文件名称。SourceDebugExtension存储额外的代码调试信息。</p>
-<pre class="line-numbers language-none"><code class="language-none">SourceFile_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 sourcefile_index;    &#x2F;&#x2F;CONSTANT_Utf8_info
-&#125;
-
-SourceDebugExtension_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u1 debug_extension[attribute_length];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">SourceFile_attribute</span> <span class="hljs-string">&#123;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">attribute_name_index;</span><br>    <span class="hljs-attr">u4</span> <span class="hljs-string">attribute_length;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">sourcefile_index;    //CONSTANT_Utf8_info</span><br><span class="hljs-attr">&#125;</span><br><br><span class="hljs-attr">SourceDebugExtension_attribute</span> <span class="hljs-string">&#123;</span><br>    <span class="hljs-attr">u2</span> <span class="hljs-string">attribute_name_index;</span><br>    <span class="hljs-attr">u4</span> <span class="hljs-string">attribute_length;</span><br>    <span class="hljs-attr">u1</span> <span class="hljs-string">debug_extension[attribute_length];</span><br><span class="hljs-attr">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="7-10-LineNumberTable属性"><a href="#7-10-LineNumberTable属性" class="headerlink" title="7.10 LineNumberTable属性"></a>7.10 LineNumberTable属性</h3><p>&emsp;描述java源码行号和字节码行号之间的对应关系。非运行必须属性，可以使用<code>javc -g: none XXX.java</code>或者<code>javac -g: lines XXX.java</code>来取消，这样生成的class文件不含LineNumberTable属性，报错时也不会显示行号信息。</p>
-<pre class="line-numbers language-none"><code class="language-none">LineNumberTable_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 line_number_table_length;
-    &#123;   u2 start_pc;					&#x2F;&#x2F;字节码行号
-        u2 line_number;	      &#x2F;&#x2F;源码行号
-    &#125; line_number_table[line_number_table_length];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs abnf">LineNumberTable_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br>    u2 line_number_table_length<span class="hljs-comment">;</span><br>    &#123;   u2 start_pc<span class="hljs-comment">;					//字节码行号</span><br>        u2 line_number<span class="hljs-comment">;	      //源码行号</span><br>    &#125; line_number_table[line_number_table_length]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="7-11-LocalVariableTable和LocalVariableTypeTable属性"><a href="#7-11-LocalVariableTable和LocalVariableTypeTable属性" class="headerlink" title="7.11 LocalVariableTable和LocalVariableTypeTable属性"></a>7.11 LocalVariableTable和LocalVariableTypeTable属性</h3><p>&emsp;LocalVariableTable用于描述栈帧中局部变量表的变量与java源码中定义的变量之间的关系，不是运行时必须属性。编译时使用<code>javac -g: none XXX.java</code>或者<code>javac -g: vars XXX.java</code>来忽略，这样会导致所有的参数名称丢失，IDE会使用args0、args1来代替原有参数名。不影响程序运行。其结构如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">LocalVariableTable_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 local_variable_table_length;
-    &#123;   u2 start_pc;							&#x2F;&#x2F;局部变量生命周期开始的字节码偏移量
-        u2 length;                &#x2F;&#x2F;局部变量生命周期开始范围长度
-        u2 name_index;					  &#x2F;&#x2F;局部变量名称，指向CONSTANT_Utf8_info
-        u2 descriptor_index;      &#x2F;&#x2F;局部变量描述符
-        u2 index;									&#x2F;&#x2F;局部变量在栈帧的局部变量表中变量槽的位置
-    &#125; local_variable_table[local_variable_table_length];
-&#125;
-
-LocalVariableTypeTable_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 local_variable_type_table_length;
-    &#123;   u2 start_pc;
-        u2 length;
-        u2 name_index;
-        u2 signature_index;   &#x2F;&#x2F;记录泛型
-        u2 index;
-    &#125; local_variable_type_table[local_variable_type_table_length];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs abnf">LocalVariableTable_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br>    u2 local_variable_table_length<span class="hljs-comment">;</span><br>    &#123;   u2 start_pc<span class="hljs-comment">;							//局部变量生命周期开始的字节码偏移量</span><br>        u2 length<span class="hljs-comment">;                //局部变量生命周期开始范围长度</span><br>        u2 name_index<span class="hljs-comment">;					  //局部变量名称，指向CONSTANT_Utf8_info</span><br>        u2 descriptor_index<span class="hljs-comment">;      //局部变量描述符</span><br>        u2 index<span class="hljs-comment">;									//局部变量在栈帧的局部变量表中变量槽的位置</span><br>    &#125; local_variable_table[local_variable_table_length]<span class="hljs-comment">;</span><br>&#125;<br><br>LocalVariableTypeTable_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br>    u2 local_variable_type_table_length<span class="hljs-comment">;</span><br>    &#123;   u2 start_pc<span class="hljs-comment">;</span><br>        u2 length<span class="hljs-comment">;</span><br>        u2 name_index<span class="hljs-comment">;</span><br>        u2 signature_index<span class="hljs-comment">;   //记录泛型</span><br>        u2 index<span class="hljs-comment">;</span><br>    &#125; local_variable_type_table[local_variable_type_table_length]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;LocalVariableTypeTable是jdk5引入的，作用同LocalVariableTable，记录泛型。</p>
 <h3 id="7-12运行时注解相关属性"><a href="#7-12运行时注解相关属性" class="headerlink" title="7.12运行时注解相关属性"></a>7.12运行时注解相关属性</h3><p>&emsp;JDK5引入了注解，Class文件也增加注解相关的属性。RuntimeVisibleAnnotations、RuntimeInvisibleAnnotations、RuntimeVisibleParameterAnnotations、RuntimeInvisibleParameterAnnotations、RuntimeVisibleTypeAnnotations、RuntimeInvisibleTypeAnnotations这6个注解功能类似。</p>
-<pre class="line-numbers language-none"><code class="language-none">RuntimeVisibleAnnotations_attribute &#123;
-    u2         attribute_name_index;
-    u4         attribute_length;
-    u2         num_annotations;
-    annotation annotations[num_annotations];
-&#125;
-
-annotation &#123;
-    u2 type_index;																	&#x2F;&#x2F; 指向CONSTAN_Utf8_info的索引，描述注解的字段描述符
-    u2 num_element_value_pairs;											&#x2F;&#x2F; 注解数量
-    &#123;   u2            element_name_index;						&#x2F;&#x2F; 该注解的参数
-        element_value value;                        &#x2F;&#x2F; 该注解的值
-    &#125; element_value_pairs[num_element_value_pairs];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs crystal">RuntimeVisibleAnnotations_attribute &#123;<br>    u2         attribute_name_index;<br>    u4         attribute_length;<br>    u2         num_annotations;<br>    <span class="hljs-keyword">annotation</span> <span class="hljs-title">annotations</span>[<span class="hljs-title">num_annotations</span>];<br>&#125;<br><br><span class="hljs-keyword">annotation</span> &#123;<br>    u2 type_index;																	<span class="hljs-regexp">//</span> 指向CONSTAN_Utf8_info的索引，描述注解的字段描述符<br>    u2 num_element_value_pairs;											<span class="hljs-regexp">//</span> 注解数量<br>    &#123;   u2            element_name_index;						<span class="hljs-regexp">//</span> 该注解的参数<br>        element_value value;                        <span class="hljs-regexp">//</span> 该注解的值<br>    &#125; element_value_pairs[num_element_value_pairs];<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>&emsp;RuntimeVisibleAnnotations记录了类、字段或方法运行时的可见注解，当反射获取注解时，就是通过这个属性获取到的。其他5种注解的结构和它一致，功能类似。</p>
-<pre class="line-numbers language-none"><code class="language-none">
-RuntimeInvisibleAnnotations_attribute &#123;
-    u2         attribute_name_index;
-    u4         attribute_length;
-    u2         num_annotations;
-    annotation annotations[num_annotations];
-&#125;
-
-RuntimeVisibleParameterAnnotations_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u1 num_parameters;
-    &#123;   u2         num_annotations;
-        annotation annotations[num_annotations];
-    &#125; parameter_annotations[num_parameters];
-&#125;
-
-RuntimeInvisibleParameterAnnotations_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u1 num_parameters;
-    &#123;   u2         num_annotations;
-        annotation annotations[num_annotations];
-    &#125; parameter_annotations[num_parameters];
-&#125;
-
-RuntimeVisibleTypeAnnotations_attribute &#123;
-    u2              attribute_name_index;
-    u4              attribute_length;
-    u2              num_annotations;
-    type_annotation annotations[num_annotations];
-&#125;
-
-RuntimeInvisibleTypeAnnotations_attribute &#123;
-    u2              attribute_name_index;
-    u4              attribute_length;
-    u2              num_annotations;
-    type_annotation annotations[num_annotations];
-&#125;
-
-AnnotationDefault_attribute &#123;
-    u2            attribute_name_index;
-    u4            attribute_length;
-    element_value default_value;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><br>RuntimeInvisibleAnnotations_attribute &#123;<br>    u2         attribute_name_index;<br>    u4         attribute_length;<br>    u2         num_annotations;<br>    <span class="hljs-keyword">annotation</span> <span class="hljs-title">annotations</span>[<span class="hljs-title">num_annotations</span>];<br>&#125;<br><br>RuntimeVisibleParameterAnnotations_attribute &#123;<br>    u2 attribute_name_index;<br>    u4 attribute_length;<br>    u1 num_parameters;<br>    &#123;   u2         num_annotations;<br>        <span class="hljs-keyword">annotation</span> <span class="hljs-title">annotations</span>[<span class="hljs-title">num_annotations</span>];<br>    &#125; parameter_annotations[num_parameters];<br>&#125;<br><br>RuntimeInvisibleParameterAnnotations_attribute &#123;<br>    u2 attribute_name_index;<br>    u4 attribute_length;<br>    u1 num_parameters;<br>    &#123;   u2         num_annotations;<br>        <span class="hljs-keyword">annotation</span> <span class="hljs-title">annotations</span>[<span class="hljs-title">num_annotations</span>];<br>    &#125; parameter_annotations[num_parameters];<br>&#125;<br><br>RuntimeVisibleTypeAnnotations_attribute &#123;<br>    u2              attribute_name_index;<br>    u4              attribute_length;<br>    u2              num_annotations;<br>    type_annotation annotations[num_annotations];<br>&#125;<br><br>RuntimeInvisibleTypeAnnotations_attribute &#123;<br>    u2              attribute_name_index;<br>    u4              attribute_length;<br>    u2              num_annotations;<br>    type_annotation annotations[num_annotations];<br>&#125;<br><br>AnnotationDefault_attribute &#123;<br>    u2            attribute_name_index;<br>    u4            attribute_length;<br>    element_value default_value;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;AnnotationDefault记录注解中的默认值，也就是value参数。</p>
 <h3 id="7-13BootstrapMethods属性"><a href="#7-13BootstrapMethods属性" class="headerlink" title="7.13BootstrapMethods属性"></a>7.13BootstrapMethods属性</h3><p>&emsp;JDK7新增属性，用于保存invokeddynamic指令引用的引导方法限定类。如果类文件结构的常量池中出现过CONSTANT_InvokeDynamic_info常量，则类文件必须存在BoostrapMethod属性，最多一个。结构如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">BootstrapMethods_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-    u2 num_bootstrap_methods;
-    &#123;   u2 bootstrap_method_ref;												&#x2F;&#x2F;指向CONSTANT_MethodHandle_info类型常量
-        u2 num_bootstrap_arguments;                     
-        u2 bootstrap_arguments[num_bootstrap_arguments];&#x2F;&#x2F;有点类似链表，一个接一个
-    &#125; bootstrap_methods[num_bootstrap_methods];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs abnf">BootstrapMethods_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br>    u2 num_bootstrap_methods<span class="hljs-comment">;</span><br>    &#123;   u2 bootstrap_method_ref<span class="hljs-comment">;												//指向CONSTANT_MethodHandle_info类型常量</span><br>        u2 num_bootstrap_arguments<span class="hljs-comment">;                     </span><br>        u2 bootstrap_arguments[num_bootstrap_arguments]<span class="hljs-comment">;//有点类似链表，一个接一个</span><br>    &#125; bootstrap_methods[num_bootstrap_methods]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="7-14模块相关属性"><a href="#7-14模块相关属性" class="headerlink" title="7.14模块相关属性"></a>7.14模块相关属性</h3><p>&emsp;主要是是为了支持JDK9引入的模块系统，用得少不看了，详情查看官网。</p>
-<pre class="line-numbers language-none"><code class="language-none">Module_attribute &#123;
-    u2 attribute_name_index;
-    u4 attribute_length;
-
-    u2 module_name_index;
-    u2 module_flags;
-    u2 module_version_index;
-
-    u2 requires_count;
-    &#123;   u2 requires_index;
-        u2 requires_flags;
-        u2 requires_version_index;
-    &#125; requires[requires_count];
-
-    u2 exports_count;
-    &#123;   u2 exports_index;
-        u2 exports_flags;
-        u2 exports_to_count;
-        u2 exports_to_index[exports_to_count];
-    &#125; exports[exports_count];
-
-    u2 opens_count;
-    &#123;   u2 opens_index;
-        u2 opens_flags;
-        u2 opens_to_count;
-        u2 opens_to_index[opens_to_count];
-    &#125; opens[opens_count];
-
-    u2 uses_count;
-    u2 uses_index[uses_count];
-
-    u2 provides_count;
-    &#123;   u2 provides_index;
-        u2 provides_with_count;
-        u2 provides_with_index[provides_with_count];
-    &#125; provides[provides_count];
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs abnf">Module_attribute &#123;<br>    u2 attribute_name_index<span class="hljs-comment">;</span><br>    u4 attribute_length<span class="hljs-comment">;</span><br><br>    u2 module_name_index<span class="hljs-comment">;</span><br>    u2 module_flags<span class="hljs-comment">;</span><br>    u2 module_version_index<span class="hljs-comment">;</span><br><br>    u2 requires_count<span class="hljs-comment">;</span><br>    &#123;   u2 requires_index<span class="hljs-comment">;</span><br>        u2 requires_flags<span class="hljs-comment">;</span><br>        u2 requires_version_index<span class="hljs-comment">;</span><br>    &#125; requires[requires_count]<span class="hljs-comment">;</span><br><br>    u2 exports_count<span class="hljs-comment">;</span><br>    &#123;   u2 exports_index<span class="hljs-comment">;</span><br>        u2 exports_flags<span class="hljs-comment">;</span><br>        u2 exports_to_count<span class="hljs-comment">;</span><br>        u2 exports_to_index[exports_to_count]<span class="hljs-comment">;</span><br>    &#125; exports[exports_count]<span class="hljs-comment">;</span><br><br>    u2 opens_count<span class="hljs-comment">;</span><br>    &#123;   u2 opens_index<span class="hljs-comment">;</span><br>        u2 opens_flags<span class="hljs-comment">;</span><br>        u2 opens_to_count<span class="hljs-comment">;</span><br>        u2 opens_to_index[opens_to_count]<span class="hljs-comment">;</span><br>    &#125; opens[opens_count]<span class="hljs-comment">;</span><br><br>    u2 uses_count<span class="hljs-comment">;</span><br>    u2 uses_index[uses_count]<span class="hljs-comment">;</span><br><br>    u2 provides_count<span class="hljs-comment">;</span><br>    &#123;   u2 provides_index<span class="hljs-comment">;</span><br>        u2 provides_with_count<span class="hljs-comment">;</span><br>        u2 provides_with_index[provides_with_count]<span class="hljs-comment">;</span><br>    &#125; provides[provides_count]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 

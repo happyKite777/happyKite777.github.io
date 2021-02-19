@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      125
+      124
        分钟
     </span>
   
@@ -236,33 +236,10 @@
 </blockquote>
 <p>&emsp;为每一个对象配置一个计数器，当对象被其他地方引用时，计数器+1，引用失效时，计数器-1。当任何时刻计数器值为0时，说明对象不可能再被引用，该对象可以被回收。</p>
 <p>&emsp;这种方式原理简单、判定效率高，大多数情况下，是个很好的方式。但是主流的JVM没有选择它，因为这种算法需要考虑的额外情况很多，比如循环引用的问题。</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReferenceCounts</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token class-name">Object</span> instance <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> _1M <span class="token operator">=</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bigSize <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token function">testGc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">testGc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">ReferenceCounts</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReferenceCounts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">ReferenceCounts</span> b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReferenceCounts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        a<span class="token punctuation">.</span>instance <span class="token operator">=</span> b<span class="token punctuation">;</span>
-        b<span class="token punctuation">.</span>instance <span class="token operator">=</span> a<span class="token punctuation">;</span>
-
-        a <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-        b <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-        <span class="token comment">//此时发生回收</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">gc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ReferenceCounts</span> </span>&#123;<br>    <span class="hljs-keyword">public</span> Object instance = <span class="hljs-keyword">null</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> _1M = <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">byte</span>[] bigSize = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">2</span> * _1M];<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        testGc();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testGc</span><span class="hljs-params">()</span> </span>&#123;<br>        ReferenceCounts a = <span class="hljs-keyword">new</span> ReferenceCounts();<br>        ReferenceCounts b = <span class="hljs-keyword">new</span> ReferenceCounts();<br>        a.instance = b;<br>        b.instance = a;<br><br>        a = <span class="hljs-keyword">null</span>;<br>        b = <span class="hljs-keyword">null</span>;<br>        <span class="hljs-comment">//此时发生回收</span><br>        System.gc();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;执行<code>javac ReferenceCounts.java</code> <code>java -verbose:gc ReferenceCounts</code>可以看到内存从6767K-&gt;472K，并没有因为相互引用而不回收他们，说明jvm使用的并不是引用计数法。-XX:+PrintGCDetails可以看到更细节的内存变化。</p>
-<pre class="line-numbers language-none"><code class="language-none">[GC (System.gc()) [PSYoungGen: 6767K-&gt;464K(38400K)] 6767K-&gt;472K(125952K), 0.0019002 secs] [Times: user&#x3D;0.00 sys&#x3D;0.00, real&#x3D;0.00 secs] 
-[Full GC (System.gc()) [PSYoungGen: 464K-&gt;0K(38400K)] [ParOldGen: 8K-&gt;396K(87552K)] 472K-&gt;396K(125952K), <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scheme">[<span class="hljs-name">GC</span> (<span class="hljs-name">System.gc</span>()) [<span class="hljs-name">PSYoungGen:</span> <span class="hljs-number">6767</span>K-&gt;464K(<span class="hljs-name">38400K</span>)] <span class="hljs-number">6767</span>K-&gt;472K(<span class="hljs-name">125952K</span>), <span class="hljs-number">0.0019002</span> secs] [<span class="hljs-name">Times:</span> user=0.00 sys=0.00, real=0.00 secs] <br>[<span class="hljs-name">Full</span> GC (<span class="hljs-name">System.gc</span>()) [<span class="hljs-name">PSYoungGen:</span> <span class="hljs-number">464</span>K-&gt;0K(<span class="hljs-name">38400K</span>)] [<span class="hljs-name">ParOldGen:</span> <span class="hljs-number">8</span>K-&gt;396K(<span class="hljs-name">87552K</span>)] <span class="hljs-number">472</span>K-&gt;396K(<span class="hljs-name">125952K</span>), <br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <p>可达性分析</p>
@@ -295,57 +272,7 @@
 </blockquote>
 <p><img src="https://img-blog.csdnimg.cn/20201223192608994.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA2MzIwNzg=,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="对象的二次标记"></p>
 <p>&emsp;如上图所示，对象第一次被判定会已死，并不会直接进入被GC，而是会做一次筛选，是否需要执行final()方法，如果对象已经执行过了，或者没有实现finalize()方法，则会进入“被回收”集合，下次gc时候被清理。如果实现了finalize()方法，则会进行调用，在finalize（）中如果重新建立连接，则会被移除“被回收”集合。否则会被GC回收掉。如下这个例子：</p>
-<pre class="line-numbers language-none"><code class="language-none">&#x2F;**
- * 對象的自我拯救
- * @author Administrator
- *
- *&#x2F;
-public class FinalizeEscapeGC &#123;
-	public static FinalizeEscapeGC SAVE_HOOK&#x3D;null;
-	
-	&#x2F;&#x2F;判斷是否還活著
-	public void isAlive()&#123;
-		System.out.println(&quot;我還活著&quot;);
-	&#125;
-	
-	@Override
-	protected void finalize() throws Throwable &#123;
-		super.finalize();
-		System.out.println(&quot;finalize方法执行了&quot;);
-		FinalizeEscapeGC.SAVE_HOOK&#x3D;this;&#x2F;&#x2F;与对象简历联系，自救
-	&#125;
-	
-	public static void main(String[] args) throws InterruptedException &#123;
-		SAVE_HOOK&#x3D;new FinalizeEscapeGC();
-		
-		&#x2F;&#x2F;第一次自救
-		SAVE_HOOK&#x3D;null;
-		System.gc();
-		&#x2F;&#x2F;因为finalize的优先级低，先等一下
-		Thread.sleep(500);
-		if(SAVE_HOOK!&#x3D;null)&#123;
-			SAVE_HOOK.isAlive();
-		&#125;else&#123;
-			System.out.println(&quot;第一次自救失败&quot;);
-		&#125;
-				
-		
-		&#x2F;&#x2F;第二次自救  
-		&#x2F;&#x2F;因为每个对象的finalize()方法只会被系统自动调用一次，所以第一次调用后，
-		&#x2F;&#x2F;第二次自救时不会再调用finalize(),自然也就不会与其他的对象产生联系，从而自救失败
-		SAVE_HOOK&#x3D;null;
-		System.gc();
-		&#x2F;&#x2F;因为finalize的优先级低，先等一下
-		Thread.sleep(500);
-		if(SAVE_HOOK!&#x3D;null)&#123;
-			SAVE_HOOK.isAlive();
-		&#125;else&#123;
-			System.out.println(&quot;第二次自救失败&quot;);
-		&#125;		
-	&#125;
-	&#x2F;&#x2F;finalize()虽然能够实现对象自救，但是不要轻易使用，因为他的运行代价太大，不确定性高，无法确定各个对象的调用顺序。
-	&#x2F;&#x2F;而且finalize()能做的事，try-finally都能做，而且做得更好
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 對象的自我拯救</span><br><span class="hljs-comment"> * @author Administrator</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">FinalizeEscapeGC</span> &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> FinalizeEscapeGC SAVE_HOOK=<span class="hljs-literal">null</span>;<br>	<br>	<span class="hljs-comment">//判斷是否還活著</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">isAlive</span>(<span class="hljs-params"></span>)</span>&#123;<br>		System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;我還活著&quot;</span>);<br>	&#125;<br>	<br>	@Override<br>	<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">finalize</span>(<span class="hljs-params"></span>) throws Throwable</span> &#123;<br>		super.finalize();<br>		System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;finalize方法执行了&quot;</span>);<br>		FinalizeEscapeGC.SAVE_HOOK=<span class="hljs-keyword">this</span>;<span class="hljs-comment">//与对象简历联系，自救</span><br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>) throws InterruptedException</span> &#123;<br>		SAVE_HOOK=<span class="hljs-keyword">new</span> FinalizeEscapeGC();<br>		<br>		<span class="hljs-comment">//第一次自救</span><br>		SAVE_HOOK=<span class="hljs-literal">null</span>;<br>		System.gc();<br>		<span class="hljs-comment">//因为finalize的优先级低，先等一下</span><br>		Thread.sleep(<span class="hljs-number">500</span>);<br>		<span class="hljs-keyword">if</span>(SAVE_HOOK!=<span class="hljs-literal">null</span>)&#123;<br>			SAVE_HOOK.isAlive();<br>		&#125;<span class="hljs-keyword">else</span>&#123;<br>			System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;第一次自救失败&quot;</span>);<br>		&#125;<br>				<br>		<br>		<span class="hljs-comment">//第二次自救  </span><br>		<span class="hljs-comment">//因为每个对象的finalize()方法只会被系统自动调用一次，所以第一次调用后，</span><br>		<span class="hljs-comment">//第二次自救时不会再调用finalize(),自然也就不会与其他的对象产生联系，从而自救失败</span><br>		SAVE_HOOK=<span class="hljs-literal">null</span>;<br>		System.gc();<br>		<span class="hljs-comment">//因为finalize的优先级低，先等一下</span><br>		Thread.sleep(<span class="hljs-number">500</span>);<br>		<span class="hljs-keyword">if</span>(SAVE_HOOK!=<span class="hljs-literal">null</span>)&#123;<br>			SAVE_HOOK.isAlive();<br>		&#125;<span class="hljs-keyword">else</span>&#123;<br>			System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;第二次自救失败&quot;</span>);<br>		&#125;		<br>	&#125;<br>	<span class="hljs-comment">//finalize()虽然能够实现对象自救，但是不要轻易使用，因为他的运行代价太大，不确定性高，无法确定各个对象的调用顺序。</span><br>	<span class="hljs-comment">//而且finalize()能做的事，try-finally都能做，而且做得更好</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -464,7 +391,7 @@ public class FinalizeEscapeGC &#123;
 <li>卡精度：每个记录精确到一块内存区域，该区域内有对象包含跨代指针。</li>
 </ul>
 <p>&emsp;其中第三种方式，卡精度使用的是“卡表”去实现记忆集。这是最常用的实现方式。卡表定义了记忆集的记录精度、与堆内存的映射关系等。HotSpot中的卡表具体实现如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">CARD_TABLE [this address &gt;&gt; 9] &#x3D; 0;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">CARD_TABLE [this<span class="hljs-built_in"> address </span>&gt;&gt; 9] = 0;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;字节数组CARD_TABLE每一个元素都对应着其标识的内存区域中一块特定大小的内存块，这个内存块被称作“卡页”（Card Page），一般来说，卡页大小都是以2的N次幂的字节数，通过上面代码可以看出HotSpot中使用的卡页是2的9次幂，即512字节（地址右移9位，相当于用地址除以512）。如果卡表标识内存区域的起始地址是0x0000的话，数组CARD_TABLE的第0、1、2号元素，分别对应了地址范围为0x0000～0x01FF、0x0200～0x03FF、0x0400～0x05FF的卡页内存块。如下图所示：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200315195004804.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzY5NjUyOQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="卡表与卡页对应关系"></p>
@@ -472,18 +399,12 @@ public class FinalizeEscapeGC &#123;
 <p>GC时，只要<strong>筛选卡表中变脏的元素</strong>加入GCRoots。</p>
 <h3 id="3-7-写屏障"><a href="#3-7-写屏障" class="headerlink" title="3.7 写屏障"></a>3.7 写屏障</h3><p>&emsp;当其他的分代区域引用本区域的对象， 本区域对应的卡表元素就应该变脏（即变为1）。理论上，当本区域对象被引用的时刻，就应该其卡表就应该变脏，但是卡表如何变脏，也就是卡表具体是如何维护的呢？</p>
 <p>&emsp;在HotSpot里面，通过“写屏障”技术来维护卡表的状态。写屏障可以看做在虚拟机层面对“引用类型字段赋值”动作的AOP切面，在赋值时产生一个环形通知。赋值前后都属于写屏障，赋值前称为“<strong>写前屏障</strong>（Pre-Write Barrier）”，赋值后称为“<strong>写后屏障</strong>（Post-Write Barrier）”。在G1出现之前，其他的收集器均使用写后屏障。简化逻辑如下：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">oop_field_store</span><span class="token punctuation">(</span>oop<span class="token operator">*</span> field<span class="token punctuation">,</span> oop new_value<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-	<span class="token comment">//引用字段赋值操作</span>
-  <span class="token operator">*</span>field <span class="token operator">=</span> new _value<span class="token punctuation">;</span>
-	<span class="token comment">//写后屏障，在这里完成卡表状态更新</span>
-	<span class="token function">post_writer_barrier</span><span class="token punctuation">(</span>field<span class="token punctuation">,</span> new_value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">oop_field_store</span><span class="hljs-params">(oop* field, oop new_value)</span></span>&#123;<br>	<span class="hljs-comment">//引用字段赋值操作</span><br>  *field = <span class="hljs-keyword">new</span> _value;<br>	<span class="hljs-comment">//写后屏障，在这里完成卡表状态更新</span><br>	post_writer_barrier(field, new_value);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;写屏障问题：</p>
 <p>&emsp;1. 应用写屏障后，虚拟机会为所有赋值操作生成相应的指令，一旦收集器在写屏障中增加了更新卡表操作，无论更新的是不是老年代对新生代的引用，每次只要对引用进行更新，就会产生额外的开销。但是这个开销和Minor GC时扫描整个老年代相比还是低很多。</p>
 <p>&emsp;2. <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43696529/article/details/104884373">伪共享</a>问题：为了解决该问题，虚拟机会先检查卡表状态，当其未被标记时，才标记其变脏。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">if</span> <span class="token punctuation">(</span>CARD_TABLE <span class="token punctuation">[</span>this address <span class="token operator">>></span> <span class="token number">9</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>    
-	CARD_TABLE <span class="token punctuation">[</span>this address <span class="token operator">>></span> <span class="token number">9</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (CARD_TABLE [<span class="hljs-keyword">this</span> address &gt;&gt; <span class="hljs-number">9</span>] != <span class="hljs-number">0</span>)    <br>	CARD_TABLE [<span class="hljs-keyword">this</span> address &gt;&gt; <span class="hljs-number">9</span>] = <span class="hljs-number">0</span>;<br></code></pre></td></tr></table></figure>
 
 <p>&emsp;在JDK 7之后，HotSpot虚拟机增加了一个新的参数<code>-XX：+UseCondCardMark</code>，用来决定是否开启卡表更新的条件判断。开启会增加一次额外判断的开销，但能够避免伪共享问题，两者各有性能损耗，是否打开要根据应用实际运行情况来进行测试权衡。</p>
 <h3 id="3-8-并发的可达性分析"><a href="#3-8-并发的可达性分析" class="headerlink" title="3.8 并发的可达性分析"></a>3.8 并发的可达性分析</h3><p>&emsp;当用户线程和垃圾收集工作同时进行时，有可能发生错误标记的情况，比如本来被标记为已死的对象被错误标记为存活，这种可以忍受，但是如果把存货对象标记为已死，则整个程序可能发生崩溃，这可是严重事故不可容忍的。</p>
@@ -571,10 +492,7 @@ public class FinalizeEscapeGC &#123;
 <li><p><code>-XX:InitiatingHeapOccupancyPercent=80</code>表示老年代的使用率达到80%会触发一次mixed gc</p>
 </li>
 <li><p>mixed gc的执行过程有点类似cms，主要分为以下几个步骤：</p>
-<pre class="line-numbers language-none"><code class="language-none">1. initial mark: 初始标记过程，整个过程stop the world，标记了从GC Root可达的对象
-2. concurrent marking: 并发标记过程，整个过程gc collector线程与应用线程可以并行执行，标记出GC Root可达对象衍生出去的存活对象，并收集各个Region的存活对象信息
-3. remark: 最终标记过程，整个过程stop the world，标记出那些在并发标记过程中遗漏的，或者内部引用发生变化的对象
-4. clean up: 垃圾清除过程，如果发现一个Region中没有存活对象，则把该Region加入到空闲列表中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">1.</span> initial mark: 初始标记过程，整个过程<span class="hljs-keyword">stop</span> the world，标记了从GC Root可达的对象<br><span class="hljs-number">2.</span> concurrent marking: 并发标记过程，整个过程gc collector线程与应用线程可以并行执行，标记出GC Root可达对象衍生出去的存活对象，并收集各个Region的存活对象信息<br><span class="hljs-number">3.</span> <span class="hljs-comment">remark: 最终标记过程，整个过程stop the world，标记出那些在并发标记过程中遗漏的，或者内部引用发生变化的对象</span><br><span class="hljs-number">4.</span> clean up: 垃圾清除过程，如果发现一个Region中没有存活对象，则把该Region加入到空闲列表中<br></code></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>

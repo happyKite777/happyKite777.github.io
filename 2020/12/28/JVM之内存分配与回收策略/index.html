@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      169 字
+      170 字
     </span>
   
 
@@ -229,17 +229,7 @@
             <div class="markdown-body">
               <p>&emsp;上一篇文章了解了<a href="https://happykite777.github.io/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">内存分代理论</a>，这次来具体了解下内存分配和回收策略。</p>
 <h3 id="1-对象优先在Eden区分配"><a href="#1-对象优先在Eden区分配" class="headerlink" title="1 对象优先在Eden区分配"></a>1 对象优先在Eden区分配</h3><p>&emsp;大多数对象都在Eden区分配，当Eden区没有足够的空间时，会发起一次Minor GC。</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
-* -Xmn10M:设置年轻代大小为10M
-* -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
-*/</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">testEden</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> a1<span class="token punctuation">,</span> a2<span class="token punctuation">,</span> a3<span class="token punctuation">,</span> a4<span class="token punctuation">;</span>
-  a1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
-  a2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
-  a3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span>
-  a4 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">4</span> <span class="token operator">*</span> _1M<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">//出现一次Minor GC</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* -Xmn10M:设置年轻代大小为10M</span><br><span class="hljs-comment">* -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testEden</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-keyword">byte</span>[] a1, a2, a3, a4;<br>  a1 = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">2</span> * _1M];<br>  a2 = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">2</span> * _1M];<br>  a3 = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">2</span> * _1M];<br>  a4 = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">4</span> * _1M];<span class="hljs-comment">//出现一次Minor GC</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 

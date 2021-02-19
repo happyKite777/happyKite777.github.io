@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>java内存模型 - HappyKite777的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":100,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="java内存模型">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-10 15:19" pubdate>
+        2021年1月10日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      57
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">java内存模型</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-硬件内存架构"><a href="#1-硬件内存架构" class="headerlink" title="1. 硬件内存架构"></a>1. 硬件内存架构</h1><p>&emsp;我们知道，在计算机中，由于处理器和存储设备之间的运算速度有着数量级的差距，为了解决这个问题，现代计算机会加入一或多层告诉缓存（Cache）来作为内存和处理器之间的缓冲：将运算需要使用的数据复制到缓存中，让运算能快速进行，运算结束后再从缓存同步会内存之中，这样处理器就无须等待缓慢的内存读写了。</p>
+<p>&emsp;<strong>运作原理</strong>：通常情况下，当一个CPU需要读取主存时，它会将主存的部分读到CPU缓存中。它甚至可能将缓存中的部分内容读到它的内部寄存器中，然后在寄存器中执行操作。当CPU需要将结果写回到主存中去时，它会将内部寄存器的值刷新到缓存中，然后在某个时间点将值刷新回主存。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-bfb5daff43e7f6593057f8871f5e5888_1440w.jpg" srcset="/img/loading.gif" alt="硬件内存架构"></p>
+<h2 id="现代硬件内架构出现的问题："><a href="#现代硬件内架构出现的问题：" class="headerlink" title="现代硬件内架构出现的问题："></a>现代硬件内架构出现的问题：</h2><p>&emsp;主要出现在多线程的情况下。</p>
+<h3 id="emsp-缓存一致性问题"><a href="#emsp-缓存一致性问题" class="headerlink" title="&emsp;缓存一致性问题"></a>&emsp;<strong>缓存一致性问题</strong></h3><p>&emsp;在多核处理器中，每个处理器都有自己的高速缓存，他们共享同一主内存，因此有可能会导致各自缓存数据不一致问题。为了解决一致性问题，需要各个处理器访问缓存时遵循一些协议，读写时根据协议操作，比如MSI、MESI、MOSI、Dragon Protocol等。</p>
+<p><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1006537827,1146975882&fm=11&gp=0.jpg" srcset="/img/loading.gif" alt="处理器、高速缓存和主内存的交互"></p>
+<h3 id="emsp-指令重排序问题"><a href="#emsp-指令重排序问题" class="headerlink" title="&emsp;指令重排序问题"></a>&emsp;<strong>指令重排序问题</strong></h3><p>&emsp;为了使得处理器内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行（Out-Of-Order Execution）优化，处理器会在计算之后将乱序执行的结果重组，保证该结果与顺序执行的结果是一致的，但并不保证程序中各个语句计算的先后顺序与输入代码中的顺序一致。Java虚拟机的即时编译器中也有类似的指令重排序（Instruction Reorder）优化。</p>
+<h1 id="2-Java内存模型"><a href="#2-Java内存模型" class="headerlink" title="2. Java内存模型"></a>2. Java内存模型</h1><p> &emsp;<strong>内存模型</strong>可以理解为在特定的操作协议下，对特定的内存或者高速缓存进行读写访问的过程抽象。不同架构的物理机器可以拥有不一样的内存模型，java虚拟机也有自己的内存模型（Java Memory Model， JMM）。</p>
+<p>&emsp;java内存模型的主要目的是定义程序中各种变量的访问规则，关注点在虚拟机把变量值存储到内存和从内存中取出来的底层细节。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-bd607bd9a5598a8330ad329033e04b91_1440w.jpg" srcset="/img/loading.gif" alt="java内存模型"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-a1a75c9f7264cf78d0927663371ca9d2_1440w.jpg" srcset="/img/loading.gif" alt="java内存模型"></p>
+<ul>
+<li>一个本地变量可能是原始类型，在这种情况下，它总是“呆在”线程栈上。</li>
+<li>一个本地变量也可能是指向一个对象的一个引用。在这种情况下，引用（这个本地变量）存放在线程栈上，但是对象本身存放在堆上。</li>
+<li>一个对象可能包含方法，这些方法可能包含本地变量。这些本地变量仍然存放在线程栈上，即使这些方法所属的对象存放在堆上。</li>
+<li>一个对象的成员变量可能随着这个对象自身存放在堆上。不管这个成员变量是原始类型还是引用类型。</li>
+<li>静态成员变量跟随着类定义一起也存放在堆上。</li>
+<li>存放在堆上的对象可以被所有持有对这个对象引用的线程访问。当一个线程可以访问一个对象时，它也可以访问这个对象的成员变量。如果两个线程同时调用同一个对象上的同一个方法，它们将会都访问这个对象的成员变量，但是每一个线程都拥有这个成员变量的私有拷贝。</li>
+</ul>
+<h2 id="2-1-主内存与工作内存"><a href="#2-1-主内存与工作内存" class="headerlink" title="2.1 主内存与工作内存"></a>2.1 主内存与工作内存</h2><p>&emsp;</p>
+<p><img src="https://pic3.zhimg.com/80/v2-037270b0876b6af680d1832bcc9dca32_1440w.jpg" srcset="/img/loading.gif" alt="主内存与工作内存"></p>
+<p>&emsp;JMM规定了所有的变量都存储在主内存中，内存保存了被该线程使用的变量的主内存副本。<strong>线程对变量的所有操作都会必须在工作内存中完成</strong>，不能直接读写主内存数据。不同线程之间无法直接访问对方线程的变量，他们之间的通讯需要通过主内存来完成。</p>
+<p>&emsp;这里的内存不同于虚拟机运行时内存，这两者没什么联系。如果非要联系，从定义看，主内存对应于java堆中的对象实例数据部分，工作内存对应于虚拟机栈（因为虚拟机栈是线程私有的）。从基础层面看，主内存对应于物理机的主内存，工作内存对应于寄存器或者高速缓存。</p>
+<p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.it610.com%2Fimage%2Fproduct%2Fed0252f86ffe4ec78ecdc72089ec3f48.jpg&refer=http%3A%2F%2Fimg.it610.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1616308476&t=97a82dff545580e8c4b4574c91189d5e" srcset="/img/loading.gif" alt="虚拟机运行时内存"></p>
+<h2 id="2-2-线程间通信"><a href="#2-2-线程间通信" class="headerlink" title="2.2 线程间通信"></a>2.2 线程间通信</h2><p>&emsp;线程间通信必须要经过主内存。如果线程A与线程B之间要通信的话，必须要经历2个步骤：</p>
+<ul>
+<li><p>线程A把本地内存A中更新过的共享变量刷新到主内存中去。</p>
+</li>
+<li><p>线程B到主内存中去读取线程A之前已更新过的共享变量。</p>
+</li>
+</ul>
+<p>&emsp;主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步到主内存之间的实现细节，Java内存模型定义了以下八种操作来完成：</p>
+<p><b style="color:red">lock（锁定）</b>：作用于主内存的变量，把一个变量标识为一条线程独占状态。</p>
+<p><b style="color:red">unlock（解锁）</b>：作用于主内存变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定。</p>
+<p><b style="color:red">read（读取）</b>：作用于主内存变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用</p>
+<p><b style="color:red">load（载入）</b>：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中。</p>
+<p><b style="color:red">use（使用）</b>：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎，每当虚拟机遇到一个需要使用变量的值的字节码指令时将会执行这个操作。</p>
+<p><b style="color:red">assign（赋值）</b>：作用于工作内存的变量，它把一个从执行引擎接收到的值赋值给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作。</p>
+<p><b style="color:red">store（存储）</b>：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作。</p>
+<p><b style="color:red">write（写入）</b>：作用于主内存的变量，它把store操作从工作内存中一个变量的值传送到主内存的变量中。</p>
+<p>&emsp;把变量从主内存拷贝到工作内存中需要按顺序执行<code>read</code>和<code>load</code>操作，从工作内存同步回主内存需要按顺序执行<code>store</code>和<code>write</code>操作。只要求这两者顺序，但是中间可以穿插其他操作。比如，read a、read b、load b、load a。</p>
+<p>&emsp;以上8种操作必须满足以下规则：</p>
+<ul>
+<li><code>read</code>和<code>load</code>、<code>store</code>和<code>write</code>必须成对出现，不允许出现单一操作。比如主内存读取了，但是工作内存不接受操作🈲</li>
+<li>不允许一个线程丢弃它的最近<code>assign</code>的操作，即变量在工作内存中改变了之后必须同步到主内存中</li>
+<li>不允许一个线程无原因地（没有发生过任何<code>assign</code>操作）把数据从工作内存同步回主内存中</li>
+<li>一个新的变量只能在主内存中诞生，不允许在工作内存中直接使用一个未被初始化（<code>load</code>或<code>assign</code>）的变量。即对一个变量实施<code>use</code>和<code>store</code>操作之前，必须先执行过了<code>assign</code>和<code>load</code>操作</li>
+<li>一个变量在同一时刻只允许一条线程对其进行<code>lock</code>操作，但<code>lock</code>操作可以被同一条线程重复执行多次，多次执行<code>lock</code>后，只有执行相同次数的<code>unlock</code>操作，变量才会被解锁。<code>lock</code>和<code>unlock</code>必须成对出现</li>
+<li>如果对一个变量执行<code>lock</code>操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前需要重新执行<code>load</code>或<code>assign</code>操作初始化变量的值</li>
+<li>不允许<code>unlock</code>一个未被<code>lock</code>的变量，不允许<code>unlock</code>一个被其他线程锁定的变量</li>
+<li>对一个变量执行<code>unlock</code>操作之前，必须先把此变量同步到主内存中（执行<code>store</code>和<code>write</code>操作）</li>
+</ul>
+<h2 id="2-3-Java内存模型解决的问题"><a href="#2-3-Java内存模型解决的问题" class="headerlink" title="2.3 Java内存模型解决的问题"></a>2.3 Java内存模型解决的问题</h2><p>&emsp;在Java多线程中，Java提供了一系列与并发处理相关的关键字，比如<code>volatile</code>、<code>synchronized</code>、<code>final</code>、<code>concurren</code>包等。其实这些就是Java内存模型封装了底层的实现后提供给程序员使用的一些关键字。</p>
+<p>&emsp;Java内存模型的本质是围绕着Java并发过程中的如何处理<code>原子性</code>、<code>可见性</code>和<code>顺序性</code>这三个特征来设计的。</p>
+<p>&emsp;Java内存模型建立所围绕的问题：在多线程并发过程中，如何处理多线程读同步问题与<strong>可见性</strong>（多线程缓存与指令重排序）、多线程写同步问题与<strong>原子性</strong>（多线程竞争race condition）。</p>
+<h4 id="多线程读同步问题与可见性"><a href="#多线程读同步问题与可见性" class="headerlink" title="多线程读同步问题与可见性"></a>多线程读同步问题与可见性</h4><blockquote>
+<p>可见性：线程对共享变量修改的可见性。当一个线程修改了共享变量的值，其他线程能够立刻得知这个修改。</p>
+</blockquote>
+<p><b style="color:red">线程缓存导致的可见性问题</b></p>
+<p>&emsp;如果两个或多个线程在没有正确的使用volatile声明或者同步的情况下共享一个对象，线程的更新操作对其他线程是不可见的，因为共享变量没有被同步回主内存中。这样可能导致每个线程拥有这个共享对象的私有拷贝，每个拷贝停留在不同的CPU缓存中。由此导致了共享变量不可见。JMM中解决这个内存可见性问题可以使用如下两种方式：</p>
+<ul>
+<li>使用<code>volatile</code>关键字：<ul>
+<li>volatile关键字可以保证直接从主存中读取一个变量，如果这个变量被修改后，总是会被写回到主存中去。</li>
+<li>volatile的特殊规则保证了新值能立即同步到主内存，以及每个线程在每次使用volatile变量前都立即从主内存刷新。</li>
+<li>关于volatile请细看下一小节</li>
+</ul>
+</li>
+<li>使用<code>synchronized</code>关键字：<ul>
+<li>synchronized实际上是对代码块执行了lock和unlock操作，前面关于lock和unlock的规则中，“对一个变量执行unlock操作之前，必须先把此变量同步回主内存中”、”lock操作会清空工作内存中此变量的值，在执行引擎使用这个变量前需要重新执行load或assign操作初始化变量的值“这两条决定了其可见性。</li>
+</ul>
+</li>
+<li>使用<code>final</code>关键字：<ul>
+<li>被final修饰的字段在构造器中一旦被初始化完成，并且构造器没有把“this”的引用传递出去（this引用逃逸是一件很危险的事情，其他线程有可能通过这个引用访问到“初始化了一半”的对象），那么在其他线程就能看见final字段的值（无须同步）。</li>
+</ul>
+</li>
+</ul>
+<p><b style="color:red">重排序导致的可见性问题</b></p>
+<p>&emsp;为了使得处理器内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行，比如对于那些没有依赖关系的指令，处理器可能会把他们进行重排序。重排序一般有3种类型：编译器优化的重排序、指令级并行的重排序和内存系统的重排序。</p>
+<p>&emsp;在多线程环境下，重排序可能会导致一些可见性问题，比如以下，线程A的步骤1和2没有依赖关系所以有可能被重排，导致步骤2先于步骤1执行。这样会导致：线程B在步骤4读共享变量时，不一定能看到写线程A在执行1时对共享变量的修改，因为由于重排，1的操作被延后到4之后了。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-8ef063a1b514d9cfbdf059984f83ed2f_1440w.jpg" srcset="/img/loading.gif" alt="线程执行时序"></p>
+<p>&emsp;Java语言提供了<code>volatile</code>和<code>synchronized</code>两个关键字来保证线程之间操作的有序性：</p>
+<ul>
+<li><code>volatile</code>关键字本身就包含了禁止指令重排序的语义</li>
+<li><code>synchronized</code>则是由“一个变量在同一个时刻只允许一条线程对其进行lock操作”这条规则获得的，这个规则决定了持有同一个锁的两个同步块只能串行地进入</li>
+</ul>
+<h3 id="多线程写同步问题与原子性"><a href="#多线程写同步问题与原子性" class="headerlink" title="多线程写同步问题与原子性"></a>多线程写同步问题与原子性</h3><p>&emsp;当多个线程在访问未被同步机制保护的代码时，可能会发生同步写的问题。比如A和B线程都对变量i进行++操作，A先读i，接着B读i，然后A++i同步回主内存，B++i同步回主内存。此时i的预期+2实际+1，这就出现了不同步的问题。</p>
+<blockquote>
+<p>原子性：指一个操作是按原子的方式执行的。要么该操作不被执行；要么以原子方式执行，即执行过程中不会被其它线程中断。</p>
+</blockquote>
+<p>&emsp;<strong>使用原子性保证多线程写同步问题</strong></p>
+<p>&emsp;原子性的实现：<code>read</code>、<code>load</code>、<code>assign</code>、<code>use</code>、<code>store</code>、<code>write</code>这6种操作都是原子性的。</p>
+<ul>
+<li><p>java中基本数据类型变量（long和double除外）、引用类型变量、声明为volatile的任何类型变量的访问读写是具备原子性的</p>
+</li>
+<li><p><code>long</code>和<code>double</code>则不一定。java虚拟机允许<strong>未被volatile修饰的64位数据的读写操作划分为两次32位的操作来进行</strong>，这样可能导致多个线程读取到的变量是”半个变量“，即第一次32位更新了但后一次32位没有。目前各种平台下的商用虚拟机几乎都选择把64位数据的读写操作作为原子操作来对待，因此写代码是不必专门声明<code>volatile long</code>等。</p>
+</li>
+<li><p><code>++ / --</code>等符合操作不具备原子性</p>
+</li>
+<li><p>同步代码块可以保证更大范围的原子性。<code>lock</code>和<code>unlock</code>操作可以满足，对应于<code>monitorenter</code>和<code>monitorexist</code>指令来使用这两个操作。反应到java代码中就是<code>synchronized</code>关键字。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) &#123;<br>	a=<span class="hljs-number">1</span>; b=<span class="hljs-number">2</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="2-4-volatile关键字"><a href="#2-4-volatile关键字" class="headerlink" title="2.4 volatile关键字"></a>2.4 volatile关键字</h2><p>&emsp;volatile型变量特点：</p>
+<ul>
+<li><p>保证此变量对所有线程的可见性，原因上一节有讲到。</p>
+</li>
+<li><p>禁止指令重排序优化</p>
+</li>
+</ul>
+<p><b style="color:red">volatile变量对所有线程可见，但是却不一定能保证并发安全</b></p>
+<p>&emsp;比如以下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntVolatile</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">increase</span><span class="hljs-params">()</span> </span>&#123;<br>        a++;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        Thread[] threads = <span class="hljs-keyword">new</span> Thread[<span class="hljs-number">20</span>];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; threads.length; i++) &#123;<br>            threads[i] = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">10000</span>; j++) &#123;<br>                        increase();<br>                    &#125;<br>                &#125;<br>            &#125;);<br>            threads[i].start();<br>        &#125;<br><br>        <span class="hljs-comment">//等待所有线程结束</span><br>        <span class="hljs-keyword">while</span> (Thread.activeCount() &gt; <span class="hljs-number">1</span>)<br>            Thread.yield();<br><br>        System.out.println(a);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//increase()字节码         </span><br>				 0: getstatic     #2                  // Field a:I<br>         <span class="hljs-number">3</span>: iconst_1<br>         <span class="hljs-number">4</span>: iadd<br>         5: putstatic     #2                  // Field a:I<br>         <span class="hljs-number">8</span>: <span class="hljs-keyword">return</span><br><br></code></pre></td></tr></table></figure>
+
+<p>&emsp;执行可以发现，最后的结果是一个小于200000的值。说明volatile并不能保证并发安全。问题出在<code>a++</code>自增运算上。从上述字节码我们可以看到，<code>getstatic</code>指令把a的值取到操作数栈栈顶，此时volatile可以保证取到的a是正确的，但是在执行后续操作<code>iconst_、idd</code>操作时，其他线程可能已经把a的值改变了，而栈顶的数就变成了过期数据，<code>putstatic</code>指令执行后可能把较小的值同步回主内存之中了。</p>
+<p>&emsp;注意：一条字节码指令也不一定是原子的，因为它解释器可能运行多条代码。</p>
+<p>&emsp;以上例子说明，<code>volatile</code>只保证可见性，并不保证原子性。当程序的运行结果不依赖volatile变量当前值，或者变量不需要其他状态变量共同参与不变约束的时候，必须加锁来保证其原子性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">volatile</span> <span class="hljs-keyword">boolean</span> shutdown;<br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">shutdown</span><span class="hljs-params">()</span></span>&#123;<br>  shutdown = <span class="hljs-keyword">true</span>;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">do</span><span class="hljs-params">()</span></span>&#123;<br>  <span class="hljs-keyword">while</span>(!shutdown)&#123;<br>    <span class="hljs-comment">//业务代码</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;以上例子就适合使用<code>volatile</code>来控制并发。</p>
+<p><b style="color:red">volatile禁止指令重排序优化</b></p>
+<p>&emsp;对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，<strong>插入特定类型的内存屏障</strong>（Memory Barriers，Intel称之为Memory Fence）指令，<strong>通过内存屏障指令来禁止特定类型的处理器重排序</strong>。</p>
+<p>&emsp;通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证。</p>
+<p>&emsp;<strong>内存屏障类型</strong>如下，其中StoreLoad Barriers是一个“全能型”的屏障，它同时具有其他3个屏障的效果。现代处理器大多支持该屏障，但执行该屏障开销昂贵，因为需要把写缓冲区中的数据全部刷新到内存中。</p>
+<p><img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3424114361,3727957794&fm=11&gp=0.jpg" srcset="/img/loading.gif"></p>
+<p>&emsp;<strong>JMM针对编译器制定volatile重排序规则：</strong></p>
+<ul>
+<li><p>当第二个操作是volatile写时，不管第一个操作是什么，都不能重排序。这个规则确保volatile写之前的操作不会被编译器重排序到volatile写之后。 </p>
+</li>
+<li><p>当第一个操作是volatile读时，不管第二个操作是什么，都不能重排序。这个规则确保volatile读之后的操作不会被编译器重排序到volatile读之前。 </p>
+</li>
+<li><p>当第一个操作是volatile写，第二个操作是volatile读时，不能重排序。</p>
+</li>
+</ul>
+<p>&emsp;为了实现上述规则，编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。下面是基于保守策略的JMM内存屏障插入策略：</p>
+<ul>
+<li>在每个volatile写操作的前面插入一个StoreStore屏障。 </li>
+<li>在每个volatile写操作的后面插入一个StoreLoad屏障。 </li>
+<li>在每个volatile读操作的后面插入一个LoadLoad屏障。 </li>
+<li>在每个volatile读操作的后面插入一个LoadStore屏障。</li>
+</ul>
+<p><b style="color:red">volatile和synchronized对比</b></p>
+<ul>
+<li>volatile同步机制性能确实优于synchronized锁，但是虚拟机对锁进行了许多优化和消除，因此无法说volatile比synchronized快多少</li>
+<li>volatile变量的读操作性能消耗和普通变量几乎无差别</li>
+<li>volatile变量的写操作会比普通变量慢，因为需要加各种内存屏障。但是大多时候，仍然比锁快。</li>
+</ul>
+<h2 id="2-5-先行发生（happens-before）原则"><a href="#2-5-先行发生（happens-before）原则" class="headerlink" title="2.5 先行发生（happens before）原则"></a>2.5 先行发生（happens before）原则</h2><p>&emsp;在JMM中，如果一个操作执行的结果需要对另一个操作可见（两个操作既可以是在一个线程之内，也可以是在不同线程之间），那么这两个操作之间必须要存在happens-before关系。java中先天存在不需要任何其他手段来保证的先行发生原则有：</p>
+<ul>
+<li>程序次序规则：一个线程内，控制流程中书写在前面的操作先行于书写在后的操作</li>
+<li>管程锁定规则：unlock操作先行发生于后面对同一个锁的lock操作</li>
+<li>volatile变量规则：一个volatileb变量的写操作先行于任意后续对这个变量的读操作</li>
+<li>线程启动规则：线程中所有的操作都先行于该线程的终止检测</li>
+<li>线程中断规则：interrupt()的调用先行于被检测线程的代码检测到中断时间的发生</li>
+<li>对象终结规则：对象的初始化完成（构造函数结束）先行于finalize()方法</li>
+<li>传递性：如果A 先行于 B，且B先行于 C，那么A先行于 C。</li>
+</ul>
+<p><strong>时间先后顺序和先行发生之间没有因果关系，衡量并发以先行发生原则为准。</strong></p>
+<h1 id="3-Java内存模型和硬件内存架构之间的桥接"><a href="#3-Java内存模型和硬件内存架构之间的桥接" class="headerlink" title="3.  Java内存模型和硬件内存架构之间的桥接"></a>3.  Java内存模型和硬件内存架构之间的桥接</h1><p>&emsp;硬件内存架构没有区分线程栈和堆。对于硬件，所有的线程栈和堆都分布在主内存中。部分线程栈和堆可能有时候会出现在CPU缓存中和CPU内部的寄存器中。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-1a7b7bb752799b6c067a0eaca0a1a9b2_1440w.jpg" srcset="/img/loading.gif" alt=" Java内存模型和硬件内存架构之间的桥接"></p>
+<ul>
+<li>线程之间的共享变量存储在主内存（Main Memory）中</li>
+<li>每个线程都有一个私有的本地内存（Local Memory），本地内存是JMM的一个抽象概念，并不真实存在，它涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化。本地内存中存储了该线程以读/写共享变量的拷贝副本。</li>
+<li>从更低的层次来说，主内存就是硬件的内存，而为了获取更好的运行速度，虚拟机及硬件系统可能会让工作内存优先存储于寄存器和高速缓存中。</li>
+<li>Java内存模型中的线程的工作内存（working memory）是cpu的寄存器和高速缓存的抽象描述。而<strong>JVM的静态内存储模型（JVM内存模型）只是一种对内存的物理划分而已，它只局限在内存，而且只局限在JVM的内存</strong>。</li>
+</ul>
+<p><img src="https://pic1.zhimg.com/80/v2-30e6d810eb6a8700a87fc06756aab984_1440w.jpg" srcset="/img/loading.gif" alt="JMM的控制模型图"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jvm/">jvm</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4%E7%AE%80%E4%BB%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">字节码指令简介</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">
+                        <span class="hidden-mobile">虚拟机字节码执行引擎</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
