@@ -179,6 +179,345 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM之内存分配与回收策略">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">JVM之内存分配与回收策略</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">
+          
+          
+            
+          
+          &emsp;上一篇文章了解了内存分代理论，这次来具体了解下内存分配和回收策略。
+1 对象优先在Eden区分配&emsp;大多数对象都在Eden区分配，当Eden区没有足够的空间时，会发起一次Minor GC。
+1234567891011/*** -Xmn10M:设置年轻代大小为10M* -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails 
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-28 17:18" pubdate>
+              2020-12-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM之垃圾回收">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM之垃圾回收</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+          
+          
+            
+          
+          1. 垃圾回收概述1.1 哪些内存需要回收&emsp;为了提高内存利用率，虚拟机可以对无用的内存进行回收清理。虚拟机的内存分配和内存回收技术已经很成熟，但是我们仍然需要了解垃圾回收相关原理，以便于在发生内存溢出、内存泄露等问题时，可以排定位查。
+&emsp;前面说过，运行时内存区域分为程序计数器、虚拟机栈、本地方法栈、堆、方法区和运行常量池。其中pc计数器、虚拟机栈、本地方法栈区域随线程而生，随线
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-04 00:07" pubdate>
+              2020-12-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/29/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="类加载机制">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/29/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">类加载机制</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/29/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">
+          
+          
+            
+          
+          1、类加载机制概述
+&emsp;java虚拟机的结构图如上所示，从详细图可以看出，字节码文件首先会被类加载器子系统加载到内存中，类加载器的工作分为三步：加载、链接和初始化。加载需要加载器，比如引导加载器、扩展加载器和应用加载器等。链接环节分为验证、准备、解析三个步骤，最后是初始化。文件被加载到内存中，内存中又分为不同区域。之后解释器和JIT即时编译器会把字节码翻译成成机器指令。当内存使用完毕后，G
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-29 15:04" pubdate>
+              2020-10-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/10/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="类文件结构分析">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/10/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">类文件结构分析</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/10/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">
+          
+          
+            
+          
+          class类文件结构 参考：https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.7.5 jdk11
+&emsp;前面说过，任何语言只要能被编译成符合规范的字节码文件，就可以在虚拟机上运行。字节码文件是java规范中规定的，一个class文件必定对应着一个类或者接口的信息，但是反过来则不一定，因为类或者接口可以
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-10 16:24" pubdate>
+              2020-10-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM之内存管理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">JVM之内存管理</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+          
+          
+            
+          
+          &emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。
+1.2 jvm线程
+jvm线程
+
+线程是一个程序里的运行单元。JVM允许一个应用有多个线程并行的执行
+在Hotspot JVM里，每个线程都与操作系统的本
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-10 15:19" pubdate>
+              2020-10-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/" target="_self">
+          <img src="/img/jvm.jpeg" srcset="/img/loading.gif" alt="JVM的简单介绍">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">JVM的简单介绍</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">
+          
+          
+            
+          
+          1、虚拟机概念&emsp;虚拟机就是指虚拟的计算机。它是一款软件，用来执行一系列虚拟计算机指令。大体上，虚拟机可以分为系统虚拟机和程序虚拟机。
+
+系统虚拟机：对物理计算机的仿真，提供可运行完整操作系统的虚拟平台，比如VirtualBox、VMware等。
+程序虚拟机：专门为执行单个计算机程序而设计，比如java虚拟机（JVM），在Java虚拟机中执行的指令我们称为Java字节码指令。
+
+2、jav
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-09 18:03" pubdate>
+              2020-10-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/28/Mach-O%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/" target="_self">
           <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="Mach-O目标文件格式">
         </a>

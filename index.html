@@ -179,6 +179,280 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/05/09/3.rabbitmq%E4%B9%8B%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/" target="_self">
+          <img src="/img/rabbitmq.png" srcset="/img/loading.gif" alt="（三）rabbitmq之延迟队列">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/05/09/3.rabbitmq%E4%B9%8B%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/">（三）rabbitmq之延迟队列</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/05/09/3.rabbitmq%E4%B9%8B%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/">
+          
+          
+            
+          
+          1. 延迟队列&emsp;延迟队列是指进入队列后的元素不会被立即消费，而是达到一定时间后才会被消费。比如我的工作中需要实现这样一个功能。支付常常会因为一些原因导致支付报错，比如DNS解析失败等，这种情况一般客户会再次点击支付。为了避免每次报错都人工排查原因，需要实现一个功能，如果dns解析失败报错，则1分钟后主动查询订单是否支付成功，成功则不管，失败则手动排查。这时候可以采用延迟队列实现，每次报错
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-05-09 14:03" pubdate>
+              2021-05-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/rabbitmq/">rabbitmq</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/05/09/2.rabbitmq%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/" target="_self">
+          <img src="/img/rabbitmq.png" srcset="/img/loading.gif" alt="（二）rabbitmq之可靠性保证">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/05/09/2.rabbitmq%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/">（二）rabbitmq之可靠性保证</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/05/09/2.rabbitmq%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/">
+          
+          
+            
+          
+          
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-05-09 10:03" pubdate>
+              2021-05-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/rabbitmq/">rabbitmq</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/05/08/1.rabbitmq%E7%AE%80%E4%BB%8B/" target="_self">
+          <img src="/img/rabbitmq.png" srcset="/img/loading.gif" alt="（一）rabbitmq简介及其消息模型">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/05/08/1.rabbitmq%E7%AE%80%E4%BB%8B/">（一）rabbitmq简介及其消息模型</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/05/08/1.rabbitmq%E7%AE%80%E4%BB%8B/">
+          
+          
+            
+          
+          1. AMQP协议&emsp;AMQP（Advanced Message Queuing Protocol，高级消息队列协议）是一个进程间传递异步消息的网络协议。
+&emsp;AMQP有以下几个概念：
+
+Broker：接收和分发消息的应用，就是处理消息的服务器，RabbitMQ Server就是Message Broker。
+Virtual host：类似于namespace，通过它可以在同一个m
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-05-08 10:03" pubdate>
+              2021-05-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/rabbitmq/">rabbitmq</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/04/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="线程池ThreadPoolExecutor源码阅读">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">线程池ThreadPoolExecutor源码阅读</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/04/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">
+          
+          
+            
+          
+          ThreadPoolExecutor数据结构123456789101112131415161718192021222324252627282930313233343536373839404142434445//7个核心参数：// 核心线程数private volatile int corePoolSize;// 最大线程数private volatile int maximumPoolSize;/
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-28 16:03" pubdate>
+              2021-04-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%9D%A2%E8%AF%95%E5%BF%85%E5%A4%87%E7%9F%A5%E8%AF%86%E7%82%B9/">面试必备知识点</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/04/26/%E5%90%8E%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="后端面试题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/26/%E5%90%8E%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/">后端面试题</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/04/26/%E5%90%8E%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/">
+          
+          
+            
+          
+          &emsp;经过一个月的准备和接近一个月的面试，终于拿到新公司offer了。这一个月来面试了滴滴、美团、头条、阿里、腾讯、猿辅导、快手，最终拿到了滴滴、美团、猿辅导、快手四家公司的offer。面试让我深刻的体会了自己有多菜，因此决定好好研究源码，日常保持学习，这个行业，不学就会被淘汰，从此我要洗心革面搞技术，矜矜业业做业务，先在此记录下面试题目。本人毕业后刚工作两年，第一次跳槽，题目可供类似经历的
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-26 19:03" pubdate>
+              2021-04-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/02/19/java%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E5%92%8C%E9%94%81/" target="_self">
           <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="java线程安全和锁">
         </a>
@@ -457,6 +731,66 @@ java中的线程安全不可变&emsp;不可变对象一定是线程安全的，�
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/01/02/jvm%E7%9B%91%E6%8E%A7/" target="_self">
+          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM常用监控命令">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/01/02/jvm%E7%9B%91%E6%8E%A7/">JVM常用监控命令</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/01/02/jvm%E7%9B%91%E6%8E%A7/">
+          
+          
+            
+          
+          1. jps&emsp;列出正在运行的虚拟机进程信息。
+jps -l：显示主类全名
+jps -v：显示启动时jvm参数
+jps -q：显示main函数参数
+jps -m：只输出LVMID
+2. jstat&emsp;统计信息监视工具。
+2.112345☁  blog  jstat -gcutil 1396  S0     S1     E      O      M     CCS    YGC 
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-02 17:18" pubdate>
+              2021-01-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jvm/">jvm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/" target="_self">
           <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="虚拟机字节码执行引擎">
         </a>
@@ -485,345 +819,6 @@ java中的线程安全不可变&emsp;不可变对象一定是线程安全的，�
             <i class="iconfont icon-date"></i>
             <time datetime="2020-12-28 18:38" pubdate>
               2020-12-28
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/" target="_self">
-          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM之内存分配与回收策略">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">JVM之内存分配与回收策略</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/28/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5/">
-          
-          
-            
-          
-          &emsp;上一篇文章了解了内存分代理论，这次来具体了解下内存分配和回收策略。
-1 对象优先在Eden区分配&emsp;大多数对象都在Eden区分配，当Eden区没有足够的空间时，会发起一次Minor GC。
-1234567891011/*** -Xmn10M:设置年轻代大小为10M* -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails 
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-28 17:18" pubdate>
-              2020-12-28
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" target="_self">
-          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM之垃圾回收">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM之垃圾回收</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/04/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
-          
-          
-            
-          
-          1. 垃圾回收概述1.1 哪些内存需要回收&emsp;为了提高内存利用率，虚拟机可以对无用的内存进行回收清理。虚拟机的内存分配和内存回收技术已经很成熟，但是我们仍然需要了解垃圾回收相关原理，以便于在发生内存溢出、内存泄露等问题时，可以排定位查。
-&emsp;前面说过，运行时内存区域分为程序计数器、虚拟机栈、本地方法栈、堆、方法区和运行常量池。其中pc计数器、虚拟机栈、本地方法栈区域随线程而生，随线
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-04 00:07" pubdate>
-              2020-12-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/29/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" target="_self">
-          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="类加载机制">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/29/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">类加载机制</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/29/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">
-          
-          
-            
-          
-          1、类加载机制概述
-&emsp;java虚拟机的结构图如上所示，从详细图可以看出，字节码文件首先会被类加载器子系统加载到内存中，类加载器的工作分为三步：加载、链接和初始化。加载需要加载器，比如引导加载器、扩展加载器和应用加载器等。链接环节分为验证、准备、解析三个步骤，最后是初始化。文件被加载到内存中，内存中又分为不同区域。之后解释器和JIT即时编译器会把字节码翻译成成机器指令。当内存使用完毕后，G
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-29 15:04" pubdate>
-              2020-10-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/10/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/" target="_self">
-          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="类文件结构分析">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/10/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">类文件结构分析</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/10/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">
-          
-          
-            
-          
-          class类文件结构 参考：https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.7.5 jdk11
-&emsp;前面说过，任何语言只要能被编译成符合规范的字节码文件，就可以在虚拟机上运行。字节码文件是java规范中规定的，一个class文件必定对应着一个类或者接口的信息，但是反过来则不一定，因为类或者接口可以
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-10 16:24" pubdate>
-              2020-10-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" target="_self">
-          <img src="/img/paper-default.png" srcset="/img/loading.gif" alt="JVM之内存管理">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">JVM之内存管理</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/10/JVM%E4%B9%8B%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
-          
-          
-            
-          
-          &emsp;java中内存的管理是由JVM负责的，程序员new了一个对象后无需处理对象的释放删除等工作，较C/C++来说，开发轻松了不少。但是JVM不是万能的，一旦内存出现泄漏等问题，程序员需要排查原因，所以有必要好好理解JVM的内存管理机制。
-1.2 jvm线程
-jvm线程
-
-线程是一个程序里的运行单元。JVM允许一个应用有多个线程并行的执行
-在Hotspot JVM里，每个线程都与操作系统的本
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-10 15:19" pubdate>
-              2020-10-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/" target="_self">
-          <img src="/img/jvm.jpeg" srcset="/img/loading.gif" alt="JVM的简单介绍">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">JVM的简单介绍</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/">
-          
-          
-            
-          
-          1、虚拟机概念&emsp;虚拟机就是指虚拟的计算机。它是一款软件，用来执行一系列虚拟计算机指令。大体上，虚拟机可以分为系统虚拟机和程序虚拟机。
-
-系统虚拟机：对物理计算机的仿真，提供可运行完整操作系统的虚拟平台，比如VirtualBox、VMware等。
-程序虚拟机：专门为执行单个计算机程序而设计，比如java虚拟机（JVM），在Java虚拟机中执行的指令我们称为Java字节码指令。
-
-2、jav
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-09 18:03" pubdate>
-              2020-10-09
             </time>
           </div>
         

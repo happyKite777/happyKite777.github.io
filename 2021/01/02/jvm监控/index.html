@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>JVM常用监控命令 - HappyKite777的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":100,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="JVM常用监控命令">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-02 17:18" pubdate>
+        2021年1月2日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM常用监控命令</h1>
+            
+            <div class="markdown-body">
+              <h2 id="1-jps"><a href="#1-jps" class="headerlink" title="1. jps"></a>1. jps</h2><p>&emsp;列出正在运行的虚拟机进程信息。</p>
+<p><code>jps -l</code>：显示主类全名</p>
+<p><code>jps -v</code>：显示启动时jvm参数</p>
+<p><code>jps -q</code>：显示main函数参数</p>
+<p><code>jps -m</code>：只输出LVMID</p>
+<h2 id="2-jstat"><a href="#2-jstat" class="headerlink" title="2. jstat"></a>2. jstat</h2><p>&emsp;统计信息监视工具。</p>
+<h3 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">☁  blog  jstat -gcutil <span class="hljs-number">1396</span><br>  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT<br>  <span class="hljs-number">0.00</span>   <span class="hljs-number">0.00</span>  <span class="hljs-number">68.89</span>  <span class="hljs-number">28.63</span>  <span class="hljs-number">96.31</span>  <span class="hljs-number">93.85</span>      <span class="hljs-number">8</span>    <span class="hljs-number">0.066</span>     <span class="hljs-number">2</span>    <span class="hljs-number">0.110</span>    <span class="hljs-number">0.177</span><br>  <br>  <br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-1-垃圾回收统计"><a href="#2-1-垃圾回收统计" class="headerlink" title="2.1 垃圾回收统计"></a>2.1 垃圾回收统计</h3><p>​    blog  jstat -gc 1396   只统计一次</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">☁  blog  jstat -gc <span class="hljs-number">1396</span> <span class="hljs-number">1000</span> <span class="hljs-number">5</span>  <span class="hljs-comment">//每隔1s统计gc的情况，统计5次</span><br> S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT<br><span class="hljs-number">13824.0</span> <span class="hljs-number">13824.0</span>  <span class="hljs-number">0.0</span>    <span class="hljs-number">0.0</span>   <span class="hljs-number">240640.0</span> <span class="hljs-number">165787.3</span>  <span class="hljs-number">61952.0</span>    <span class="hljs-number">17737.2</span>   <span class="hljs-number">35456.0</span> <span class="hljs-number">34146.1</span> <span class="hljs-number">4736.0</span> <span class="hljs-number">4444.5</span>      <span class="hljs-number">8</span>    <span class="hljs-number">0.066</span>   <span class="hljs-number">2</span>      <span class="hljs-number">0.110</span>    <span class="hljs-number">0.177</span><br><span class="hljs-number">13824.0</span> <span class="hljs-number">13824.0</span>  <span class="hljs-number">0.0</span>    <span class="hljs-number">0.0</span>   <span class="hljs-number">240640.0</span> <span class="hljs-number">165787.3</span>  <span class="hljs-number">61952.0</span>    <span class="hljs-number">17737.2</span>   <span class="hljs-number">35456.0</span> <span class="hljs-number">34146.1</span> <span class="hljs-number">4736.0</span> <span class="hljs-number">4444.5</span>      <span class="hljs-number">8</span>    <span class="hljs-number">0.066</span>   <span class="hljs-number">2</span>      <span class="hljs-number">0.110</span>    <span class="hljs-number">0.177</span><br><span class="hljs-number">13824.0</span> <span class="hljs-number">13824.0</span>  <span class="hljs-number">0.0</span>    <span class="hljs-number">0.0</span>   <span class="hljs-number">240640.0</span> <span class="hljs-number">165787.3</span>  <span class="hljs-number">61952.0</span>    <span class="hljs-number">17737.2</span>   <span class="hljs-number">35456.0</span> <span class="hljs-number">34146.1</span> <span class="hljs-number">4736.0</span> <span class="hljs-number">4444.5</span>      <span class="hljs-number">8</span>    <span class="hljs-number">0.066</span>   <span class="hljs-number">2</span>      <span class="hljs-number">0.110</span>    <span class="hljs-number">0.177</span><br><span class="hljs-number">13824.0</span> <span class="hljs-number">13824.0</span>  <span class="hljs-number">0.0</span>    <span class="hljs-number">0.0</span>   <span class="hljs-number">240640.0</span> <span class="hljs-number">165787.3</span>  <span class="hljs-number">61952.0</span>    <span class="hljs-number">17737.2</span>   <span class="hljs-number">35456.0</span> <span class="hljs-number">34146.1</span> <span class="hljs-number">4736.0</span> <span class="hljs-number">4444.5</span>      <span class="hljs-number">8</span>    <span class="hljs-number">0.066</span>   <span class="hljs-number">2</span>      <span class="hljs-number">0.110</span>    <span class="hljs-number">0.177</span><br><span class="hljs-number">13824.0</span> <span class="hljs-number">13824.0</span>  <span class="hljs-number">0.0</span>    <span class="hljs-number">0.0</span>   <span class="hljs-number">240640.0</span> <span class="hljs-number">165787.3</span>  <span class="hljs-number">61952.0</span>    <span class="hljs-number">17737.2</span>   <span class="hljs-number">35456.0</span> <span class="hljs-number">34146.1</span> <span class="hljs-number">4736.0</span> <span class="hljs-number">4444.5</span>      <span class="hljs-number">8</span>    <span class="hljs-number">0.066</span>   <span class="hljs-number">2</span>      <span class="hljs-number">0.110</span>    <span class="hljs-number">0.177</span><br><br>（单位是kb）<br>S0C：S0的容量   S1C：S1的容量<br>S0U：S0已使用容量   S1C：S1已使用容量<br>EC：Eden区容量	EU：Eden区已使用容量<br>OC：老年代容量	OU：老年代已使用容量<br>MC：元空间容量	MU：元空间已使用容量<br>CCSC：压缩类空间容量 CCSU：压缩类空间已使用容量<br>YGC：年轻代垃圾回收次数 YGCT：年轻代垃圾回收消耗时间<br>FGC：老年代垃圾回收次数 FGCT：老年代垃圾回收消耗时间<br>GCT：垃圾回收消耗总时间<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-类加载统计"><a href="#2-2-类加载统计" class="headerlink" title="2.2 类加载统计"></a>2.2 类加载统计</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-meta">☁</span>  <span class="hljs-string">blog  jstat -class 1396</span><br><span class="hljs-attr">Loaded</span>  <span class="hljs-string">Bytes  Unloaded  Bytes     Time</span><br>  <span class="hljs-attr">7455</span> <span class="hljs-string">13821.8        0     0.0      18.52</span><br>  <br> <span class="hljs-attr">Loaded</span>:<span class="hljs-string">加载class的数量</span><br> <span class="hljs-attr">Bytes</span>:<span class="hljs-string">所占用空间大小</span><br> <span class="hljs-attr">Unloaded</span>:<span class="hljs-string">未加载数量</span><br> <span class="hljs-attr">Bytes</span>:<span class="hljs-string">未加载占用空间</span><br> <span class="hljs-attr">Time</span>:<span class="hljs-string">加载耗时</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-统计编译"><a href="#2-3-统计编译" class="headerlink" title="2.3 统计编译"></a>2.3 统计编译</h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">☁  blog  jstat -compiler <span class="hljs-number">1396</span><br>Compiled Failed Invalid   Time   FailedType FailedMethod<br>    <span class="hljs-number">4210</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>     <span class="hljs-number">1.43</span>          <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-4"><a href="#2-4" class="headerlink" title="2.4"></a>2.4</h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">☁  blog  jstat -gccapacity <span class="hljs-number">1396</span><br> NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC       MCMN     MCMX      MC     CCSMN    CCSMX     CCSC    YGC    FGC<br> <span class="hljs-number">43520.0</span> <span class="hljs-number">698880.0</span> <span class="hljs-number">276992.0</span> <span class="hljs-number">13824.0</span> <span class="hljs-number">13824.0</span> <span class="hljs-number">240640.0</span>    <span class="hljs-number">87552.0</span>  <span class="hljs-number">1398272.0</span>    <span class="hljs-number">61952.0</span>    <span class="hljs-number">61952.0</span>      <span class="hljs-number">0.0</span> <span class="hljs-number">1079296.0</span>  <span class="hljs-number">35456.0</span>      <span class="hljs-number">0.0</span> <span class="hljs-number">1048576.0</span>   <span class="hljs-number">4736.0</span>      <span class="hljs-number">8</span>     <span class="hljs-number">2</span><br> <br>NGCMN：新生代最小容量<br>NGCMX：新生代最大容量<br>NGC：当前新生代容量<br>S0C：S0大小	S1C：S1大小<br>EC：eden区的大小<br>OGCMN：老年代最小容量<br>OGCMX：老年代最大容量<br>OGC：当前老年代大小<br>OC:当前老年代大小<br>MCMN:最小元数据容量<br>MCMX：最大元数据容量<br>MC：当前元数据空间大小<br>CCSMN：最小压缩类空间大小<br>CCSMX：最大压缩类空间大小<br>CCSC：当前压缩类空间大小<br>YGC：年轻代gc次数<br>FGC：老年代GC次数<br></code></pre></td></tr></table></figure>
+
+<h2 id="新生代垃圾回收统计"><a href="#新生代垃圾回收统计" class="headerlink" title="新生代垃圾回收统计"></a>新生代垃圾回收统计</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wangshuminjava/article/details/107041189%E5%A4%AA%E5%A4%9A%E4%BA%86%E4%B8%8B%E6%AC%A1%E8%A1%A5">https://blog.csdn.net/wangshuminjava/article/details/107041189太多了下次补</a></p>
+<h3 id="3-jinfo"><a href="#3-jinfo" class="headerlink" title="3. jinfo"></a>3. jinfo</h3><p>&emsp;查看和调整虚拟机各项参数</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">☁  blog  jinfo -flag CMSInitiatingOccupancyFraction <span class="hljs-number">1396</span><br>-XX:CMSInitiatingOccupancyFraction=<span class="hljs-number">-1</span><br><br>查看使用CMS收集器时，老年代使用了指定阈值的内存时，出发FullGC。默认<span class="hljs-number">-1</span><br>如果CMSInitiatingOccupancyFraction在<span class="hljs-number">0</span>~<span class="hljs-number">100</span>之间，那么由CMSInitiatingOccupancyFraction决定。<br>否则由按 ((<span class="hljs-number">100</span> - MinHeapFreeRatio) + (<span class="hljs-built_in">double</span>)( CMSTriggerRatio * MinHeapFreeRatio) / <span class="hljs-number">100.0</span>) / <span class="hljs-number">100.0</span> 决定<br>————————————————<br>原文链接：https:<span class="hljs-comment">//blog.csdn.net/liubenlong007/article/details/88541589</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-jmap"><a href="#4-jmap" class="headerlink" title="4. jmap"></a>4. jmap</h2><p>&emsp;生成堆dump快照文件。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">jmap -heap <span class="hljs-number">1396</span><br>Attaching to process ID <span class="hljs-number">6</span>, please wait...<br>Debugger attached successfully.<br>Server compiler detected.<br>JVM version <span class="hljs-keyword">is</span> <span class="hljs-number">25.212</span>-b04<br><br>using thread-local object allocation.<br>Garbage-First (G1) GC with <span class="hljs-number">4</span> thread(s)<br><br>Heap Configuration:<br>   MinHeapFreeRatio         = <span class="hljs-number">40</span>    <br>   <span class="hljs-comment">// 空闲堆空间的最小百分比，计算公式为：HeapFreeRatio =(CurrentFreeHeapSize/CurrentTotalHeapSize) * 100，值的区间为0~100，默认值为 40。</span><br>   <span class="hljs-comment">// 如果HeapFreeRatio &lt; MinHeapFreeRatio，则需要进行堆扩容，扩容的时机应该在每次垃圾回收之后。</span><br>   <br>   MaxHeapFreeRatio         = <span class="hljs-number">70</span><br>   <span class="hljs-comment">// 空闲堆空间的最大百分比。公式同上</span><br>   <span class="hljs-comment">//如果HeapFreeRatio &gt; MinHeapFreeRatio，则需要进行堆扩容，扩容的时机应该在每次垃圾回收之后。</span><br>   <br>   MaxHeapSize              = <span class="hljs-number">2147483648</span> (<span class="hljs-number">2048.0</span>MB) <span class="hljs-comment">//JVM 堆空间允许的最大值。</span><br>   NewSize                  = <span class="hljs-number">1073741824</span> (<span class="hljs-number">1024.0</span>MB) <span class="hljs-comment">//JVM 新生代堆空间的默认值。</span><br>   MaxNewSize               = <span class="hljs-number">1073741824</span> (<span class="hljs-number">1024.0</span>MB) <span class="hljs-comment">//JVM 新生代堆空间允许的最大值。</span><br>   OldSize                  = <span class="hljs-number">5452592</span> (<span class="hljs-number">5.1999969482421875</span>MB) <span class="hljs-comment">//老年代堆空间的默认值。</span><br>   NewRatio                 = <span class="hljs-number">2</span>																<span class="hljs-comment">//新生代（2个Survivor区和Eden区 ）与老年代（不包括永久区）的堆空间比值，表示新生代：老年代=1：2。</span><br>   SurvivorRatio            = <span class="hljs-number">8</span>												<span class="hljs-comment">// eden：s0：s1=8：1：1</span><br>   MetaspaceSize            = <span class="hljs-number">21807104</span> (<span class="hljs-number">20.796875</span>MB)  <span class="hljs-comment">// 元空间的默认值。 </span><br>   CompressedClassSpaceSize = <span class="hljs-number">1073741824</span> (<span class="hljs-number">1024.0</span>MB)   <span class="hljs-comment">// </span><br>   MaxMetaspaceSize         = <span class="hljs-number">17592186044415</span> MB       <span class="hljs-comment">// 元空间允许的最大值。</span><br>   G1HeapRegionSize         = <span class="hljs-number">1048576</span> (<span class="hljs-number">1.0</span>MB)         <span class="hljs-comment">// 每个 Region 空间的大小。</span><br><br>Heap Usage:<br>G1 Heap:<br>   regions  = <span class="hljs-number">2048</span>														<span class="hljs-comment">// regions个数= 2G</span><br>   capacity = <span class="hljs-number">2147483648</span> (<span class="hljs-number">2048.0</span>MB)           <span class="hljs-comment">// 上文可知每个region大小为1M，因此G1 region总空间为=2048 * 1 </span><br>   used     = <span class="hljs-number">454693360</span> (<span class="hljs-number">433.62937927246094</span>MB) <span class="hljs-comment">//已使用433M</span><br>   free     = <span class="hljs-number">1692790288</span> (<span class="hljs-number">1614.370620727539</span>MB) <span class="hljs-comment">//空闲1.6G</span><br>   <span class="hljs-number">21.17330953478813</span>% used										 <span class="hljs-comment">//使用率为 21.17%</span><br>G1 Young Generation:<br>Eden Space:<br>   regions  = <span class="hljs-number">355</span><br>   capacity = <span class="hljs-number">1120927744</span> (<span class="hljs-number">1069.0</span>MB)<br>   used     = <span class="hljs-number">372244480</span> (<span class="hljs-number">355.0</span>MB)<br>   free     = <span class="hljs-number">748683264</span> (<span class="hljs-number">714.0</span>MB)<br>   <span class="hljs-number">33.20860617399439</span>% used<br>Survivor Space:<br>   regions  = <span class="hljs-number">7</span><br>   capacity = <span class="hljs-number">7340032</span> (<span class="hljs-number">7.0</span>MB)<br>   used     = <span class="hljs-number">7340032</span> (<span class="hljs-number">7.0</span>MB)<br>   free     = <span class="hljs-number">0</span> (<span class="hljs-number">0.0</span>MB)<br>   <span class="hljs-number">100.0</span>% used<br>G1 Old Generation:<br>   regions  = <span class="hljs-number">72</span><br>   capacity = <span class="hljs-number">1019215872</span> (<span class="hljs-number">972.0</span>MB)<br>   used     = <span class="hljs-number">75108848</span> (<span class="hljs-number">71.62937927246094</span>MB)<br>   free     = <span class="hljs-number">944107024</span> (<span class="hljs-number">900.3706207275391</span>MB)<br>   <span class="hljs-number">7.36927770292808</span>% used<br><br><span class="hljs-number">45017</span> <span class="hljs-built_in">int</span>erned Strings occupying <span class="hljs-number">5168104</span> bytes.<br><br>原文链接：https:<span class="hljs-comment">//blog.csdn.net/claram/article/details/104635114</span><br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">☁</span>  <span class="hljs-string">blog</span>   <span class="hljs-string">jmap</span> <span class="hljs-string">-histo</span> <span class="hljs-number">3865</span><br><br><br> <span class="hljs-string">num</span>     <span class="hljs-comment">#instances         #bytes  class name</span><br><span class="hljs-string">----------------------------------------------</span><br>   <span class="hljs-attr">1:</span>           <span class="hljs-number">669</span>        <span class="hljs-number">2725952</span>  [<span class="hljs-string">I</span><br>   <span class="hljs-attr">2:</span>          <span class="hljs-number">3345        </span><span class="hljs-number">1774608</span>  [<span class="hljs-string">B</span><br>   <span class="hljs-attr">3:</span>          <span class="hljs-number">7830        </span><span class="hljs-number">1022800</span>  [<span class="hljs-string">C</span><br>   <span class="hljs-attr">4:</span>          <span class="hljs-number">5556         </span><span class="hljs-number">133344</span>  <span class="hljs-string">java.lang.String</span><br>   <span class="hljs-attr">5:</span>           <span class="hljs-number">684</span>          <span class="hljs-number">78072</span>  <span class="hljs-string">java.lang.Class</span><br>   <span class="hljs-attr">6:</span>          <span class="hljs-number">1400          </span><span class="hljs-number">70448</span>  [<span class="hljs-string">Ljava.lang.Object;</span><br>   <span class="hljs-attr">7:</span>           <span class="hljs-number">683</span>          <span class="hljs-number">27320</span>  <span class="hljs-string">java.util.LinkedHashMap$Entry</span><br>   <span class="hljs-attr">8:</span>           <span class="hljs-number">540</span>          <span class="hljs-number">17280</span>  <span class="hljs-string">java.util.HashMap$Node</span><br>   <span class="hljs-attr">9:</span>           <span class="hljs-number">536</span>          <span class="hljs-number">17152</span>  <span class="hljs-string">java.io.File</span><br>  <span class="hljs-attr">10:</span>           <span class="hljs-number">325</span>          <span class="hljs-number">16680</span>  [<span class="hljs-string">Ljava.lang.String;</span><br>  <span class="hljs-attr">11:</span>            <span class="hljs-number">50</span>          <span class="hljs-number">15168</span>  [<span class="hljs-string">Ljava.util.HashMap$Node;</span><br>  <span class="hljs-attr">12:</span>           <span class="hljs-number">229</span>          <span class="hljs-number">14656</span>  <span class="hljs-string">java.net.URL</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<p><code>jmap -dump:format=b,file=test.dump 1396</code>：会在当前路径下生成test.bin快照文件</p>
+<h2 id="5-jhat"><a href="#5-jhat" class="headerlink" title="5. jhat"></a>5. jhat</h2><p><code>jhat test.dump</code>：jhat会生成一个界面，可分析dump文件，但是很难用，一般不会用它。</p>
+<h2 id="6-jstack"><a href="#6-jstack" class="headerlink" title="6. jstack"></a>6. jstack</h2><p>&emsp;生成虚拟机当前时刻的线程快照（threaddump），它是当前虚拟机内每一条线程正在执行的方法堆栈的集合，通过分析快照，可以定位线程出现长时间停顿的原因，比如线程间死锁、死循环、请求外部资源导致线程长时间挂起等。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jvm/">jvm</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/10/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java内存模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">
+                        <span class="hidden-mobile">虚拟机字节码执行引擎</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

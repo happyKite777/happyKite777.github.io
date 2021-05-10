@@ -175,7 +175,7 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 12 篇文章</p>
+  <p class="h4">共计 13 篇文章</p>
   <hr>
   
   
@@ -210,6 +210,12 @@
     <a href="/2021/01/10/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="list-group-item list-group-item-action">
       <span class="archive-post-title">java内存模型</span>
       <time style="float: right;">01-10</time>
+    </a>
+  
+    
+    <a href="/2021/01/02/jvm%E7%9B%91%E6%8E%A7/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">JVM常用监控命令</span>
+      <time style="float: right;">01-02</time>
     </a>
   
     
@@ -251,14 +257,20 @@
       <time style="float: right;">10-10</time>
     </a>
   
-    
-    <a href="/2020/10/09/JVM%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">JVM的简单介绍</span>
-      <time style="float: right;">10-09</time>
-    </a>
-  
 </div>
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/tags/jvm/page/2/">2</a><a class="extend next" rel="next" href="/tags/jvm/page/2/"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
