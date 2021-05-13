@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/happy.jpg">
+  <link rel="icon" type="image/png" href="/img/happy.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="happyKite777">
+  <meta name="keywords" content="">
+  <title>（一）feign原理解析 - HappyKite777的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"happykite777.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":100,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>HappyKite777的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="（一）feign原理解析">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-05-12 11:08" pubdate>
+        2021年5月12日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      75
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">（一）feign原理解析</h1>
+            
+            <div class="markdown-body">
+              <p>&emsp;<em>Feign</em>是一种声明式、模板化的HTTP客户端。feign中文意思是模仿、假装的，顾名思义，它其实内部封装了http客户端，使得我们调用http请求时就像调用接口那么简单。来看一个简单的feign例子。<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="本文例子来自https://github.com/OpenFeign/feign
+">[1]</span></a></sup></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">pom.xml。本文基于当前最新版feign进行解析</span><br><span class="hljs-comment">&lt;!--feign gson decoder，解析response--&gt;</span><br><span class="hljs-comment">&lt;dependency&gt;</span><br><span class="hljs-comment">	&lt;groupId&gt;io.github.openfeign&lt;/groupId&gt;</span><br><span class="hljs-comment">	&lt;artifactId&gt;feign-gson&lt;/artifactId&gt;</span><br><span class="hljs-comment">	&lt;version&gt;11.2&lt;/version&gt;</span><br><span class="hljs-comment">&lt;/dependency&gt;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">&lt;!--feign，feign核心包--&gt;</span><br><span class="hljs-comment">&lt;dependency&gt;</span><br><span class="hljs-comment">	&lt;groupId&gt;io.github.openfeign&lt;/groupId&gt;</span><br><span class="hljs-comment">	&lt;artifactId&gt;feign-core&lt;/artifactId&gt;</span><br><span class="hljs-comment">	&lt;version&gt;11.2&lt;/version&gt;</span><br><span class="hljs-comment">&lt;/dependency&gt;</span><br><span class="hljs-comment">**/</span><br><br><span class="hljs-keyword">import</span> feign.Feign;<br><span class="hljs-keyword">import</span> feign.Param;<br><span class="hljs-keyword">import</span> feign.RequestLine;<br><span class="hljs-keyword">import</span> feign.gson.GsonDecoder;<br><span class="hljs-keyword">import</span> feign.gson.GsonEncoder;<br><br><span class="hljs-keyword">import</span> java.io.Serializable;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FeignDemo</span> </span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String API_URL = <span class="hljs-string">&quot;https://api.github.com&quot;</span>;<br><br>    <span class="hljs-comment">//定义返回结果bean</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> </span>&#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> String login;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> id;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> String url;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Contributor</span><span class="hljs-params">(String login, <span class="hljs-keyword">int</span> contributions, String url)</span> </span>&#123;<br>            <span class="hljs-keyword">this</span>.login = login;<br>            <span class="hljs-keyword">this</span>.id = contributions;<br>            <span class="hljs-keyword">this</span>.url = url;<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">GitHub</span> </span>&#123;<br>        <span class="hljs-meta">@RequestLine(&quot;GET /repos/&#123;owner&#125;/&#123;repo&#125;/contributors&quot;)</span><br>        <span class="hljs-function">List&lt;Contributor&gt; <span class="hljs-title">contributors</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;owner&quot;)</span> String owner, <span class="hljs-meta">@Param(&quot;repo&quot;)</span> String repository)</span></span>;<br><br>    &#125;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br><br>        GitHub gitHub = Feign.builder()<br>                .encoder(<span class="hljs-keyword">new</span> GsonEncoder())<br>                .decoder(<span class="hljs-keyword">new</span> GsonDecoder())<br>                .target(GitHub.class, <span class="hljs-string">&quot;https://api.github.com&quot;</span>);<br><br>        <span class="hljs-comment">//访问https://api.github.com/repos/OpenFeign/feign/contributors</span><br>        <span class="hljs-comment">//看起来就像调用远程接口，实际上是发了http请求。使得代码简洁方便。</span><br>        List&lt;Contributor&gt; contributors = gitHub.contributors(<span class="hljs-string">&quot;OpenFeign&quot;</span>, <span class="hljs-string">&quot;feign&quot;</span>);<br>        <span class="hljs-keyword">for</span> (Contributor contributor : contributors) &#123;<br>            System.out.println(<span class="hljs-string">&quot;login name=&quot;</span> + contributor.login + <span class="hljs-string">&quot;, id = &quot;</span> + contributor.id + <span class="hljs-string">&quot;, page url = &quot;</span> + contributor.url);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;以下是大神画的openfeign的原理图，openfeign核心也是feign，接下来我们根据这张图去看看源码如何实现的。本文源码基于feign 11.2解析。</p>
+<p><img src="https://pic1.zhimg.com/v2-54575ad99c82530a9a4aad07746c67ff_1440w.jpg?source=172ae18b" srcset="/img/loading.gif" alt="feign原理"></p>
+<h1 id="1-创建接口的代理类"><a href="#1-创建接口的代理类" class="headerlink" title="1. 创建接口的代理类"></a>1. 创建接口的代理类</h1><p>&emsp; 图中的<code>@FeignClient</code>是openfeign中的注解，后面会讲到。根据上面那个例子，从<code>Feign.Builder()</code>入手分析。Feign.Builder中定义了feign的一些属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//请求拦截器</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;RequestInterceptor&gt; requestInterceptors =<br>        <span class="hljs-keyword">new</span> ArrayList&lt;RequestInterceptor&gt;();<br><span class="hljs-comment">//日志级别</span><br><span class="hljs-keyword">private</span> Logger.Level logLevel = Logger.Level.NONE;<br><span class="hljs-comment">//contract：合同。实际上是请求遵守的协议</span><br><span class="hljs-keyword">private</span> Contract contract = <span class="hljs-keyword">new</span> Contract.Default();<br><span class="hljs-comment">//发送请求的客户端。默认为JDK自带的HttpURLConnection</span><br><span class="hljs-keyword">private</span> Client client = <span class="hljs-keyword">new</span> Client.Default(<span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>);<br><span class="hljs-comment">//重试相关参数</span><br><span class="hljs-keyword">private</span> Retryer retryer = <span class="hljs-keyword">new</span> Retryer.Default();<br><span class="hljs-comment">//日志记录器</span><br><span class="hljs-keyword">private</span> Logger logger = <span class="hljs-keyword">new</span> NoOpLogger();<br><span class="hljs-comment">//参数编码器</span><br><span class="hljs-keyword">private</span> Encoder encoder = <span class="hljs-keyword">new</span> Encoder.Default();<br><span class="hljs-comment">//响应解码器</span><br><span class="hljs-keyword">private</span> Decoder decoder = <span class="hljs-keyword">new</span> Decoder.Default();<br><span class="hljs-comment">//请求转换成map的类</span><br><span class="hljs-keyword">private</span> QueryMapEncoder queryMapEncoder = <span class="hljs-keyword">new</span> FieldQueryMapEncoder();<br><span class="hljs-comment">//报错处理器</span><br><span class="hljs-keyword">private</span> ErrorDecoder errorDecoder = <span class="hljs-keyword">new</span> ErrorDecoder.Default();<br><span class="hljs-comment">//Request的内部类，包含http连接时长、超时设置等信息</span><br><span class="hljs-keyword">private</span> Options options = <span class="hljs-keyword">new</span> Options();<br><span class="hljs-comment">//控制代理类的方法调用。</span><br><span class="hljs-keyword">private</span> InvocationHandlerFactory invocationHandlerFactory =<br>    <span class="hljs-keyword">new</span> InvocationHandlerFactory.Default();<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> decode404;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> closeAfterDecode = <span class="hljs-keyword">true</span>;<br><span class="hljs-keyword">private</span> ExceptionPropagationPolicy propagationPolicy = NONE;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> forceDecoding = <span class="hljs-keyword">false</span>;<br><span class="hljs-keyword">private</span> List&lt;Capability&gt; capabilities = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br></code></pre></td></tr></table></figure>
+<p>&emsp;接下来分析<code>.target(GitHub.class, &quot;https://api.github.com&quot;);</code>target方法。我们可以看到，在target中，<code>build()</code>为feign的相关属性设置了默认值，newInstance最终掉到了<code>feign.ReflectiveFeign#newInstance</code>方法。该方法创建了目标方法的代理类，并为代理类绑定了调用方法MethodHandler。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//Feign#target</span><br><span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">target</span><span class="hljs-params">(Target&lt;T&gt; target)</span> </span>&#123;<br>  <span class="hljs-keyword">return</span> build().newInstance(target);<br>&#125;<br><br><span class="hljs-comment">//Feign#build</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> Feign <span class="hljs-title">build</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-comment">//省略</span><br>  InvocationHandlerFactory invocationHandlerFactory =<br>      Capability.enrich(<span class="hljs-keyword">this</span>.invocationHandlerFactory, capabilities);<br>  QueryMapEncoder queryMapEncoder = Capability.enrich(<span class="hljs-keyword">this</span>.queryMapEncoder, capabilities);<br><br>  SynchronousMethodHandler.Factory synchronousMethodHandlerFactory =<br>      <span class="hljs-keyword">new</span> SynchronousMethodHandler.Factory(client, retryer, requestInterceptors, logger,<br>          logLevel, decode404, closeAfterDecode, propagationPolicy, forceDecoding);<br>  <span class="hljs-comment">//通过名称解析，规定了request的解析协议，参数，编码/接码器、同步方法处理工厂等，源码不贴了，自己看，很简单</span><br>  ParseHandlersByName handlersByName =<br>      <span class="hljs-keyword">new</span> ParseHandlersByName(contract, options, encoder, decoder, queryMapEncoder,<br>          errorDecoder, synchronousMethodHandlerFactory);<br>    <span class="hljs-comment">//实例化了ReflectiveFeign对象</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ReflectiveFeign(handlersByName, invocationHandlerFactory, queryMapEncoder);<br>&#125;<br><br><span class="hljs-comment">//ReflectiveFeign#newInstance。</span><br>  <span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">newInstance</span><span class="hljs-params">(Target&lt;T&gt; target)</span> </span>&#123;<br>  	<span class="hljs-comment">//依据Contract，解析底层MethodHandler</span><br>    Map&lt;String, MethodHandler&gt; nameToHandler = targetToHandlersByName.apply(target);<br>    Map&lt;Method, MethodHandler&gt; methodToHandler = <span class="hljs-keyword">new</span> LinkedHashMap&lt;Method, MethodHandler&gt;();<br>    List&lt;DefaultMethodHandler&gt; defaultMethodHandlers = <span class="hljs-keyword">new</span> LinkedList&lt;DefaultMethodHandler&gt;();<br>	<br>	<span class="hljs-comment">//设置调用方法的handler</span><br>    <span class="hljs-keyword">for</span> (Method method : target.type().getMethods()) &#123;<br>      <span class="hljs-keyword">if</span> (method.getDeclaringClass() == Object.class) &#123;<br>        <span class="hljs-keyword">continue</span>;<br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (Util.isDefault(method)) &#123;<br>        DefaultMethodHandler handler = <span class="hljs-keyword">new</span> DefaultMethodHandler(method);<br>        defaultMethodHandlers.add(handler);<br>        methodToHandler.put(method, handler);<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        methodToHandler.put(method, nameToHandler.get(Feign.configKey(target.type(), method)));<br>      &#125;<br>    &#125;<br>    InvocationHandler handler = factory.create(target, methodToHandler);<br>    <span class="hljs-comment">//通过JDK Proxy创建代理类</span><br>    T proxy = (T) Proxy.newProxyInstance(target.type().getClassLoader(),<br>        <span class="hljs-keyword">new</span> Class&lt;?&gt;[] &#123;target.type()&#125;, handler);<br><br>    <span class="hljs-keyword">for</span> (DefaultMethodHandler defaultMethodHandler : defaultMethodHandlers) &#123;<br>      defaultMethodHandler.bindTo(proxy);<br>    &#125;<br>    <span class="hljs-comment">//返回代理类</span><br>    <span class="hljs-keyword">return</span> proxy;<br>  &#125;<br></code></pre></td></tr></table></figure>
+<h1 id="2-依据Contract，解析底层MethodHandler"><a href="#2-依据Contract，解析底层MethodHandler" class="headerlink" title="2. 依据Contract，解析底层MethodHandler"></a>2. 依据Contract，解析底层MethodHandler</h1><p>&emsp;<code>Map&lt;String, MethodHandler&gt; nameToHandler = targetToHandlersByName.apply(target);</code>用来解析底层的MethodHandler，我们来看看apply方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//feign.ReflectiveFeign.ParseHandlersByName#apply</span><br><br><span class="hljs-function"><span class="hljs-keyword">public</span> Map&lt;String, MethodHandler&gt; <span class="hljs-title">apply</span><span class="hljs-params">(Target target)</span> </span>&#123;<br><span class="hljs-comment">//1. 解析注解</span><br>  List&lt;MethodMetadata&gt; metadata = contract.parseAndValidateMetadata(target.type());<br>  Map&lt;String, MethodHandler&gt; result = <span class="hljs-keyword">new</span> LinkedHashMap&lt;String, MethodHandler&gt;();<br>  <span class="hljs-comment">//2. 遍历元数据，解析底层MethodHandler</span><br>  <span class="hljs-comment">// 2.1 构造MethodHandler所需的参数BuildTemplateByResolvingArgs</span><br>  <span class="hljs-keyword">for</span> (MethodMetadata md : metadata) &#123;<br>    BuildTemplateByResolvingArgs buildTemplate;<br>    <span class="hljs-keyword">if</span> (!md.formParams().isEmpty() &amp;&amp; md.template().bodyTemplate() == <span class="hljs-keyword">null</span>) &#123;<br>      buildTemplate =<br>          <span class="hljs-keyword">new</span> BuildFormEncodedTemplateFromArgs(md, encoder, queryMapEncoder, target);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (md.bodyIndex() != <span class="hljs-keyword">null</span>) &#123;<br>      buildTemplate = <span class="hljs-keyword">new</span> BuildEncodedTemplateFromArgs(md, encoder, queryMapEncoder, target);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      buildTemplate = <span class="hljs-keyword">new</span> BuildTemplateByResolvingArgs(md, queryMapEncoder, target);<br>    &#125;<br>	<span class="hljs-comment">//2.2 通过工厂构造MethodHandler</span><br>    <span class="hljs-keyword">if</span> (md.isIgnored()) &#123;<br>      result.put(md.configKey(), args -&gt; &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(md.configKey() + <span class="hljs-string">&quot; is not a method handled by feign&quot;</span>);<br>      &#125;);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      result.put(md.configKey(),<br>          factory.create(target, md, buildTemplate, options, decoder, errorDecoder));<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="2-1-解析注解"><a href="#2-1-解析注解" class="headerlink" title="2.1 解析注解"></a>2.1 解析注解</h2><p>&emsp;主要对目标接口的注解、方法注解、参数注解进行解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//feign.Contract.BaseContract#parseAndValidateMetadata(java.lang.Class&lt;?&gt;)</span><br><span class="hljs-comment">//targetType为目标类。比如例子中为：com.hk7.feign.FeignDemo$GitHub</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;MethodMetadata&gt; <span class="hljs-title">parseAndValidateMetadata</span><span class="hljs-params">(Class&lt;?&gt; targetType)</span> </span>&#123;<br>  <span class="hljs-comment">//目标类必须返回明确的参数。不能是泛型。因此无法存在TypeParameters参数</span><br>  <span class="hljs-comment">//假设contributors方法返回类型是List&lt;Contributor&gt;，则会报错，因为无法匹配被调用方具体哪一个方法</span><br>  checkState(targetType.getTypeParameters().length == <span class="hljs-number">0</span>, <span class="hljs-string">&quot;Parameterized types unsupported: %s&quot;</span>,<br>      targetType.getSimpleName());<br>  <span class="hljs-comment">//最多一个接口。原因同上。</span><br>  checkState(targetType.getInterfaces().length &lt;= <span class="hljs-number">1</span>, <span class="hljs-string">&quot;Only single inheritance supported: %s&quot;</span>,<br>      targetType.getSimpleName());<br>  <span class="hljs-keyword">if</span> (targetType.getInterfaces().length == <span class="hljs-number">1</span>) &#123;<br>    checkState(targetType.getInterfaces()[<span class="hljs-number">0</span>].getInterfaces().length == <span class="hljs-number">0</span>,<br>        <span class="hljs-string">&quot;Only single-level inheritance supported: %s&quot;</span>,<br>        targetType.getSimpleName());<br>  &#125;<br>  <span class="hljs-keyword">final</span> Map&lt;String, MethodMetadata&gt; result = <span class="hljs-keyword">new</span> LinkedHashMap&lt;String, MethodMetadata&gt;();<br>  <span class="hljs-comment">//遍历接口的所有方法</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">final</span> Method method : targetType.getMethods()) &#123;<br>    <span class="hljs-keyword">if</span> (method.getDeclaringClass() == Object.class ||<br>        (method.getModifiers() &amp; Modifier.STATIC) != <span class="hljs-number">0</span> ||<br>        Util.isDefault(method)) &#123;<br>      <span class="hljs-keyword">continue</span>;<br>    &#125;<br>    <span class="hljs-comment">//解析元数据。解析方法，并设置其处理类MethodHandler</span><br>    <span class="hljs-keyword">final</span> MethodMetadata metadata = parseAndValidateMetadata(targetType, method);<br>    checkState(!result.containsKey(metadata.configKey()), <span class="hljs-string">&quot;Overrides unsupported: %s&quot;</span>,<br>        metadata.configKey());<br>    result.put(metadata.configKey(), metadata);<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(result.values());<br>&#125;<br><br><br><span class="hljs-comment">//feign.Contract.BaseContract#parseAndValidateMetadata(java.lang.Class&lt;?&gt;, java.lang.reflect.Method)</span><br><span class="hljs-comment">//这里是处理接口方法handler的关键代码</span><br><span class="hljs-function"><span class="hljs-keyword">protected</span> MethodMetadata <span class="hljs-title">parseAndValidateMetadata</span><span class="hljs-params">(Class&lt;?&gt; targetType, Method method)</span> </span>&#123;<br>  <span class="hljs-comment">//定义需要解析的元数据data，并通过targetType和method赋值给它。后面基于data做解析</span><br>  <span class="hljs-keyword">final</span> MethodMetadata data = <span class="hljs-keyword">new</span> MethodMetadata();<br>  data.targetType(targetType);<br>  data.method(method);<br>  data.returnType(Types.resolve(targetType, targetType, method.getGenericReturnType()));<br>  <span class="hljs-comment">//configKey拼接方法,结果是 GitHub#contributors(String,String)</span><br>  data.configKey(Feign.configKey(targetType, method));<br><br>	<span class="hljs-comment">//解析目标类上的注解，本例没有</span><br>  <span class="hljs-keyword">if</span> (targetType.getInterfaces().length == <span class="hljs-number">1</span>) &#123;<br>    processAnnotationOnClass(data, targetType.getInterfaces()[<span class="hljs-number">0</span>]);<br>  &#125;<br>  processAnnotationOnClass(data, targetType);<br><br>	<span class="hljs-comment">//遍历解析方法上的注解，本例为解析：@RequestLine(&quot;GET /repos/&#123;owner&#125;/&#123;repo&#125;/contributors&quot;)</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">final</span> Annotation methodAnnotation : method.getAnnotations()) &#123;<br>    processAnnotationOnMethod(data, methodAnnotation, method);<br>  &#125;<br>  <span class="hljs-comment">//默认false</span><br>  <span class="hljs-keyword">if</span> (data.isIgnored()) &#123;<br>    <span class="hljs-keyword">return</span> data;<br>  &#125;<br>  <span class="hljs-comment">//实例化data的时候，template已经创建了，默认为RequestTemplate</span><br>  <span class="hljs-comment">//如果RequestTemplate的method为空，则报错</span><br>  <span class="hljs-comment">//RequestTemplate的method属性赋值，在解析方法注解的时候完成.后面会讲到</span><br>  checkState(data.template().method() != <span class="hljs-keyword">null</span>,<br>      <span class="hljs-string">&quot;Method %s not annotated with HTTP method type (ex. GET, POST)%s&quot;</span>,<br>      data.configKey(), data.warnings());<br>  <span class="hljs-comment">//获取方法的参数和原生参数，这里为均为String String</span><br>  <span class="hljs-keyword">final</span> Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();<br>  <span class="hljs-keyword">final</span> Type[] genericParameterTypes = method.getGenericParameterTypes();<br><br>	<span class="hljs-comment">//获取参数中的注解，&#123;repo&#125; &#123;repo&#125;等同于@Param</span><br>  <span class="hljs-keyword">final</span> Annotation[][] parameterAnnotations = method.getParameterAnnotations();<br>  <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> count = parameterAnnotations.length;<br>  <span class="hljs-comment">//遍历处理参数中的注解, @Param</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; count; i++) &#123;<br>    <span class="hljs-keyword">boolean</span> isHttpAnnotation = <span class="hljs-keyword">false</span>;<br>    <span class="hljs-keyword">if</span> (parameterAnnotations[i] != <span class="hljs-keyword">null</span>) &#123;<br>    <span class="hljs-comment">//具体处理</span><br>      isHttpAnnotation = processAnnotationsOnParameter(data, parameterAnnotations[i], i);<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (isHttpAnnotation) &#123;<br>      data.ignoreParamater(i);<br>    &#125;<br>	<span class="hljs-comment">//注解解析结果校验</span><br>    <span class="hljs-keyword">if</span> (parameterTypes[i] == URI.class) &#123;<br>      data.urlIndex(i);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!isHttpAnnotation &amp;&amp; parameterTypes[i] != Request.Options.class) &#123;<br>      <span class="hljs-keyword">if</span> (data.isAlreadyProcessed(i)) &#123;<br>        checkState(data.formParams().isEmpty() || data.bodyIndex() == <span class="hljs-keyword">null</span>,<br>            <span class="hljs-string">&quot;Body parameters cannot be used with form parameters.%s&quot;</span>, data.warnings());<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        checkState(data.formParams().isEmpty(),<br>            <span class="hljs-string">&quot;Body parameters cannot be used with form parameters.%s&quot;</span>, data.warnings());<br>        checkState(data.bodyIndex() == <span class="hljs-keyword">null</span>,<br>            <span class="hljs-string">&quot;Method has too many Body parameters: %s%s&quot;</span>, method, data.warnings());<br>        data.bodyIndex(i);<br>        data.bodyType(Types.resolve(targetType, targetType, genericParameterTypes[i]));<br>      &#125;<br>    &#125;<br>  &#125;<br>	<span class="hljs-comment">//校验header参数</span><br>  <span class="hljs-keyword">if</span> (data.headerMapIndex() != <span class="hljs-keyword">null</span>) &#123;<br>    checkMapString(<span class="hljs-string">&quot;HeaderMap&quot;</span>, parameterTypes[data.headerMapIndex()],<br>        genericParameterTypes[data.headerMapIndex()]);<br>  &#125;<br>	<span class="hljs-comment">//校验query参数</span><br>  <span class="hljs-keyword">if</span> (data.queryMapIndex() != <span class="hljs-keyword">null</span>) &#123;<br>    <span class="hljs-keyword">if</span> (Map.class.isAssignableFrom(parameterTypes[data.queryMapIndex()])) &#123;<br>      checkMapKeys(<span class="hljs-string">&quot;QueryMap&quot;</span>, genericParameterTypes[data.queryMapIndex()]);<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> data;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;接下来看看，feign是如何对类注解、方法注解和参数注解进行解析的。从以上源码我们可以看到，在<code>feign.DeclarativeContract</code>类中的<code>processAnnotationOnClass、processAnnotationOnMethod、processAnnotationsOnParameter</code>三个方法中对以上三类注解进行了解析。这三个方法大同小异，都是获取定义好的注解解析器，然后调用<code>process</code>方法进行实际解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//这里我摘抄了processAnnotationOnMethod的部分源码，另两个类似，只不过多了一些判断条件</span><br><span class="hljs-comment">//获取所有的方法注解解析器</span><br>List&lt;GuardedAnnotationProcessor&gt; processors = methodAnnotationProcessors.stream()<br>    .filter(processor -&gt; processor.test(annotation))<br>    .collect(Collectors.toList());<br><span class="hljs-comment">//遍历方法注解解析器 解析 </span><br><span class="hljs-keyword">if</span> (!processors.isEmpty()) &#123;<br>  processors.forEach(processor -&gt; processor.process(annotation, data));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;源码我们可以看到方法解析器存储在<code>methodAnnotationProcessors</code>map中，那么它是什么时候被放进去的呢？这里往前看，在创建feign实例的时候会执行<code>private Contract contract = new Contract.Default();</code>，在<code>Contract.Default()</code>的构造方法中，把那三种注解解析器注册进了<code>Contract</code>的对应map中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//DeclarativeContract类中存储解析三种注解处理器的三个容器</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DeclarativeContract</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseContract</span> </span>&#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;GuardedAnnotationProcessor&gt; classAnnotationProcessors = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;GuardedAnnotationProcessor&gt; methodAnnotationProcessors = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;Class&lt;Annotation&gt;, DeclarativeContract.ParameterAnnotationProcessor&lt;Annotation&gt;&gt; parameterAnnotationProcessors =<br>      <span class="hljs-keyword">new</span> HashMap&lt;&gt;();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;<code>Contract.Default</code>继承自<code>DeclarativeContract</code>，从构造方法中可以看到，它的注册方式都是形如<code>super.registerXXXAnnotation(AnnotationClass.class, param -&gt; &#123;&#125;)</code>的方式，其中匿名函数<code>param -&gt; &#123;&#125;</code>就是具体解析逻辑。我们跟踪<code>super.registerClassAnnotation</code>方法最终会看到register方法，方法注解和参数注解类似</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> &lt;E extends Annotation&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">registerClassAnnotation</span><span class="hljs-params">(Predicate&lt;E&gt; predicate,</span></span><br><span class="hljs-function"><span class="hljs-params">                                                                DeclarativeContract.AnnotationProcessor&lt;E&gt; processor)</span> </span>&#123;<br>    <span class="hljs-comment">//GuardedAnnotationProcessor(predicate, processor)就是注解解析器</span><br>    <span class="hljs-comment">//其中processor为我们传入的解析器解析方法</span><br>    <span class="hljs-keyword">this</span>.classAnnotationProcessors.add(<span class="hljs-keyword">new</span> GuardedAnnotationProcessor(predicate, processor));<br>  &#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;接下来我们看看具体的注解解析逻辑，代码位于<code>feign.Contract.Default#Default&#123;&#125;</code>中</p>
+<div class="note note-success">
+            <ol><li>注册 类注解处理器到classAnnotationProcessors中</li></ol>
+          </div>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//注册 处理注解@Header的类注解器</span><br><span class="hljs-keyword">super</span>.registerClassAnnotation(Headers.class, (header, data) -&gt; &#123;<br>  <span class="hljs-comment">//获取headers</span><br>  <span class="hljs-keyword">final</span> String[] headersOnType = header.value();<br>  checkState(headersOnType.length &gt; <span class="hljs-number">0</span>, <span class="hljs-string">&quot;Headers annotation was empty on type %s.&quot;</span>,<br>      data.configKey());<br>  <span class="hljs-comment">//放入requestTemplate的headers中</span><br>  <span class="hljs-keyword">final</span> Map&lt;String, Collection&lt;String&gt;&gt; headers = toMap(headersOnType);<br>  headers.putAll(data.template().headers());<br>  data.template().headers(<span class="hljs-keyword">null</span>); <span class="hljs-comment">// to clear</span><br>  data.template().headers(headers);<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>&emsp;总结：把@Header中数组取出，转成map赋值给requestTemplate</p>
+<div class="note note-success">
+            <ol start="2"><li>注册 方法注解处理器到methodAnnotationProcessors中</li></ol>
+          </div>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//1.注册 处理注解@RequestLine的方法注解器</span><br><span class="hljs-keyword">super</span>.registerMethodAnnotation(RequestLine.class, (ann, data) -&gt; &#123;<br>  <span class="hljs-keyword">final</span> String requestLine = ann.value();<br>  checkState(emptyToNull(requestLine) != <span class="hljs-keyword">null</span>,<br>      <span class="hljs-string">&quot;RequestLine annotation was empty on method %s.&quot;</span>, data.configKey());<br> <span class="hljs-comment">//这里对requestLine的值进行正则校验,   ^([A-Z]+)[ ]*(.*)$</span><br>  <span class="hljs-comment">//匹配  ‘大写字符 小写字符串’。post /a/b/x 失败， Get /a/b/c 成功</span><br>  <span class="hljs-keyword">final</span> Matcher requestLineMatcher = REQUEST_LINE_PATTERN.matcher(requestLine);<br>  <span class="hljs-keyword">if</span> (!requestLineMatcher.find()) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(String.format(<br>        <span class="hljs-string">&quot;RequestLine annotation didn&#x27;t start with an HTTP verb on method %s&quot;</span>,<br>        data.configKey()));<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">//这里设置requestTemplate的method和url</span><br>    data.template().method(HttpMethod.valueOf(requestLineMatcher.group(<span class="hljs-number">1</span>)));<br>    data.template().uri(requestLineMatcher.group(<span class="hljs-number">2</span>));<br>  &#125;<br>  data.template().decodeSlash(ann.decodeSlash());<br>  data.template()<br>      .collectionFormat(ann.collectionFormat());<br>&#125;);<br><br><br><span class="hljs-comment">//2.注册 处理注解@Body的方法注解器</span><br><span class="hljs-keyword">super</span>.registerMethodAnnotation(Body.class, (ann, data) -&gt; &#123;<br>  <span class="hljs-keyword">final</span> String body = ann.value();<br>  checkState(emptyToNull(body) != <span class="hljs-keyword">null</span>, <span class="hljs-string">&quot;Body annotation was empty on method %s.&quot;</span>,<br>      data.configKey());<br>  <span class="hljs-comment">//这里设置requestTemplate的body</span><br>  <span class="hljs-keyword">if</span> (body.indexOf(<span class="hljs-string">&#x27;&#123;&#x27;</span>) == -<span class="hljs-number">1</span>) &#123;<br>    data.template().body(body);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    data.template().bodyTemplate(body);<br>  &#125;<br>&#125;);<br><br><br><span class="hljs-comment">//3.注册 处理注解@Headers的方法注解器</span><br><span class="hljs-keyword">super</span>.registerMethodAnnotation(Headers.class, (header, data) -&gt; &#123;<br>  <span class="hljs-keyword">final</span> String[] headersOnMethod = header.value();<br>  checkState(headersOnMethod.length &gt; <span class="hljs-number">0</span>, <span class="hljs-string">&quot;Headers annotation was empty on method %s.&quot;</span>,<br>      data.configKey());<br>  <span class="hljs-comment">//这里设置requestTemplate的headers</span><br>  data.template().headers(toMap(headersOnMethod));<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>&emsp;总结：</p>
+<ul>
+<li>@RequestLine：解析值，并将method和uri赋值给请求（requestTemplate）</li>
+<li>@Body：设置请求体的值和编码</li>
+<li>@Headers：设置请求的header<div class="note note-success">
+            <ol start="3"><li>注册 参数注解处理器到parameterAnnotationProcessors中</li></ol>
+          </div>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//注册 处理注解@Param的参数注解器</span><br><span class="hljs-keyword">super</span>.registerParameterAnnotation(Param.class, (paramAnnotation, data, paramIndex) -&gt; &#123;<br>  <span class="hljs-keyword">final</span> String annotationName = paramAnnotation.value();<br>  <span class="hljs-keyword">final</span> Parameter parameter = data.method().getParameters()[paramIndex];<br>  <span class="hljs-keyword">final</span> String name;<br>  <span class="hljs-keyword">if</span> (emptyToNull(annotationName) == <span class="hljs-keyword">null</span> &amp;&amp; parameter.isNamePresent()) &#123;<br>    name = parameter.getName();<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    name = annotationName;<br>  &#125;<br>  checkState(emptyToNull(name) != <span class="hljs-keyword">null</span>, <span class="hljs-string">&quot;Param annotation was empty on param %s.&quot;</span>,<br>      paramIndex);<br>  nameParam(data, name, paramIndex);<br>  <span class="hljs-keyword">final</span> Class&lt;? extends Param.Expander&gt; expander = paramAnnotation.expander();<br>  <span class="hljs-keyword">if</span> (expander != Param.ToStringExpander.class) &#123;<br>    data.indexToExpanderClass().put(paramIndex, expander);<br>  &#125;<br>  <span class="hljs-comment">//设置data的formParams值</span><br>  <span class="hljs-keyword">if</span> (!data.template().hasRequestVariable(name)) &#123;<br>    data.formParams().add(name);<br>  &#125;<br>&#125;);<br><br><br><span class="hljs-comment">//注册 处理注解@QueryMap的参数注解器</span><br><span class="hljs-keyword">super</span>.registerParameterAnnotation(QueryMap.class, (queryMap, data, paramIndex) -&gt; &#123;<br>  checkState(data.queryMapIndex() == <span class="hljs-keyword">null</span>,<br>      <span class="hljs-string">&quot;QueryMap annotation was present on multiple parameters.&quot;</span>);<br>  <span class="hljs-comment">//设置data的queryMapIndex和queryMapEncoded</span><br>  data.queryMapIndex(paramIndex);<br>  data.queryMapEncoded(queryMap.encoded());<br>&#125;);<br><br><br><span class="hljs-comment">//注册 处理注解@HeaderMap的参数注解器</span><br><span class="hljs-keyword">super</span>.registerParameterAnnotation(HeaderMap.class, (queryMap, data, paramIndex) -&gt; &#123;<br>  checkState(data.headerMapIndex() == <span class="hljs-keyword">null</span>,<br>      <span class="hljs-string">&quot;HeaderMap annotation was present on multiple parameters.&quot;</span>);<br>  <span class="hljs-comment">//设置data的queryMapIndex值</span><br>  data.headerMapIndex(paramIndex);<br>&#125;);<br></code></pre></td></tr></table></figure>
+总结：不总结了，类似method，都是给request设置响应属性值。</li>
+</ul>
+<p>&emsp;从源码我们可以看到默认的请求协议包含的6种注解，分别是<code>@Header、@RequestLine、@Body、@Headers、@Param、@QueryMap、@HeaderMap</code>，他们对应着三类解析器。实际工作中，我们也可以定义自己的Contract协议，只需要实现<code>Contract</code>接口即可，比如openfeign就是使用这种方式，集成了spring mvc的相关注解进去。</p>
+<h2 id="2-2-为代理类设置MethodHandler"><a href="#2-2-为代理类设置MethodHandler" class="headerlink" title="2.2 为代理类设置MethodHandler"></a>2.2 为代理类设置MethodHandler</h2><p>&emsp;这个很简单，主要是通过工厂创建MethodHandler。<code>factory.create(target, md, buildTemplate, options, decoder, errorDecoder));</code>，这里的<code>factory</code>是<code>new Feign.Build</code>的时候创建的，它是一个同步方法处理工厂<code>SynchronousMethodHandler</code>。接下来我们看看它的create代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java">    <span class="hljs-function"><span class="hljs-keyword">public</span> MethodHandler <span class="hljs-title">create</span><span class="hljs-params">(Target&lt;?&gt; target,</span></span><br><span class="hljs-function"><span class="hljs-params">                                MethodMetadata md,</span></span><br><span class="hljs-function"><span class="hljs-params">                                RequestTemplate.Factory buildTemplateFromArgs,</span></span><br><span class="hljs-function"><span class="hljs-params">                                Options options,</span></span><br><span class="hljs-function"><span class="hljs-params">                                Decoder decoder,</span></span><br><span class="hljs-function"><span class="hljs-params">                                ErrorDecoder errorDecoder)</span> </span>&#123;<br>			<span class="hljs-comment">//其实就是返回了一个SynchronousMethodHandler</span><br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SynchronousMethodHandler(target, client, retryer, requestInterceptors, logger,<br>          logLevel, md, buildTemplateFromArgs, options, decoder,<br>          errorDecoder, decode404, closeAfterDecode, propagationPolicy, forceDecoding);<br>    &#125;<br>    <br><span class="hljs-comment">//SynchronousMethodHandler类成员变量如下</span><br><span class="hljs-comment">//具体不解释了，同上。看名字就能猜出来</span><br><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SynchronousMethodHandler</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MethodHandler</span> </span>&#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> MethodMetadata metadata;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Target&lt;?&gt; target;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Client client;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Retryer retryer;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;RequestInterceptor&gt; requestInterceptors;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Logger logger;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Logger.Level logLevel;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> RequestTemplate.Factory buildTemplateFromArgs;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Options options;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ExceptionPropagationPolicy propagationPolicy;<br><br>  <span class="hljs-comment">// only one of decoder and asyncResponseHandler will be non-null</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Decoder decoder;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> AsyncResponseHandler asyncResponseHandler;<br></code></pre></td></tr></table></figure>
+<p>&emsp;SynchronousMethodHandler继承自MethodHandler，因此方法的调用是在这个类的invoke中进行的。里面包含了图中request构造、编码、请求拦截、response解码等都在里面。</p>
+<h1 id="3-方法的调用和返回"><a href="#3-方法的调用和返回" class="headerlink" title="3. 方法的调用和返回"></a>3. 方法的调用和返回</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">invoke</span><span class="hljs-params">(Object[] argv)</span> <span class="hljs-keyword">throws</span> Throwable </span>&#123;<br>  <span class="hljs-comment">//1. 构造request</span><br>  RequestTemplate template = buildTemplateFromArgs.create(argv);<br>  <span class="hljs-comment">//2. 设置request相关选项。比如连接时长、读取时长等</span><br>  Options options = findOptions(argv);<br>  <span class="hljs-comment">//3. 获取重试器</span><br>  Retryer retryer = <span class="hljs-keyword">this</span>.retryer.clone();<br>  <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-comment">// 4. 发起http请求并解析response</span><br>      <span class="hljs-keyword">return</span> executeAndDecode(template, options);<br>    &#125; <span class="hljs-keyword">catch</span> (RetryableException e) &#123;<br>      <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">//5. 报错重试</span><br>        retryer.continueOrPropagate(e);<br>      &#125; <span class="hljs-keyword">catch</span> (RetryableException th) &#123;<br>        Throwable cause = th.getCause();<br>        <span class="hljs-keyword">if</span> (propagationPolicy == UNWRAP &amp;&amp; cause != <span class="hljs-keyword">null</span>) &#123;<br>          <span class="hljs-keyword">throw</span> cause;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>          <span class="hljs-keyword">throw</span> th;<br>        &#125;<br>      &#125;<br>      <span class="hljs-keyword">if</span> (logLevel != Logger.Level.NONE) &#123;<br>      	<span class="hljs-comment">//4. 记录重试日志</span><br>        logger.logRetry(metadata.configKey(), logLevel);<br>      &#125;<br>      <span class="hljs-keyword">continue</span>;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="3-1-构造request请求"><a href="#3-1-构造request请求" class="headerlink" title="3.1 构造request请求"></a>3.1 构造request请求</h2><p>&emsp;<code>buildTemplateFromArgs.create(argv);</code>这一句构造request请求，前面分析元数据中也有requestTemplate，它只是临时的，，通过它构造真正的请求。argv是调用方法时传入的参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> RequestTemplate <span class="hljs-title">create</span><span class="hljs-params">(Object[] argv)</span> </span>&#123;<br>	<span class="hljs-comment">//1. 通过metadata.template构造临时的RequestTemplate。</span><br>	<span class="hljs-comment">//form()就是一些赋值操作，自己去看</span><br>  RequestTemplate mutable = RequestTemplate.from(metadata.template());<br>  <span class="hljs-comment">//2. 设置目标url</span><br>  mutable.feignTarget(target);<br>  <span class="hljs-keyword">if</span> (metadata.urlIndex() != <span class="hljs-keyword">null</span>) &#123;<br>    <span class="hljs-keyword">int</span> urlIndex = metadata.urlIndex();<br>    checkArgument(argv[urlIndex] != <span class="hljs-keyword">null</span>, <span class="hljs-string">&quot;URI parameter %s was null&quot;</span>, urlIndex);<br>    mutable.target(String.valueOf(argv[urlIndex]));<br>  &#125;<br>  <span class="hljs-comment">//3. 解析argv参数。</span><br>  <span class="hljs-comment">//varBuilder   &#123;1-&gt;OpenFeign, 2-&gt;feign&#125;</span><br>  Map&lt;String, Object&gt; varBuilder = <span class="hljs-keyword">new</span> LinkedHashMap&lt;String, Object&gt;();<br>  <span class="hljs-keyword">for</span> (Entry&lt;Integer, Collection&lt;String&gt;&gt; entry : metadata.indexToName().entrySet()) &#123;<br>    <span class="hljs-keyword">int</span> i = entry.getKey();<br>    Object value = argv[entry.getKey()];<br>    <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>) &#123; <span class="hljs-comment">// Null values are skipped.</span><br>      <span class="hljs-keyword">if</span> (indexToExpander.containsKey(i)) &#123;<br>        value = expandElements(indexToExpander.get(i), value);<br>      &#125;<br>      <span class="hljs-keyword">for</span> (String name : entry.getValue()) &#123;<br>        varBuilder.put(name, value);<br>      &#125;<br>    &#125;<br>  &#125;<br>	<span class="hljs-comment">//4. varBuilder参数填充至url中的占位符，并返回真正的RequestTemplate</span><br>	<span class="hljs-comment">//实际上是通过Template#resolveExpression解析表达式实现的。不贴源码了，自己去看吧</span><br>  RequestTemplate template = resolve(argv, mutable, varBuilder);<br>  <br>  <span class="hljs-comment">// 5. queryMap不为空则填充请求的query</span><br>  <span class="hljs-keyword">if</span> (metadata.queryMapIndex() != <span class="hljs-keyword">null</span>) &#123;<br>    <span class="hljs-comment">// add query map parameters after initial resolve so that they take</span><br>    <span class="hljs-comment">// precedence over any predefined values</span><br>    Object value = argv[metadata.queryMapIndex()];<br>    Map&lt;String, Object&gt; queryMap = toQueryMap(value);<br>    template = addQueryMapQueryParameters(queryMap, template);<br>  &#125;<br>  <span class="hljs-comment">// 6. headerMap不为空则填充请求的header</span><br>  <span class="hljs-keyword">if</span> (metadata.headerMapIndex() != <span class="hljs-keyword">null</span>) &#123;<br>    template =<br>        addHeaderMapHeaders((Map&lt;String, Object&gt;) argv[metadata.headerMapIndex()], template);<br>  &#125;<br>	<span class="hljs-comment">// 7. 返回构造好的requestTemplate</span><br>  <span class="hljs-keyword">return</span> template;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="3-2-发起请求并解析响应"><a href="#3-2-发起请求并解析响应" class="headerlink" title="3.2 发起请求并解析响应"></a>3.2 发起请求并解析响应</h2><p>&emsp;设置参数和获取重试器都很简单，分析省略。直接看<code>executeAndDecode</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function">Object <span class="hljs-title">executeAndDecode</span><span class="hljs-params">(RequestTemplate template, Options options)</span> <span class="hljs-keyword">throws</span> Throwable </span>&#123;<br>	<span class="hljs-comment">//1. 从requestTemplate中获取请求。并执行拦截器的方法</span><br>	<span class="hljs-comment">//代码省略，默认的拦截器只是给请求加了Authorization头</span><br>  Request request = targetRequest(template);<br><span class="hljs-comment">//2. 记日志</span><br>  <span class="hljs-keyword">if</span> (logLevel != Logger.Level.NONE) &#123;<br>    logger.logRequest(metadata.configKey(), logLevel, request);<br>  &#125;<br><br>  Response response;<br>  <span class="hljs-keyword">long</span> start = System.nanoTime();<br>  <span class="hljs-keyword">try</span> &#123;<br>  	<span class="hljs-comment">//3. 客户端发送http请求</span><br>  	<span class="hljs-comment">//client的初始化再Feign里面，前面有说过。具体的构造就是发送请求并获取response，代码不贴了。使用jdk自带的DelegateHttpsURLConnection连接</span><br>  	<span class="hljs-comment">/**</span><br><span class="hljs-comment">  <span class="hljs-doctag">@Override</span></span><br><span class="hljs-comment">  public Response execute(Request request, Options options) throws IOException &#123;</span><br><span class="hljs-comment">    HttpURLConnection connection = convertAndSend(request, options);</span><br><span class="hljs-comment">    return convertResponse(connection, request);</span><br><span class="hljs-comment">  &#125;</span><br><span class="hljs-comment">  	**/</span><br>    response = client.execute(request, options);<br>    <span class="hljs-comment">// ensure the request is set. <span class="hljs-doctag">TODO:</span> remove in Feign 12</span><br>    response = response.toBuilder()<br>        .request(request)<br>        .requestTemplate(template)<br>        .build();<br>  &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>    <span class="hljs-keyword">if</span> (logLevel != Logger.Level.NONE) &#123;<br>      logger.logIOException(metadata.configKey(), logLevel, e, elapsedTime(start));<br>    &#125;<br>    <span class="hljs-keyword">throw</span> errorExecuting(request, e);<br>  &#125;<br>  <span class="hljs-keyword">long</span> elapsedTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);<br><br><span class="hljs-comment">//4. 解码器对response进行解码。默认为空。</span><br>  <span class="hljs-keyword">if</span> (decoder != <span class="hljs-keyword">null</span>)<br>    <span class="hljs-keyword">return</span> decoder.decode(response, metadata.returnType());<br><span class="hljs-comment">//5. 解析response并解码</span><br><span class="hljs-comment">//从名字可以看出来，响应处理器是异步的。它会把结果返回到CompletableFuture中</span><br>  CompletableFuture&lt;Object&gt; resultFuture = <span class="hljs-keyword">new</span> CompletableFuture&lt;&gt;();<br>  asyncResponseHandler.handleResponse(resultFuture, metadata.configKey(), response,<br>      metadata.returnType(),<br>      elapsedTime);<br><br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">if</span> (!resultFuture.isDone())<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">&quot;Response handling not done&quot;</span>);<br><br>    <span class="hljs-keyword">return</span> resultFuture.join();<br>  &#125; <span class="hljs-keyword">catch</span> (CompletionException e) &#123;<br>    Throwable cause = e.getCause();<br>    <span class="hljs-keyword">if</span> (cause != <span class="hljs-keyword">null</span>)<br>      <span class="hljs-keyword">throw</span> cause;<br>    <span class="hljs-keyword">throw</span> e;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;我们来看第五步，解析response并解码源码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">handleResponse</span><span class="hljs-params">(CompletableFuture&lt;Object&gt; resultFuture,</span></span><br><span class="hljs-function"><span class="hljs-params">                  String configKey,</span></span><br><span class="hljs-function"><span class="hljs-params">                  Response response,</span></span><br><span class="hljs-function"><span class="hljs-params">                  Type returnType,</span></span><br><span class="hljs-function"><span class="hljs-params">                  <span class="hljs-keyword">long</span> elapsedTime)</span> </span>&#123;<br><span class="hljs-comment">// copied fairly liberally from SynchronousMethodHandler</span><br><span class="hljs-keyword">boolean</span> shouldClose = <span class="hljs-keyword">true</span>;<br><br><span class="hljs-keyword">try</span> &#123;<br>  <span class="hljs-keyword">if</span> (logLevel != Level.NONE) &#123;<br>    response = logger.logAndRebufferResponse(configKey, logLevel, response,<br>        elapsedTime);<br>  &#125;<br>  <span class="hljs-comment">//如果是返回的是Response，直接解析</span><br>  <span class="hljs-keyword">if</span> (Response.class == returnType) &#123;<br>  	<span class="hljs-comment">//body为空直接返回空</span><br>    <span class="hljs-keyword">if</span> (response.body() == <span class="hljs-keyword">null</span>) &#123;<br>      resultFuture.complete(response);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (response.body().length() == <span class="hljs-keyword">null</span><br>        || response.body().length() &gt; MAX_RESPONSE_BUFFER_SIZE) &#123;<br>      shouldClose = <span class="hljs-keyword">false</span>;<br>      resultFuture.complete(response);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 否则从Response里面读取body，并设置返回</span><br>      <span class="hljs-keyword">final</span> <span class="hljs-keyword">byte</span>[] bodyData = Util.toByteArray(response.body().asInputStream());<br>      resultFuture.complete(response.toBuilder().body(bodyData).build());<br>    &#125;<br>    <span class="hljs-comment">//如果返回code是2xx</span><br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (response.status() &gt;= <span class="hljs-number">200</span> &amp;&amp; response.status() &lt; <span class="hljs-number">300</span>) &#123;<br>    <span class="hljs-keyword">if</span> (isVoidType(returnType)) &#123;<br>      resultFuture.complete(<span class="hljs-keyword">null</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 解码器解析response。具体解析逻辑根据各自传入解码器决定</span><br>    <span class="hljs-comment">/**比如gson，主要两步</span><br><span class="hljs-comment">    1. reader读取结果流</span><br><span class="hljs-comment">    Reader reader = response.body().asReader(Util.UTF_8);</span><br><span class="hljs-comment">    2. 转换成json串</span><br><span class="hljs-comment">    this.gson.fromJson(reader, type);</span><br><span class="hljs-comment">    **/</span><br>      <span class="hljs-keyword">final</span> Object result = decode(response, returnType);<br>      shouldClose = closeAfterDecode;<br>      <span class="hljs-comment">// 把结果赋值到resultFuture中</span><br>      resultFuture.complete(result);<br>    &#125;<br>    <span class="hljs-comment">//如果404，则直接解析并返回</span><br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (decode404 &amp;&amp; response.status() == <span class="hljs-number">404</span> &amp;&amp; !isVoidType(returnType)) &#123;<br>    <span class="hljs-keyword">final</span> Object result = decode(response, returnType);<br>    shouldClose = closeAfterDecode;<br>    resultFuture.complete(result);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">//如果发生异常（5xx），则异常解析器进行异常解析</span><br>    resultFuture.completeExceptionally(errorDecoder.decode(configKey, response));<br>  &#125;<br>&#125; <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">final</span> IOException e) &#123;<br>  <span class="hljs-keyword">if</span> (logLevel != Level.NONE) &#123;<br>    logger.logIOException(configKey, logLevel, e, elapsedTime);<br>  &#125;<br>  resultFuture.completeExceptionally(errorReading(response.request(), response, e));<br>&#125; <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">final</span> Exception e) &#123;<br>  resultFuture.completeExceptionally(e);<br>&#125; <span class="hljs-keyword">finally</span> &#123;<br>  <span class="hljs-keyword">if</span> (shouldClose) &#123;<br>    ensureClosed(response.body());<br>  &#125;<br>&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp; 以上就是feign的工作原理了，基本上和流程图一致，图中没涉及到的@EnableClient和最后的负载均衡，后面解析openfeign原理会讲到。</p>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>本文例子来自<a target="_blank" rel="noopener" href="https://github.com/OpenFeign/feign">https://github.com/OpenFeign/feign</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/spring-cloud/">spring cloud</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/feign/">feign</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/12/2.openfeign%E4%BD%BF%E7%94%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">（二）openfeign的使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/09/4.rabbitmq%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/">
+                        <span class="hidden-mobile">（四）rabbitmq消息堆积、顺序消费</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
